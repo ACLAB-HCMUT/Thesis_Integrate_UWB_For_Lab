@@ -48,18 +48,22 @@ void setup() {
   // {
   //   Serial.println("WiFi connection failed. Check your network credentials.");
   // }
+
   M5.begin();
+  M5.Power.begin();
   Serial.begin(9600);
-  Serial2.begin(9600, SERIAL_8N1, 32, 26);
+  Serial2.begin(115200, SERIAL_8N1, 25, 21);
+
   delay(100);
-  Serial.println("UWB Setup Started");
   UWB_setupmode();
   UWB_Timer();
-  UWB_display();
+  UWB_ui_display();
+  // UWB_display();
 }
 
 void loop() {
   // Nothing to do here, FreeRTOS tasks handle the work
   M5.update();
   UWB_readString();
+  UWB_display();
 }
