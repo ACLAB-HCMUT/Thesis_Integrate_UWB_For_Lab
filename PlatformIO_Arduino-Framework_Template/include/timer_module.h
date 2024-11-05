@@ -1,7 +1,7 @@
 #ifndef TIMER_MODULE_H
 #define TIMER_MODULE_H
 
-#include <M5Stack.h>
+#include "M5Atom.h"
 
 extern hw_timer_t *timer;
 extern int timer_flag;

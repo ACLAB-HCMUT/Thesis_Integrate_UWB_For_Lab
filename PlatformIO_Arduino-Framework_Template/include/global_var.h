@@ -1,7 +1,7 @@
 #ifndef GLOBAL_VAR_H
 #define GLOBAL_VAR_H
 
-#include <M5Stack.h>
+#include "M5Atom.h"
 
 // Global variables
 extern const int LED_PIN;

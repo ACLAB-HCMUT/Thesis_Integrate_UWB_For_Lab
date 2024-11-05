@@ -50,7 +50,6 @@ void setup() {
   // }
 
   M5.begin();
-  M5.Power.begin();
   Serial.begin(9600);
   Serial2.begin(115200, SERIAL_8N1, ATOM_RX1_PIN, ATOM_TX1_PIN);
 
