@@ -1,11 +1,9 @@
-#include "uwb_task.h"
+#include "uwb_module.h"
 
-String DATA = "";
-int UWB_MODE = 1; // Set UWB Mode, Base station mode is 1
-int UWB_T_UI_NUMBER_2 = 0; // Flag bit
-int UWB_T_UI_NUMBER_1 = 0;
-int UWB_T_NUMBER = 0;
-int UWB_B_NUMBER = 2; // UWB_B_NUMBER is base station ID1~ID4 
+String DATA = ""; // Used to store distance data
+int UWB_MODE = 1; // Set UWB Mode: Tag mode is 0, Base station mode is 1
+int UWB_T_NUMBER = 0; // Store the number of base stations
+int UWB_B_NUMBER = 2; // Base station ID1~ID4 
 
 // Data clear
 void UWB_clear() {
@@ -27,17 +25,13 @@ void UWB_readString() {
       delay(20);
       UWB_T_NUMBER = (Serial2.available() / 11); // Count the number of base stations
       delay(20);
-      if (UWB_T_NUMBER != UWB_T_UI_NUMBER_1 || UWB_T_UI_NUMBER_2 == 0) {  
-        UWB_T_UI_NUMBER_1 = UWB_T_NUMBER;
-        UWB_T_UI_NUMBER_2 = 1;
-
-        // Display tag mode info on Serial
-        Serial.print("Tag mode: Number of base stations: ");
-        Serial.println(UWB_T_NUMBER);
-      }
+      Serial.print("Number of base stations: ");
+      Serial.println(UWB_T_NUMBER);
       DATA = Serial2.readString(); // Read data from Serial2
+      delay(2);
       timer_flag = 0;
       timer_data = 1;
+      break;
     } else {
       timer_flag = 1;
     }
@@ -45,7 +39,7 @@ void UWB_readString() {
       if (timer_data == 9) {
         Serial.println("Lost connection with the tag!"); // Disconnection notification
       }
-      DATA = "  0 2F   "; // Dữ liệu giả lập
+      DATA = "  0 2F   "; // Simulation data
       timer_flag = 0;
     }
     break;
@@ -55,12 +49,12 @@ void UWB_readString() {
       if (Serial2.available()) {
         delay(2);
         DATA = Serial2.readString(); // Read data from Serial2
-        Serial.println("Set up successfully!");
+        DATA = "Set up successfully!";
         timer_data = 1;
         timer_flag = 1;
         break;
       } else if (timer_data > 0 && Serial2.available() == 0) {
-        Serial.println("Can't find the tag!!!");
+        DATA = "Can't find the tag!!!";
         timer_flag = 0;
         break;
       }
@@ -123,68 +117,20 @@ void UWB_display() {
   switch (UWB_MODE) {
   case 0: // Tag mode
     if (UWB_T_NUMBER > 0 && UWB_T_NUMBER < 5) {
-      int c = UWB_T_NUMBER; // Number of base stations
-      // int b = 4 - UWB_T_NUMBER;
+      // int c = UWB_T_NUMBER; // Number of base stations
       // while (c > 0) {
-      //     c--;
-        Serial.print("Tag serial number: ");
-        Serial2.write("AT+version?\r\n");
-        DATA = Serial2.readString();
-        Serial.println(DATA);  // Tag serial number
+      //   c--;
         Serial.print("Distance: ");
-        DATA = Serial2.readString();
-        Serial.println(DATA);  // Distance
-      // }
-      // while (b > 0) {
-      //     b--;
-      //     Serial.println("Clearing remaining data slots...");
+        Serial.println(DATA);
       // }
     }
     break;
 
   case 1: // Base station mode
-    if (UWB_B_NUMBER == 1) {
-      Serial.println("Base station data: ");
-      Serial.println(DATA); // Display data in Base station mode
-    }
-    break;
-  }
-}
-
-// UI display via Serial
-void UWB_ui_display() {
-  Serial.println("UWB Example");
-  Serial.println("Tag: Press BtnA");
-  Serial.println("Base: Press BtnB");
-  Serial.println("Reset: Press BtnC");
-
-  switch (UWB_MODE) {
-  case 0: // Tag mode UI display
-    if (UWB_T_NUMBER > 0 && UWB_T_NUMBER < 5) {
-      int c = UWB_T_NUMBER; // Number of base stations
-      int b = 4 - UWB_T_NUMBER; // Number of spare slots
-      while (c > 0) {
-        c--;
-        Serial.print("Tag ");
-        Serial.print(c + 1); // Tag number
-        Serial.print(" - Distance: ");
-        Serial.println("M"); // Example distance
-      }
-      while (b > 0) {
-        b--;
-        Serial.println("Clearing additional data slots...");
-      }
-    }
-    break;
-
-  case 1: // Base station mode UI display
-    Serial.print("Base station ID: ");
-    Serial.println(UWB_B_NUMBER);
-    if (UWB_B_NUMBER == 0) {
-      Serial.println("Loading...");
-    } else {
-      Serial.println("Data loaded successfully.");
-    }
+    Serial.print("Base station ");
+    Serial.print(UWB_B_NUMBER);
+    Serial.print(" data: ");
+    Serial.println(DATA); // Display data in Base station mode
     break;
   }
 }

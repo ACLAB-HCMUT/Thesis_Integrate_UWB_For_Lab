@@ -1,4 +1,4 @@
-#include "server_task.h"
+#include "server_module.h"
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
@@ -7,13 +7,13 @@ AsyncWebServer server(80);
 String processor(const String &var) {
   Serial.println(var);
   if (var == "STATE") {
-    if (digitalRead(ledPin)) {
-      ledState = "ON";
+    if (digitalRead(LED_PIN)) {
+      led_state = "ON";
     } else {
-      ledState = "OFF";
+      led_state = "OFF";
     }
-    Serial.print(ledState);
-    return ledState;
+    Serial.print(led_state);
+    return led_state;
   }
   return String();
 }
@@ -38,13 +38,13 @@ void serverTask(void *pvParameters) {
 
   // Route to set GPIO to HIGH
   server.on("/on", HTTP_GET, [](AsyncWebServerRequest *request) {
-    digitalWrite(ledPin, HIGH);    
+    digitalWrite(LED_PIN, HIGH);    
     request->send(SPIFFS, "/index.html", String(), false, processor);
   });
 
   // Route to set GPIO to LOW
   server.on("/off", HTTP_GET, [](AsyncWebServerRequest *request) {
-    digitalWrite(ledPin, LOW);    
+    digitalWrite(LED_PIN, LOW);    
     request->send(SPIFFS, "/index.html", String(), false, processor);
   });
 

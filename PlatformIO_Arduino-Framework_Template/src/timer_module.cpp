@@ -1,4 +1,4 @@
-#include "timer_task.h"
+#include "timer_module.h"
 
 hw_timer_t *timer = NULL;
 int timer_flag = 0;

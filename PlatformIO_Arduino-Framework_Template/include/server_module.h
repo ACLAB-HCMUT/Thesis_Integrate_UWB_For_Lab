@@ -1,9 +1,9 @@
-#ifndef SERVER_TASK_H
-#define SERVER_TASK_H
+#ifndef SERVER_MODULE_H
+#define SERVER_MODULE_H
 
 #include "ESPAsyncWebServer.h"
 #include "SPIFFS.h"
-#include "global_variable.h"
+#include "global_var.h"
 
 void serverTask(void *pvParameters);
 

@@ -1,5 +1,5 @@
-#ifndef TIMER_TASK_H
-#define TIMER_TASK_H
+#ifndef TIMER_MODULE_H
+#define TIMER_MODULE_H
 
 #include <M5Stack.h>
 

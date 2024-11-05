@@ -8,10 +8,10 @@
 // #include "HardwareSerial.h"
 
 // Internal libraries
-#include "global_variable.h"
-#include "server_task.h"
-#include "timer_task.h"
-#include "uwb_task.h"
-#include "wifi_task.h"
+#include "global_var.h"
+#include "server_module.h"
+#include "timer_module.h"
+#include "uwb_module.h"
+#include "wifi_module.h"
 
 #endif

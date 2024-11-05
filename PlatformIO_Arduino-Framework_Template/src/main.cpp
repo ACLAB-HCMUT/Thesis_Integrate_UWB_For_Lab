@@ -1,5 +1,5 @@
 // Import required libraries
-#include "global.h"
+#include "main.h"
 
 // HardwareSerial UWB(1);
 
@@ -52,17 +52,14 @@ void setup() {
   M5.begin();
   M5.Power.begin();
   Serial.begin(9600);
-  Serial2.begin(115200, SERIAL_8N1, 25, 21);
+  Serial2.begin(115200, SERIAL_8N1, ATOM_RX1_PIN, ATOM_TX1_PIN);
 
   delay(100);
   UWB_setupmode();
   UWB_Timer();
-  UWB_ui_display();
-  // UWB_display();
 }
 
 void loop() {
-  // Nothing to do here, FreeRTOS tasks handle the work
   M5.update();
   UWB_readString();
   UWB_display();
