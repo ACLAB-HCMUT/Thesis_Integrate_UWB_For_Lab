@@ -3,7 +3,8 @@
 
 // HardwareSerial UWB(1);
 
-void setup() {
+void setup()
+{
   // pinMode(ledPin, OUTPUT);
 
   // // Create tasks for Wi-Fi and server
@@ -50,7 +51,7 @@ void setup() {
   // }
 
   M5.begin();
-  M5.Power.begin();
+  // M5.Power.begin();
   Serial.begin(9600);
   Serial2.begin(115200, SERIAL_8N1, 25, 21);
 
@@ -61,9 +62,15 @@ void setup() {
   // UWB_display();
 }
 
+<<<<<<< Updated upstream
 void loop() {
   // Nothing to do here, FreeRTOS tasks handle the work
+=======
+void loop()
+{
+>>>>>>> Stashed changes
   M5.update();
   UWB_readString();
+  // UWB_Keyscan();
   UWB_display();
 }
