@@ -18,3 +18,16 @@ void wifiTask(void *pvParameters) {
   Serial.println(WiFi.localIP());
   vTaskDelete(NULL); // Delete the task when done
 }
+
+void WIFI_setup() {
+  WiFi.begin(WLAN_SSID, WLAN_PASS);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print("Connecting to WiFi..");
+  }
+
+  Serial.println();
+  Serial.println("WiFi connected");
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
+}

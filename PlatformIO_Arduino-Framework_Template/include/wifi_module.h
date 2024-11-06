@@ -4,5 +4,6 @@
 #include "WiFi.h"
 
 void wifiTask(void *pvParameters);
+void WIFI_setup();
 
 #endif

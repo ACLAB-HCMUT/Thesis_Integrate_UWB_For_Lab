@@ -54,12 +54,17 @@ void setup() {
   Serial2.begin(115200, SERIAL_8N1, ATOM_RX_PIN, ATOM_TX_PIN);
 
   delay(100);
-  UWB_setupmode();
-  UWB_Timer();
+  // UWB_setupmode();
+  // UWB_Timer();
+
+  WIFI_setup();
 }
 
 void loop() {
   M5.update();
-  UWB_readString();
-  UWB_display();
+  MQTT_connect();
+  MQTT_send_data();
+  delay(3000);
+  // UWB_readString();
+  // UWB_display();
 }

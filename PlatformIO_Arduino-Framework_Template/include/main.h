@@ -10,6 +10,7 @@
 
 // Internal libraries
 #include "global_var.h"
+#include "mqtt_module.h"
 #include "server_module.h"
 #include "timer_module.h"
 #include "uwb_module.h"

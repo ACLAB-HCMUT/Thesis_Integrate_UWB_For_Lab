@@ -71,7 +71,6 @@ void UWB_Keyscan() {
   if (M5.Btn.isPressed()) {
     Serial2.write("AT+RST\r\n");
     UWB_setupmode();
-    UWB_clear();
     Serial.println("UWB reset.");
   }
 }
