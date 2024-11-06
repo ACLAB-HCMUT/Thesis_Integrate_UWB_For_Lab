@@ -51,7 +51,7 @@ void setup() {
 
   M5.begin();
   Serial.begin(9600);
-  Serial2.begin(115200, SERIAL_8N1, ATOM_RX1_PIN, ATOM_TX1_PIN);
+  Serial2.begin(115200, SERIAL_8N1, ATOM_RX_PIN, ATOM_TX_PIN);
 
   delay(100);
   UWB_setupmode();
