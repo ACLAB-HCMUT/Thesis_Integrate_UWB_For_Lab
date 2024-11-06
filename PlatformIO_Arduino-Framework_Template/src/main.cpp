@@ -3,8 +3,7 @@
 
 // HardwareSerial UWB(1);
 
-void setup()
-{
+void setup() {
   // pinMode(ledPin, OUTPUT);
 
   // // Create tasks for Wi-Fi and server

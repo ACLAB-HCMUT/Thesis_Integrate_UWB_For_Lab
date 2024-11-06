@@ -3,9 +3,9 @@
 
 // External libraries
 #include "DHT20.h"
+#include "M5Atom.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "M5Atom.h"
 // #include "HardwareSerial.h"
 
 // Internal libraries

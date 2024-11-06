@@ -38,13 +38,13 @@ void serverTask(void *pvParameters) {
 
   // Route to set GPIO to HIGH
   server.on("/on", HTTP_GET, [](AsyncWebServerRequest *request) {
-    digitalWrite(LED_PIN, HIGH);    
+    digitalWrite(LED_PIN, HIGH);
     request->send(SPIFFS, "/index.html", String(), false, processor);
   });
 
   // Route to set GPIO to LOW
   server.on("/off", HTTP_GET, [](AsyncWebServerRequest *request) {
-    digitalWrite(LED_PIN, LOW);    
+    digitalWrite(LED_PIN, LOW);
     request->send(SPIFFS, "/index.html", String(), false, processor);
   });
 
