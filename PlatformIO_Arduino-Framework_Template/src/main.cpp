@@ -59,10 +59,8 @@ void setup()
   UWB_Timer();
 }
 
-<<<<<<< Updated upstream
 void loop() {
   M5.update();
   UWB_readString();
-  // UWB_Keyscan();
   UWB_display();
 }
