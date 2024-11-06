@@ -3,7 +3,8 @@
 
 // HardwareSerial UWB(1);
 
-void setup() {
+void setup()
+{
   // pinMode(ledPin, OUTPUT);
 
   // // Create tasks for Wi-Fi and server
@@ -58,8 +59,10 @@ void setup() {
   UWB_Timer();
 }
 
+<<<<<<< Updated upstream
 void loop() {
   M5.update();
   UWB_readString();
+  // UWB_Keyscan();
   UWB_display();
 }

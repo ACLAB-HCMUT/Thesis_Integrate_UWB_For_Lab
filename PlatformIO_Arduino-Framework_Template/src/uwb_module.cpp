@@ -6,22 +6,31 @@ int UWB_T_NUMBER = 0; // Store the number of base stations
 int UWB_B_NUMBER = 0; // Base station ID1~ID4 
 
 // Data clear
-void UWB_clear() {
-  if (Serial2.available()) {
+void UWB_clear()
+{
+  Serial.println(Serial2.available());
+  if (Serial2.available())
+  {
     delay(3);
     DATA = Serial2.readString();
+    Serial.print("if:");
+    Serial.println(Serial2.available());
   }
   DATA = "";
   timer_flag = 0;
   timer_data = 0;
   Serial.println("UWB data cleared.");
+  Serial.println(Serial2.available());
 }
 
 // UWB Setup for Tag or Anchor
-void UWB_setupmode() {
-  switch (UWB_MODE) {
+void UWB_setupmode()
+{
+  switch (UWB_MODE)
+  {
   case 0: // Tag mode
-    for (int b = 0; b < 2; b++) { // Repeat twice to stabilize the connection
+    for (int b = 0; b < 2; b++)
+    { // Repeat twice to stabilize the connection
       delay(50);
       Serial2.write("AT+anchor_tag=0\r\n"); // Set device as Tag
       delay(50);
@@ -29,7 +38,8 @@ void UWB_setupmode() {
       delay(50);
       Serial2.write("AT+switchdis=1\r\n"); // Start measuring distance
       delay(50);
-      if (b == 0) {
+      if (b == 0)
+      {
         Serial2.write("AT+RST\r\n"); // Reset device
       }
     }
@@ -38,14 +48,16 @@ void UWB_setupmode() {
     break;
 
   case 1: // Base station mode
-    for (int b = 0; b < 2; b++) {
+    for (int b = 0; b < 2; b++)
+    {
       delay(50);
       Serial2.write("AT+anchor_tag=1,"); // Set up the device as a Base station
-      Serial2.print(UWB_B_NUMBER); // Base station ID
+      Serial2.print(UWB_B_NUMBER);       // Base station ID
       Serial2.write("\r\n");
       delay(1);
       delay(50);
-      if (b == 0) {
+      if (b == 0)
+      {
         Serial2.write("AT+RST\r\n"); // Reset device
       }
     }
@@ -59,7 +71,8 @@ void UWB_setupmode() {
   }
 }
 
-void UWB_Timer() {
+void UWB_Timer()
+{
   timer = timerBegin(0, 80, true);
   timerAttachInterrupt(timer, Timer0_CallBack, true);
   timerAlarmWrite(timer, 1000000, true);
