@@ -3,6 +3,23 @@
 
 // HardwareSerial UWB(1);
 
+void UWB_Task(void *pvParameters) {
+  while (1) {
+    UWB_readString();
+    UWB_display();
+
+    // Serial.print("UWB Task Stack high water mark: ");
+    // Serial.println(uxTaskGetStackHighWaterMark(NULL));
+  }
+}
+
+void MQTT_Task(void *pvParameters) {
+  while (1) {
+    MQTT_connect();
+    MQTT_send_data();
+  }
+}
+
 void setup() {
   // pinMode(ledPin, OUTPUT);
 
@@ -54,17 +71,25 @@ void setup() {
   Serial2.begin(115200, SERIAL_8N1, ATOM_RX_PIN, ATOM_TX_PIN);
 
   delay(100);
-  // UWB_setupmode();
-  // UWB_Timer();
+  UWB_setupmode();
+  UWB_Timer();
+  SPIFFS.begin();
+  if (!SPIFFS.begin(true)) {
+    Serial.println("SPIFFS Mount Failed");
+    return;
+  } else {
+    Serial.println("SPIFFS initialized.");
+  }
 
   WIFI_setup();
+  xTaskCreate(UWB_Task, "UWB_Task", 4096, NULL, 1, NULL);
+  xTaskCreate(MQTT_Task, "MQTT_Task", 4096, NULL, 1, NULL);
 }
 
 void loop() {
   M5.update();
-  MQTT_connect();
-  MQTT_send_data();
-  delay(3000);
+  // MQTT_connect();
+  // MQTT_send_data();
   // UWB_readString();
   // UWB_display();
 }

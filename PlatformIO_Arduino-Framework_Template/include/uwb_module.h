@@ -2,6 +2,7 @@
 #define UWB_MODULE_H
 
 #include "M5Atom.h"
+#include "global_var.h"
 #include "timer_module.h"
 
 void UWB_clear();

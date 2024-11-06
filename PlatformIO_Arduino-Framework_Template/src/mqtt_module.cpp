@@ -20,7 +20,7 @@ void MQTT_connect() {
     Serial.println(mqtt.connectErrorString(ret));
     Serial.println("Retrying MQTT connection in 5 seconds...");
     mqtt.disconnect();
-    delay(5000); // wait 5 seconds
+    vTaskDelay(pdMS_TO_TICKS(5000)); // wait 5 seconds
     retries--;
     if (retries == 0) {
       // Basically die and wait for WDT to reset me
@@ -32,10 +32,14 @@ void MQTT_connect() {
 }
 
 void MQTT_send_data() {
-  if (!uwbposition.publish("1,22.587,38.1123,-91.2325")) {
+  extract_data();
+  String temp = values[0] + "," + values[1] + "," + values[2] + "," + values[3];
+  writeToCSV();
+  if (!uwbposition.publish(temp.c_str())) {
     Serial.println("Send failed!");
   } else {
     Serial.println("Send success!");
   }
+  vTaskDelay(pdMS_TO_TICKS(6000));
   return;
 }

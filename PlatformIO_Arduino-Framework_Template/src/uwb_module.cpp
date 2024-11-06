@@ -1,14 +1,13 @@
 #include "uwb_module.h"
 
-String DATA = "";     // Used to store distance data
-int UWB_MODE = 1;     // Set UWB Mode: Tag mode is 0, Base station mode is 1
+int UWB_MODE = 0;     // Set UWB Mode: Tag mode is 0, Base station mode is 1
 int UWB_T_NUMBER = 0; // Store the number of base stations
-int UWB_B_NUMBER = 4; // Base station ID1~ID4
+int UWB_B_NUMBER = 0; // Base station ID1~ID4
 
 // Data clear
 void UWB_clear() {
   if (Serial2.available()) {
-    delay(3);
+    vTaskDelay(pdMS_TO_TICKS(3));
     DATA = Serial2.readString();
   }
   DATA = "";
@@ -22,13 +21,13 @@ void UWB_setupmode() {
   switch (UWB_MODE) {
   case 0:                         // Tag mode
     for (int b = 0; b < 2; b++) { // Repeat twice to stabilize the connection
-      delay(50);
+      vTaskDelay(pdMS_TO_TICKS(50));
       Serial2.write("AT+anchor_tag=0\r\n"); // Set device as Tag
-      delay(50);
+      vTaskDelay(pdMS_TO_TICKS(50));
       Serial2.write("AT+interval=5\r\n"); // Set the calculation precision
-      delay(50);
+      vTaskDelay(pdMS_TO_TICKS(50));
       Serial2.write("AT+switchdis=1\r\n"); // Start measuring distance
-      delay(50);
+      vTaskDelay(pdMS_TO_TICKS(50));
       if (b == 0) {
         Serial2.write("AT+RST\r\n"); // Reset device
       }
@@ -39,12 +38,12 @@ void UWB_setupmode() {
 
   case 1: // Base station mode
     for (int b = 0; b < 2; b++) {
-      delay(50);
+      vTaskDelay(pdMS_TO_TICKS(50));
       Serial2.write("AT+anchor_tag=1,"); // Set up the device as a Base station
       Serial2.print(UWB_B_NUMBER);       // Base station ID
       Serial2.write("\r\n");
-      delay(1);
-      delay(50);
+      vTaskDelay(pdMS_TO_TICKS(1));
+      vTaskDelay(pdMS_TO_TICKS(50));
       if (b == 0) {
         Serial2.write("AT+RST\r\n"); // Reset device
       }
@@ -71,6 +70,7 @@ void UWB_Keyscan() {
   if (M5.Btn.isPressed()) {
     Serial2.write("AT+RST\r\n");
     UWB_setupmode();
+    UWB_clear();
     Serial.println("UWB reset.");
   }
 }
@@ -80,15 +80,15 @@ void UWB_readString() {
   switch (UWB_MODE) {
   case 0: // Tag mode
     if (Serial2.available()) {
-      delay(20);
+      vTaskDelay(pdMS_TO_TICKS(20));
       UWB_T_NUMBER = (Serial2.available() / 11); // Count the number of base stations
-      delay(20);
+      vTaskDelay(pdMS_TO_TICKS(20));
       Serial.print("Number of base stations: ");
       Serial.println(UWB_T_NUMBER);
       DATA = Serial2.readString(); // Read data from Serial2
       Serial.println("Distance: ");
       Serial.println(DATA);
-      delay(2);
+      vTaskDelay(pdMS_TO_TICKS(2));
       timer_flag = 0;
       timer_data = 1;
       break;
@@ -107,7 +107,7 @@ void UWB_readString() {
   case 1:                                     // Base station mode
     if (timer_data == 0 || timer_data > 70) { // Check connection with tag
       if (Serial2.available()) {
-        delay(2);
+        vTaskDelay(pdMS_TO_TICKS(2));
         DATA = Serial2.readString(); // Read data from Serial2
         DATA = "Set up successfully!";
         timer_data = 1;
