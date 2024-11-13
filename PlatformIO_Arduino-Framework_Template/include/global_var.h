@@ -3,13 +3,19 @@
 
 #include "M5Atom.h"
 
-// Global variables
+// Global variables for LED
 extern const int LED_PIN;
 extern String led_state;
 
+// Global variables for UART
 extern const int ATOM_RX_PIN;
 extern const int ATOM_TX_PIN;
-extern String DATA;
-extern String values[];
+extern String data_uwb;
+extern float value_uwb[];
+
+// Configuration for MQTT connection
+extern const int MQTT_RETRIES;
+extern const int MQTT_WAIT_RETRY;
+extern const int MQTT_WAIT_SEND;
 
 #endif

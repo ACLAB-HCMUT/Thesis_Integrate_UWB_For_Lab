@@ -2,32 +2,21 @@
 
 void extract_data() {
   for (int i = 0; i < 4; i++) {
-    String tagInfo = "an" + String(i + 1) + ":";
-    int startIndex = DATA.indexOf(tagInfo);
+    String anchor_info = "an" + String(i + 1) + ":";
+    int start_index = data_uwb.indexOf(anchor_info);
+    int end_index = data_uwb.indexOf("m", start_index);
 
-    int endIndex = DATA.indexOf("m", startIndex);
-    String distance = DATA.substring(startIndex + tagInfo.length(), endIndex);
-    if (startIndex == -1 || endIndex == -1)
-      distance = "0";
-    values[i] = distance;
+    String distance_str;
+    if (start_index != -1 && end_index != -1) {
+      distance_str = data_uwb.substring(start_index + anchor_info.length(), end_index);
+    } else {
+      distance_str = "0";
+    }
+
+    float distance = distance_str.toFloat();
+    if (distance < 0) {
+      distance = 0;
+    }
+    value_uwb[i] = distance;
   }
-}
-
-void writeToCSV() {
-  extract_data();
-  String data = values[3];
-
-  // Mở (hoặc tạo) tệp "data.csv" để ghi
-  File file = SPIFFS.open("/data.csv", FILE_WRITE);
-  if (!file) {
-    Serial.println("Failed to open file for writing");
-    return;
-  }
-
-  // Ghi chuỗi vào tệp và xuống dòng
-  Serial.print(data.c_str());
-  file.println(data.c_str());
-  file.close(); // Đóng tệp sau khi ghi xong
-
-  Serial.println("Data written to CSV file.");
 }

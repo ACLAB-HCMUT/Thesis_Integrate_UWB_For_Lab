@@ -12,15 +12,15 @@ void MQTT_connect() {
     return;
   }
 
-  Serial.println("Connecting to MQTT... ");
+  Serial.println("Connecting to MQTT...");
   int8_t ret;
-  uint8_t retries = 3;
+  uint8_t retries = MQTT_RETRIES;
 
   while ((ret = mqtt.connect()) != 0) { // Connect will return 0 for connected
     Serial.println(mqtt.connectErrorString(ret));
     Serial.println("Retrying MQTT connection in 5 seconds...");
     mqtt.disconnect();
-    vTaskDelay(pdMS_TO_TICKS(5000)); // wait 5 seconds
+    vTaskDelay(pdMS_TO_TICKS(MQTT_WAIT_RETRY)); // Wait 5 seconds
     retries--;
     if (retries == 0) {
       // Basically die and wait for WDT to reset me
@@ -29,17 +29,17 @@ void MQTT_connect() {
     }
   }
   Serial.println("MQTT Connected!");
+  return;
 }
 
 void MQTT_send_data() {
-  extract_data();
-  String temp = values[0] + "," + values[1] + "," + values[2] + "," + values[3];
-  writeToCSV();
-  if (!uwbposition.publish(temp.c_str())) {
-    Serial.println("Send failed!");
-  } else {
-    Serial.println("Send success!");
-  }
-  vTaskDelay(pdMS_TO_TICKS(6000));
-  return;
+  // extract_data();
+  // String send_data = value[0] + "," + value[1] + "," + value[2] + "," + value[3];
+  // if (!uwbposition.publish(send_data.c_str())) {
+  //   Serial.println("Send failed!");
+  // } else {
+  //   Serial.println("Send success!");
+  // }
+  // vTaskDelay(pdMS_TO_TICKS(MQTT_WAIT_SEND));
+  // return;
 }

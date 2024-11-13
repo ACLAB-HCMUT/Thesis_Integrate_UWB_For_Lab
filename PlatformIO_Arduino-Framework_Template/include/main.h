@@ -13,7 +13,11 @@
 #include "mqtt_module.h"
 #include "server_module.h"
 #include "timer_module.h"
+#include "util.h"
 #include "uwb_module.h"
 #include "wifi_module.h"
+
+// Helper libraries for stuff
+#include "../src/utils/file_manip.h"
 
 #endif

@@ -6,6 +6,5 @@
 #include "global_var.h"
 
 void extract_data();
-void writeToCSV();
 
 #endif

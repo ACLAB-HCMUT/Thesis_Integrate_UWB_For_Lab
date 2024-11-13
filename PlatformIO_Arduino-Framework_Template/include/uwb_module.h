@@ -7,7 +7,7 @@
 
 void UWB_clear();
 void UWB_setupmode();
-void UWB_Timer();
+void UWB_timer();
 void UWB_readString();
 void UWB_display();
 
