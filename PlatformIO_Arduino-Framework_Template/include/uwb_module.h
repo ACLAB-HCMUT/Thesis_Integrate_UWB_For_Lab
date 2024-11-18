@@ -1,6 +1,7 @@
 #ifndef UWB_MODULE_H
 #define UWB_MODULE_H
 
+#include "ArduinoEigen.h"
 #include "M5Atom.h"
 #include "global_var.h"
 #include "timer_module.h"

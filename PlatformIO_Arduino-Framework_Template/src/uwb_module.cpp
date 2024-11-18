@@ -4,6 +4,15 @@ int UWB_MODE = 1;     // Set UWB Mode: Tag mode is 0, Base station mode is 1
 int UWB_T_NUMBER = 0; // Store the number of base stations
 int UWB_B_NUMBER = 1; // Base station ID1~ID4
 
+struct Point {
+  float x, y, z;
+};
+
+Point anchor_1 = {0.0f, 0.0f, 2.5f};
+Point anchor_2 = {2.5f, 2.5f, 2.5f};
+Point anchor_3 = {0.0f, 2.5f, 0.0f};
+Point anchor_4 = {2.5f, 0.0f, 0.0f};
+
 // Data clear
 void UWB_clear() {
   if (Serial2.available()) {
@@ -134,5 +143,59 @@ void UWB_display() {
     Serial.print(" data_uwb: ");
     Serial.println(data_uwb); // Display data in Base station mode
     break;
+  }
+}
+
+void parse_data(String data) {
+  int startIndex = 0;
+  int endIndex = data.indexOf("\n");
+  int i = 0;
+
+  while (endIndex != -1 && i < 4) {
+    // Lấy một phần chuỗi
+    String segment = data.substring(startIndex, endIndex);
+    // Tách giá trị sau dấu ":"
+    String value = segment.substring(segment.indexOf(":") + 1);
+
+    // Loại bỏ "m"
+    value.replace("m", "");
+
+    // Chuyển giá trị thành float và lưu vào mảng distance
+    distance[i] = value.toFloat();
+
+    // Cập nhật chỉ số để lấy phần tiếp theo
+    startIndex = endIndex + 1;
+    endIndex = data.indexOf("\n", startIndex);
+    i++;
+  }
+}
+
+void calc_position() {
+  parse_data(data_uwb);
+  float R_1 = distance[0];
+  float R_21 = distance[1] - distance[0];
+  float R_31 = distance[2] - distance[0];
+  float R_41 = distance[3] - distance[0];
+
+  float k_1 = pow(anchor_1.x, 2) + pow(anchor_1.y, 2) + pow(anchor_1.z, 2);
+  float k_2 = pow(anchor_2.x, 2) + pow(anchor_2.y, 2) + pow(anchor_2.z, 2);
+  float k_3 = pow(anchor_3.x, 2) + pow(anchor_3.y, 2) + pow(anchor_3.z, 2);
+  float k_4 = pow(anchor_4.x, 2) + pow(anchor_4.y, 2) + pow(anchor_4.z, 2);
+
+  Eigen::Matrix3f A;
+  A << anchor_2.x - anchor_1.x, anchor_2.y - anchor_1.y, anchor_2.z - anchor_1.z,
+      anchor_3.x - anchor_1.x, anchor_3.y - anchor_1.y, anchor_3.z - anchor_1.z,
+      anchor_4.x - anchor_1.x, anchor_4.y - anchor_1.y, anchor_4.z - anchor_1.z;
+  Eigen::Vector3f B, X;
+  B << -(R_21)*R_1 + 0.5 * (k_2 - k_1 - pow(R_21, 2)),
+      -(R_31)*R_1 + 0.5 * (k_3 - k_1 - pow(R_31, 2)),
+      -(R_41)*R_1 + 0.5 * (k_4 - k_1 - pow(R_41, 2));
+  // Solve AX=B
+  Eigen::ColPivHouseholderQR<Eigen::Matrix3f> dec(A);
+  if (dec.isInvertible()) {
+    X = dec.solve(B);
+    for (int i = 0; i < 3; i++) {
+      position[i] = X(i);
+    }
   }
 }
