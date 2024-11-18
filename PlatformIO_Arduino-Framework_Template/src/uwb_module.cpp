@@ -171,6 +171,10 @@ void parse_data(String data) {
 }
 
 void calc_position() {
+  if (data_uwb.isEmpty()) {
+    Serial.println("No data available for position calculation.");
+    return;
+  }
   parse_data(data_uwb);
   float R_1 = distance[0];
   float R_21 = distance[1] - distance[0];
