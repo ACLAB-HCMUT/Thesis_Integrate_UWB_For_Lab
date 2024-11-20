@@ -19,6 +19,8 @@ extern const int ATOM_TX_PIN;
 extern String data_uwb;
 extern float distance_uwb[];
 extern float position_uwb[];
+extern float slope;
+extern float intercept;
 extern Point anchor_1;
 extern Point anchor_2;
 extern Point anchor_3;

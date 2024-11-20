@@ -5,8 +5,10 @@ void UWB_task(void *pvParameters) {
   while (1) {
     UWB_readString();
     UWB_display();
-    extract_data();
-    display_extractdata();
+    // extract_data();
+    // calc_position();
+    // display_extractdata();
+    // vTaskDelay(pdMS_TO_TICKS(2000));
   }
 }
 
@@ -20,7 +22,7 @@ void MQTT_task(void *pvParameters) {
 void setup() {
   // M5Atom setup
   M5.begin();
-  Serial.begin(115200);
+  Serial.begin(9600);
 
   // UWB setup
   Serial2.begin(115200, SERIAL_8N1, ATOM_RX_PIN, ATOM_TX_PIN);

@@ -1,6 +1,6 @@
 #include "uwb_module.h"
 
-int UWB_MODE = 0;     // Set UWB Mode: Tag mode is 0, Base station mode is 1
+int UWB_MODE = 1;     // Set UWB Mode: Tag mode is 0, Base station mode is 1
 int UWB_T_NUMBER = 0; // Store the number of base stations
 int UWB_B_NUMBER = 0; // Base station ID1~ID4
 
