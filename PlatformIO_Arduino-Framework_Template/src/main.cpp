@@ -6,6 +6,7 @@ void UWB_task(void *pvParameters) {
     UWB_readString();
     UWB_display();
     extract_data();
+    display_extractdata();
   }
 }
 
@@ -19,7 +20,7 @@ void MQTT_task(void *pvParameters) {
 void setup() {
   // M5Atom setup
   M5.begin();
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   // UWB setup
   Serial2.begin(115200, SERIAL_8N1, ATOM_RX_PIN, ATOM_TX_PIN);
