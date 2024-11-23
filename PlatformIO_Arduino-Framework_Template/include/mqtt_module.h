@@ -9,6 +9,9 @@
 #include "util.h"
 
 void MQTT_connect();
-void MQTT_send_data();
+void MQTT_send_data(Adafruit_MQTT_Publish topic, int id, float array[], int length);
+
+extern Adafruit_MQTT_Publish tagposition;
+extern Adafruit_MQTT_Publish anchorposition;
 
 #endif

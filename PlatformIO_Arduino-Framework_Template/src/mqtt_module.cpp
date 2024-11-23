@@ -4,7 +4,9 @@ WiFiClient client;
 
 // Setup the MQTT client class by passing in the WiFi client and MQTT server and login details
 Adafruit_MQTT_Client mqtt(&client, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO_KEY);
-Adafruit_MQTT_Publish uwbposition = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/uwbposition/csv");
+Adafruit_MQTT_Publish tagposition = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/tagposition/csv");
+Adafruit_MQTT_Publish anchorposition = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/anchorposition/csv");
+
 
 void MQTT_connect() {
   // Stop if already connected
@@ -32,14 +34,21 @@ void MQTT_connect() {
   return;
 }
 
-void MQTT_send_data() {
-  // extract_data();
-  // String send_data = value[0] + "," + value[1] + "," + value[2] + "," + value[3];
-  // if (!uwbposition.publish(send_data.c_str())) {
-  //   Serial.println("Send failed!");
-  // } else {
-  //   Serial.println("Send success!");
-  // }
-  // vTaskDelay(pdMS_TO_TICKS(MQTT_WAIT_SEND));
-  // return;
+String formatPositionString(int id, float array[], int length) {
+  String result = String(id);
+  for (int i = 0; i < length; i++) {
+    result += "," + String(array[i]);
+  }
+  return result;
+}
+
+void MQTT_send_data(Adafruit_MQTT_Publish topic, int id, float array[], int length) {
+  String send_data = formatPositionString(id, array, length);
+  if (!topic.publish(send_data.c_str())) {
+    Serial.println("Send failed!");
+  } else {
+    Serial.println("Send success!");
+  }
+  vTaskDelay(pdMS_TO_TICKS(MQTT_WAIT_SEND));
+  return;
 }

@@ -25,6 +25,10 @@ extern Point anchor_1;
 extern Point anchor_2;
 extern Point anchor_3;
 extern Point anchor_4;
+extern float anchor_f1[];
+extern float anchor_f2[];
+extern float anchor_f3[];
+extern float anchor_f4[];
 
 // Configuration for MQTT connection
 extern const int MQTT_RETRIES;

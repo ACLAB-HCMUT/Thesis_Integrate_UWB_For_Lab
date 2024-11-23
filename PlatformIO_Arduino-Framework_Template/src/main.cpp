@@ -4,18 +4,26 @@
 void UWB_task(void *pvParameters) {
   while (1) {
     UWB_readString();
-    UWB_display();
-    // extract_data();
+    // UWB_display();
+    extract_data();
     // calc_position();
+    // calc();
     // display_extractdata();
     // vTaskDelay(pdMS_TO_TICKS(2000));
+
+    display_single(1);
   }
 }
 
 void MQTT_task(void *pvParameters) {
   while (1) {
     MQTT_connect();
-    MQTT_send_data();
+    MQTT_send_data(tagposition, 1, position_uwb, 3);
+    MQTT_send_data(anchorposition, 1, anchor_f1, 3);
+    MQTT_send_data(anchorposition, 2, anchor_f2, 3);
+    MQTT_send_data(anchorposition, 3, anchor_f3, 3);
+    MQTT_send_data(anchorposition, 4, anchor_f4, 3);
+    vTaskDelay(pdMS_TO_TICKS(5000));
   }
 }
 

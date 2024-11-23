@@ -8,13 +8,18 @@ const int ATOM_TX_PIN = 26; // Unit's pin RX connects to Atom's pin G26
 
 String data_uwb = "an1:1.98m\nan2:1.71m\nan3:2.54m\nan4:2.82m"; // Raw UWB distance data received
 float distance_uwb[4] = {1, 0, 0, 0};                           // Stores the distance to each anchor
-float position_uwb[3] = {0, 0, 0};                              // Stores position of tag
+float position_uwb[3] = {0.0, 0.0, 0.0};                        // Stores position of tag
 float slope = 1.1338989898989882;
 float intercept = 0.117644444444446;
 Point anchor_1 = {0.0f, 0.0f, 2.5f};
 Point anchor_2 = {2.5f, 2.5f, 2.5f};
 Point anchor_3 = {0.0f, 2.5f, 0.0f};
 Point anchor_4 = {2.5f, 0.0f, 0.0f};
+
+float anchor_f1[] = {0.0, 0.0, 0.0};
+float anchor_f2[] = {0.0, 0.46, 0.0};
+float anchor_f3[] = {1.15, 0.0, 0.0};
+float anchor_f4[] = {1.15, 0.46, 0.0};
 
 const int MQTT_RETRIES = 3;       // Maximum number of retry
 const int MQTT_WAIT_RETRY = 5000; // Wait time (in milliseconds) between each retry
