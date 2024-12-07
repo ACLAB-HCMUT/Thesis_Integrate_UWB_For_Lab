@@ -18,7 +18,7 @@ async function fetchDataFromAdafruit(ADAFRUIT_API_URL, ADAFRUIT_API_KEY) {
 }
   
 // 2. Hàm lưu dữ liệu vào Firebase
-async function saveDataToFirebase(db, value, createdAt, collectionName) {
+async function saveDataToFirebase(db, value, createdAt, type) {
     try {
         // Parse dữ liệu đầu vào
         const { id, location } = JSON.parse(value);
@@ -27,20 +27,21 @@ async function saveDataToFirebase(db, value, createdAt, collectionName) {
         const anchorRef = (anchorId) => db.collection("ANCHOR_LOCATION").doc(String(anchorId));
         const deviceRef = db.collection("DEVICE").doc(String(id));
 
-        await db.collection(collectionName).add({
+        await db.collection("DEVICE_LOCATION").add({
             anchor_1: anchorRef("1"),
             anchor_2: anchorRef("2"),
             anchor_3: anchorRef("3"),
             anchor_4: anchorRef("4"),
             device_id: deviceRef,
             record_time: new Date(createdAt),
+            record_type: type,
             tag_x,
             tag_y,
             tag_z,
         });
-      console.log(`Data saved to ${collectionName}:`, { value, createdAt });
+      console.log(`${type} data saved to DEVICE_LOCATION:`, { value, createdAt });
     } catch (error) {
-      console.error(`Error saving data to ${collectionName}:`, error.message);
+      console.error(`Error saving ${type} data to DEVICE_LOCATION:`, error.message);
     }
 }
 
