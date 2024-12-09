@@ -1,15 +1,15 @@
 #include "util.h"
 
 ////TEST////
-#define N_ANCHORS 4
-float anchor_matrix[N_ANCHORS][3] = {
-    // list of anchor coordinates, relative to chosen origin.
-    {0.0, 0.0, 0.0},  // Anchor labeled #1
-    {0.0, 0.46, 0.0}, // Anchor labeled #2
-    {1.15, 0.0, 0.0}, // Anchor labeled #3
-    {1.15, 0.46, 0.0} // Anchor labeled #4
-};
-float current_distance_rmse = 0.0; // rms error in distance calc => crude measure of position error (meters).  Needs to be better characterized
+// #define N_ANCHORS 4
+// float anchor_matrix[N_ANCHORS][3] = {
+//     // list of anchor coordinates, relative to chosen origin.
+//     {0.0, 0.0, 0.0},  // Anchor labeled #1
+//     {0.0, 0.46, 0.0}, // Anchor labeled #2
+//     {1.15, 0.0, 0.0}, // Anchor labeled #3
+//     {1.15, 0.46, 0.0} // Anchor labeled #4
+// };
+// float current_distance_rmse = 0.0; // rms error in distance calc => crude measure of position error (meters).  Needs to be better characterized
 
 float modify_distance(float dis) {
   return (dis - intercept) / slope;
@@ -36,44 +36,44 @@ void extract_data() {
   }
 }
 
-void calc_position() {
-  return;
-  // Serial.println(data_uwb);
-  // if (data_uwb.isEmpty()) {
-  //   Serial.println("No data available for position calculation.");
-  //   return;
-  // }
+// void calc_position() {
+//   return;
+//   Serial.println(data_uwb);
+//   if (data_uwb.isEmpty()) {
+//     Serial.println("No data available for position calculation.");
+//     return;
+//   }
 
-  // extract_data();
-  // float R_1 = distance_uwb[0];
-  // float R_21 = distance_uwb[1] - distance_uwb[0];
-  // float R_31 = distance_uwb[2] - distance_uwb[0];
-  // float R_41 = distance_uwb[3] - distance_uwb[0];
+//   extract_data();
+//   float R_1 = distance_uwb[0];
+//   float R_21 = distance_uwb[1] - distance_uwb[0];
+//   float R_31 = distance_uwb[2] - distance_uwb[0];
+//   float R_41 = distance_uwb[3] - distance_uwb[0];
 
-  // float k_1 = pow(anchor_1.x, 2) + pow(anchor_1.y, 2) + pow(anchor_1.z, 2);
-  // float k_2 = pow(anchor_2.x, 2) + pow(anchor_2.y, 2) + pow(anchor_2.z, 2);
-  // float k_3 = pow(anchor_3.x, 2) + pow(anchor_3.y, 2) + pow(anchor_3.z, 2);
-  // float k_4 = pow(anchor_4.x, 2) + pow(anchor_4.y, 2) + pow(anchor_4.z, 2);
+//   float k_1 = pow(anchor_1.x, 2) + pow(anchor_1.y, 2) + pow(anchor_1.z, 2);
+//   float k_2 = pow(anchor_2.x, 2) + pow(anchor_2.y, 2) + pow(anchor_2.z, 2);
+//   float k_3 = pow(anchor_3.x, 2) + pow(anchor_3.y, 2) + pow(anchor_3.z, 2);
+//   float k_4 = pow(anchor_4.x, 2) + pow(anchor_4.y, 2) + pow(anchor_4.z, 2);
 
-  // Eigen::Matrix3f A;
-  // A << anchor_2.x - anchor_1.x, anchor_2.y - anchor_1.y, anchor_2.z - anchor_1.z,
-  //     anchor_3.x - anchor_1.x, anchor_3.y - anchor_1.y, anchor_3.z - anchor_1.z,
-  //     anchor_4.x - anchor_1.x, anchor_4.y - anchor_1.y, anchor_4.z - anchor_1.z;
+//   Eigen::Matrix3f A;
+//   A << anchor_2.x - anchor_1.x, anchor_2.y - anchor_1.y, anchor_2.z - anchor_1.z,
+//       anchor_3.x - anchor_1.x, anchor_3.y - anchor_1.y, anchor_3.z - anchor_1.z,
+//       anchor_4.x - anchor_1.x, anchor_4.y - anchor_1.y, anchor_4.z - anchor_1.z;
 
-  // Eigen::Vector3f B, X;
-  // B << -(R_21)*R_1 + 0.5 * (k_2 - k_1 - pow(R_21, 2)),
-  //     -(R_31)*R_1 + 0.5 * (k_3 - k_1 - pow(R_31, 2)),
-  //     -(R_41)*R_1 + 0.5 * (k_4 - k_1 - pow(R_41, 2));
+//   Eigen::Vector3f B, X;
+//   B << -(R_21)*R_1 + 0.5 * (k_2 - k_1 - pow(R_21, 2)),
+//       -(R_31)*R_1 + 0.5 * (k_3 - k_1 - pow(R_31, 2)),
+//       -(R_41)*R_1 + 0.5 * (k_4 - k_1 - pow(R_41, 2));
 
-  // // Solve AX=B
-  // Eigen::ColPivHouseholderQR<Eigen::Matrix3f> dec(A);
-  // if (dec.isInvertible()) {
-  //   X = dec.solve(B);
-  //   for (int i = 0; i < 3; i++) {
-  //     position_uwb[i] = X(i);
-  //   }
-  // }
-}
+//   // Solve AX=B
+//   Eigen::ColPivHouseholderQR<Eigen::Matrix3f> dec(A);
+//   if (dec.isInvertible()) {
+//     X = dec.solve(B);
+//     for (int i = 0; i < 3; i++) {
+//       position_uwb[i] = X(i);
+//     }
+//   }
+// }
 
 void display_extractdata() {
   Serial.println("Real distances:");
@@ -90,8 +90,7 @@ void display_extractdata() {
   Serial.println(current_distance_rmse);
 }
 
-////TEST////
-void calc() {
+void calc_position() {
   if (data_uwb.isEmpty()) {
     Serial.println("No data available for position calculation.");
     return;

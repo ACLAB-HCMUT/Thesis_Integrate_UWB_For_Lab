@@ -9,7 +9,6 @@
 void extract_data();
 void calc_position();
 void display_extractdata();
-void calc();
 
 void display_single(int anchor_id);
 

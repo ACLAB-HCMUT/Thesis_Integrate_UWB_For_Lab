@@ -3,9 +3,7 @@
 
 #include "M5Atom.h"
 
-struct Point {
-  float x, y, z;
-};
+#define N_ANCHORS 4
 
 // Global variables for LED
 extern const int LED_PIN;
@@ -21,14 +19,13 @@ extern float distance_uwb[];
 extern float position_uwb[];
 extern float slope;
 extern float intercept;
-extern Point anchor_1;
-extern Point anchor_2;
-extern Point anchor_3;
-extern Point anchor_4;
-extern float anchor_f1[];
-extern float anchor_f2[];
-extern float anchor_f3[];
-extern float anchor_f4[];
+// extern float anchor_f1[];
+// extern float anchor_f2[];
+// extern float anchor_f3[];
+// extern float anchor_f4[];
+
+extern float anchor_matrix[N_ANCHORS][3];
+extern float current_distance_rmse;
 
 // Configuration for MQTT connection
 extern const int MQTT_RETRIES;
