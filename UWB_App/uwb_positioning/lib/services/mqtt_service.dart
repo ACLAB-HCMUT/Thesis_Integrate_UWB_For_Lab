@@ -4,13 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:provider/provider.dart';
+import 'package:uwb_positioning/services/alert_service.dart';
 
 class MqttService with ChangeNotifier {
+  final GlobalKey<NavigatorState> navigatorKey;
+
+  MqttService({required this.navigatorKey});
   final String server = "io.adafruit.com";
   final String username = "Duyen";
   final String aioKey = "";
   final String topicTag = "Duyen/feeds/tagposition";
   final String topicAnchor = "Duyen/feeds/anchorposition";
+
+  final double maxX = 10.0; // Giá trị tối đa của x
+  final double maxY = 10.0; // Giá trị tối đa của y
 
   late MqttServerClient client;
 
@@ -76,6 +84,18 @@ class MqttService with ChangeNotifier {
 
       if (topic == topicTag) {
         final deviceId = parsedData['tag_id'] as String;
+        final x = parsedData['tag_x'].toDouble();
+        final y = parsedData['tag_y'].toDouble();
+
+        // Kiểm tra tọa độ
+        if (x < 0 || x > maxX || y < 0 || y > maxY) {
+          final alertService = Provider.of<AlertService>(
+            navigatorKey.currentContext!,
+            listen: false,
+          );
+          alertService.showAlert('Tag $deviceId không ở đúng vị trí!');
+        }
+
         _deviceData[deviceId] = {
           'tag_x': parsedData['tag_x'].toDouble(),
           'tag_y': parsedData['tag_y'].toDouble(),

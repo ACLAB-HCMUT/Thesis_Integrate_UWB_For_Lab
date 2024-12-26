@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uwb_positioning/pages/device_detail_page.dart';
+import 'package:uwb_positioning/pages/notification_list_page.dart';
 import 'package:uwb_positioning/services/mqtt_service.dart';
 
 class DeviceListPage extends StatefulWidget {
@@ -18,6 +19,15 @@ class _DeviceListPageState extends State<DeviceListPage> {
     return Scaffold(
         appBar: AppBar(
           title: const Text("Device List"),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.notifications),
+              tooltip: "Notifications",
+              onPressed: () {
+                Navigator.pushNamed(context, NotificationListPage.nameRoute);
+              },
+            ),
+          ],
         ),
         body: ListView.builder(
           itemCount: mqttService.deviceData.length,
