@@ -17,11 +17,11 @@ class MqttService with ChangeNotifier {
   // Temporary memory to store data of devices/anchors
   final Map<String, Map<String, dynamic>> _deviceData = {};
   final Map<String, Map<String, dynamic>> _anchorData = {};
-  // Logger instance
-  final Logger _logger = Logger('MqttService');
   // Getter to get data
   Map<String, Map<String, dynamic>> get deviceData => _deviceData;
   Map<String, Map<String, dynamic>> get anchorData => _anchorData;
+  // Logger instance
+  final Logger _logger = Logger('MqttService');
 
   Future<void> connectAndSubscribe() async {
     client = MqttServerClient.withPort(server, 'flutter_client', 1883);

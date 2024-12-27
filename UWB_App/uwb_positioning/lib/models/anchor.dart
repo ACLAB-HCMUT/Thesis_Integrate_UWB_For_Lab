@@ -1,5 +1,5 @@
 class Anchor {
-  final int anchorRecId;
+  final String anchorRecId;
   final int anchorId;
   final double anchorX;
   final double anchorY;
@@ -22,9 +22,9 @@ class Anchor {
     return Anchor(
       anchorRecId: json['anchorrec_id'],
       anchorId: json['anchor_id'],
-      anchorX: json['anchor_x'],
-      anchorY: json['anchor_y'],
-      anchorZ: json['anchor_z'],
+      anchorX: json['anchor_x'].toDouble(),
+      anchorY: json['anchor_y'].toDouble(),
+      anchorZ: json['anchor_z'].toDouble(),
       recordTime: DateTime.parse(json['record_time']),
       roomNumber: json['room_number'],
     );
