@@ -6,6 +6,7 @@ import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:provider/provider.dart';
 import 'package:uwb_positioning/services/alert_service.dart';
+import 'package:uwb_positioning/services/device_service.dart';
 
 class MqttService with ChangeNotifier {
   final GlobalKey<NavigatorState> navigatorKey;
@@ -17,8 +18,8 @@ class MqttService with ChangeNotifier {
   final String topicTag = "Duyen/feeds/tagposition";
   final String topicAnchor = "Duyen/feeds/anchorposition";
 
-  final double maxX = 10.0; // Giá trị tối đa của x
-  final double maxY = 10.0; // Giá trị tối đa của y
+  double maxX = 10.0; // Giá trị tối đa của x
+  double maxY = 10.0; // Giá trị tối đa của y
 
   late MqttServerClient client;
 
@@ -88,12 +89,18 @@ class MqttService with ChangeNotifier {
         final y = parsedData['tag_y'].toDouble();
 
         // Kiểm tra tọa độ
+        final deviceService = Provider.of<DeviceService>(
+            navigatorKey.currentContext!,
+            listen: false);
         if (x < 0 || x > maxX || y < 0 || y > maxY) {
+          deviceService.devices[deviceId]!.updateInRoom(false);
           final alertService = Provider.of<AlertService>(
             navigatorKey.currentContext!,
             listen: false,
           );
           alertService.showAlert('Tag $deviceId không ở đúng vị trí!');
+        } else {
+          deviceService.devices[deviceId]!.updateInRoom(true);
         }
 
         _deviceData[deviceId] = {
@@ -104,6 +111,16 @@ class MqttService with ChangeNotifier {
         _logger.fine('Updated device $deviceId data: ${_deviceData[deviceId]}');
       } else if (topic == topicAnchor) {
         final anchorId = parsedData['anchor_id'] as String;
+        final x = parsedData['anchor_x'].toDouble();
+        final y = parsedData['anchor_y'].toDouble();
+
+        if (x > maxX) {
+          maxX = x;
+        }
+        if (y > maxY) {
+          maxY = y;
+        }
+
         _anchorData[anchorId] = {
           'anchor_x': parsedData['anchor_x'].toDouble(),
           'anchor_y': parsedData['anchor_y'].toDouble(),

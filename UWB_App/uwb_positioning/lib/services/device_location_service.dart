@@ -13,39 +13,97 @@ class DeviceLocationService with ChangeNotifier {
 
   Map<String, Anchor> _anchorLocs = {};
   Map<String, Anchor> get anchorLocs => _anchorLocs;
+
   // Logger instance
   static final Logger _logger = Logger('DeviceLocationService');
 
-  // Get the list of devices as a Map
+  // Get the list of device's location as a Map
   static Future<Map<String, DeviceLocation>> fetchDataHourly() async {
     // Simulate device's data
     await Future.delayed(const Duration(milliseconds: 500));
     final Map<String, dynamic> fakeData = {
       '1': {
-        'tag_x': 1,
-        'tag_y': 1,
+        'tag_x': 0.5,
+        'tag_y': 0.5,
         'tag_z': 0,
-        'record_time': '2024-12-28T12:30:00Z',
+        'record_time': '2024-12-28T09:00:00Z',
         'record_type': 'hourly',
         'room_id': '1',
       },
       '2': {
-        'tag_x': 1,
-        'tag_y': 2,
+        'tag_x': 0.5,
+        'tag_y': 1,
         'tag_z': 0,
-        'record_time': '2024-12-28T12:30:00Z',
+        'record_time': '2024-12-28T10:00:00Z',
         'record_type': 'hourly',
         'room_id': '1',
       },
       '3': {
-        'tag_x': 1,
-        'tag_y': 3,
+        'tag_x': 0.6,
+        'tag_y': 2,
         'tag_z': 0,
-        'record_time': '2024-12-28T12:30:00Z',
+        'record_time': '2024-12-28T11:00:00Z',
+        'record_type': 'hourly',
+        'room_id': '1',
+      },
+      '4': {
+        'tag_x': 1,
+        'tag_y': 2.5,
+        'tag_z': 0,
+        'record_time': '2024-12-28T12:00:00Z',
+        'record_type': 'hourly',
+        'room_id': '1',
+      },
+      '5': {
+        'tag_x': 1.5,
+        'tag_y': 2.5,
+        'tag_z': 0,
+        'record_time': '2024-12-28T13:00:00Z',
+        'record_type': 'hourly',
+        'room_id': '1',
+      },
+      '6': {
+        'tag_x': 1.7,
+        'tag_y': 2.8,
+        'tag_z': 0,
+        'record_time': '2024-12-28T14:00:00Z',
+        'record_type': 'hourly',
+        'room_id': '1',
+      },
+      '7': {
+        'tag_x': 1.7,
+        'tag_y': 3.5,
+        'tag_z': 0,
+        'record_time': '2024-12-28T15:00:00Z',
+        'record_type': 'hourly',
+        'room_id': '1',
+      },
+      '8': {
+        'tag_x': 2.5,
+        'tag_y': 3.5,
+        'tag_z': 0,
+        'record_time': '2024-12-28T16:00:00Z',
+        'record_type': 'hourly',
+        'room_id': '1',
+      },
+      '9': {
+        'tag_x': 2.9,
+        'tag_y': 3.7,
+        'tag_z': 0,
+        'record_time': '2024-12-28T17:00:00Z',
+        'record_type': 'hourly',
+        'room_id': '1',
+      },
+      '10': {
+        'tag_x': 3.5,
+        'tag_y': 4,
+        'tag_z': 0,
+        'record_time': '2024-12-28T18:00:00Z',
         'record_type': 'hourly',
         'room_id': '1',
       },
     };
+
     // Convert fake data to Map
     final convertedData = fakeData.map((key, value) {
       return MapEntry(key, DeviceLocation.fromJson(value));
@@ -61,30 +119,87 @@ class DeviceLocationService with ChangeNotifier {
     await Future.delayed(const Duration(milliseconds: 500));
     final Map<String, dynamic> fakeData = {
       '1': {
-        'tag_x': 2,
-        'tag_y': 1,
+        'tag_x': 1,
+        'tag_y': 4.5,
         'tag_z': 0,
-        'record_time': '2024-12-28T12:30:00Z',
+        'record_time': '2024-12-19T09:00:00Z',
         'record_type': 'daily',
         'room_id': '1',
       },
       '2': {
-        'tag_x': 2,
-        'tag_y': 2,
+        'tag_x': 1,
+        'tag_y': 3.5,
         'tag_z': 0,
-        'record_time': '2024-12-28T12:30:00Z',
+        'record_time': '2024-12-20T09:00:00Z',
         'record_type': 'daily',
         'room_id': '1',
       },
       '3': {
-        'tag_x': 2,
+        'tag_x': 1.5,
         'tag_y': 3,
         'tag_z': 0,
-        'record_time': '2024-12-28T12:30:00Z',
+        'record_time': '2024-12-21T09:00:00Z',
+        'record_type': 'daily',
+        'room_id': '1',
+      },
+      '4': {
+        'tag_x': 2,
+        'tag_y': 2.5,
+        'tag_z': 0,
+        'record_time': '2024-12-22T09:00:00Z',
+        'record_type': 'daily',
+        'room_id': '1',
+      },
+      '5': {
+        'tag_x': 2.3,
+        'tag_y': 3.2,
+        'tag_z': 0,
+        'record_time': '2024-12-23T09:00:00Z',
+        'record_type': 'daily',
+        'room_id': '1',
+      },
+      '6': {
+        'tag_x': 2.7,
+        'tag_y': 3.2,
+        'tag_z': 0,
+        'record_time': '2024-12-24T09:00:00Z',
+        'record_type': 'daily',
+        'room_id': '1',
+      },
+      '7': {
+        'tag_x': 3.0,
+        'tag_y': 3,
+        'tag_z': 0,
+        'record_time': '2024-12-25T09:00:00Z',
+        'record_type': 'daily',
+        'room_id': '1',
+      },
+      '8': {
+        'tag_x': 3.5,
+        'tag_y': 2,
+        'tag_z': 0,
+        'record_time': '2024-12-26T09:00:00Z',
+        'record_type': 'daily',
+        'room_id': '1',
+      },
+      '9': {
+        'tag_x': 2,
+        'tag_y': 1,
+        'tag_z': 0,
+        'record_time': '2024-12-27T09:00:00Z',
+        'record_type': 'daily',
+        'room_id': '1',
+      },
+      '10': {
+        'tag_x': 0.5,
+        'tag_y': 0.5,
+        'tag_z': 0,
+        'record_time': '2024-12-28T09:00:00Z',
         'record_type': 'daily',
         'room_id': '1',
       },
     };
+
     // Convert fake data to Map
     final convertedData = fakeData.map((key, value) {
       return MapEntry(key, DeviceLocation.fromJson(value));
@@ -136,6 +251,7 @@ class DeviceLocationService with ChangeNotifier {
         'room_number': '1',
       },
     };
+
     // Convert fake data to Map
     final convertedData = fakeData.map((key, value) {
       return MapEntry(key, Anchor.fromJson(value));
@@ -145,53 +261,34 @@ class DeviceLocationService with ChangeNotifier {
     return convertedData;
   }
 
-  // Fetch data for the first time
+  // Fetch hourly data
   Future<void> fetchHistoryHourly() async {
-    if (_deviceLocs.isEmpty) {
-      try {
+    try {
+      if (_deviceLocs.isEmpty) {
         _deviceLocs = await fetchDataHourly();
         notifyListeners();
-      } catch (e) {
-        throw Exception('Error loading data: $e');
       }
-    }
-    if (_anchorLocs.isEmpty) {
-      try {
+      if (_anchorLocs.isEmpty) {
         _anchorLocs = await fetchAnchor();
         notifyListeners();
-      } catch (e) {
-        throw Exception('Error loading data: $e');
       }
+    } catch (e) {
+      throw Exception('Error loading data: $e');
     }
   }
 
   Future<void> fetchHistoryDaily() async {
-    if (_deviceLocsDaily.isEmpty) {
-      try {
+    try {
+      if (_deviceLocsDaily.isEmpty) {
         _deviceLocsDaily = await fetchDataDaily();
         notifyListeners();
-      } catch (e) {
-        throw Exception('Error loading data: $e');
       }
-    }
-    if (_anchorLocs.isEmpty) {
-      try {
+      if (_anchorLocs.isEmpty) {
         _anchorLocs = await fetchAnchor();
         notifyListeners();
-      } catch (e) {
-        throw Exception('Error loading data: $e');
       }
+    } catch (e) {
+      throw Exception('Error loading data: $e');
     }
   }
-
-  // Future<void> fetchHistoryAnchor() async {
-  //   if (_anchorLocs.isEmpty) {
-  //     try {
-  //       _anchorLocs = await fetchAnchor();
-  //       notifyListeners();
-  //     } catch (e) {
-  //       throw Exception('Error loading data: $e');
-  //     }
-  //   }
-  // }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:uwb_positioning/models/device_location.dart';
 import 'package:uwb_positioning/services/device_location_service.dart';
 
 class DeviceHistoryTextPage extends StatefulWidget {
@@ -20,7 +19,9 @@ class _DeviceHistoryTextPageState extends State<DeviceHistoryTextPage> {
   void initState() {
     super.initState();
     // Mặc định là chế độ xem theo giờ
-    _deviceHistoryFuture = Provider.of<DeviceLocationService>(context, listen: false).fetchHistoryHourly();
+    _deviceHistoryFuture =
+        Provider.of<DeviceLocationService>(context, listen: false)
+            .fetchHistoryHourly();
   }
 
   @override
@@ -29,7 +30,7 @@ class _DeviceHistoryTextPageState extends State<DeviceHistoryTextPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Device History Text'),
+        title: Text(isDailyView ? 'Text Daily History' : 'Text Hourly History'),
         actions: [
           IconButton(
             icon: Icon(isDailyView ? Icons.calendar_today : Icons.access_time),
@@ -37,9 +38,11 @@ class _DeviceHistoryTextPageState extends State<DeviceHistoryTextPage> {
               setState(() {
                 isDailyView = !isDailyView; // Chuyển đổi chế độ xem
                 if (isDailyView) {
-                  _deviceHistoryFuture = deviceLocationService.fetchHistoryDaily();
+                  _deviceHistoryFuture =
+                      deviceLocationService.fetchHistoryDaily();
                 } else {
-                  _deviceHistoryFuture = deviceLocationService.fetchHistoryHourly();
+                  _deviceHistoryFuture =
+                      deviceLocationService.fetchHistoryHourly();
                 }
               });
             },

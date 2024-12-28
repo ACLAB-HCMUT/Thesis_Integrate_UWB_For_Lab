@@ -18,9 +18,10 @@ class NotificationDetailPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center( // Chỉ căn giữa phần "Cảnh báo" hoặc "Thông báo"
+            Center(
+              // Chỉ căn giữa phần "Cảnh báo" hoặc "Thông báo"
               child: Text(
-                notification.type == 'warning' ? 'Cảnh báo' : 'Thông báo',
+                notification.type == 'warning' ? 'Warning' : 'Notification',
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
