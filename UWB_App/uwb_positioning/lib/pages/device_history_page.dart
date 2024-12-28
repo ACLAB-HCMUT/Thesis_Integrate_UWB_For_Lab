@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uwb_positioning/components/grid_multi_point_painter.dart';
 import 'package:uwb_positioning/pages/device_history_text_page.dart';
-
-import 'package:uwb_positioning/services/mqtt_service.dart';
 import 'package:uwb_positioning/models/device_location.dart';
 import 'package:uwb_positioning/models/anchor.dart';
 import 'package:uwb_positioning/services/device_location_service.dart';
@@ -33,15 +31,15 @@ class _DeviceHistoryPageState extends State<DeviceHistoryPage> {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Device History Position'),
+          title: Text(isDailyView ? 'Map Daily History' : 'Map Hourly History'),
           actions: [
             IconButton(
               icon:
                   Icon(isDailyView ? Icons.calendar_today : Icons.access_time),
               onPressed: () {
                 setState(() {
-                  isDailyView = !isDailyView; // Chuyển chế độ xem
-                  // Tải lại dữ liệu tương ứng
+                  isDailyView = !isDailyView; // Switch view
+                  // Reload the corresponding data
                   if (isDailyView) {
                     _deviceHistoryFuture =
                         deviceLocationService.fetchHistoryDaily();

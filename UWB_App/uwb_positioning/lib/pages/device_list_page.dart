@@ -56,19 +56,19 @@ class _DeviceListPageState extends State<DeviceListPage> {
                           child: Container(
                             height: 100,
                             margin: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 5,
+                              horizontal: 16,
+                              vertical: 8,
                             ), // Add space around
                             decoration: BoxDecoration(
-                              color: Colors.grey[200], // Background color
+                              color: Theme.of(context)
+                                  .cardColor, // Background color
                               borderRadius:
                                   BorderRadius.circular(10), // Rounded corners
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.grey
-                                      .withOpacity(0.3), // Shadow color
-                                  blurRadius: 5, // Glossiness
-                                  offset: const Offset(0, 3), // Shadow position
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 5.0,
+                                  offset: const Offset(0, 3),
                                 ),
                               ],
                             ),
@@ -95,11 +95,35 @@ class _DeviceListPageState extends State<DeviceListPage> {
                                     children: [
                                       Text(
                                         device.deviceName,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: device.isActive
+                                              ? Colors.black
+                                              : Colors.grey,
                                         ),
                                       ),
-                                      Text('Device ID: $deviceId'),
+                                      Text('Device ID: $deviceId',
+                                          style: TextStyle(
+                                            color: device.isActive
+                                                ? Colors.black
+                                                : Colors.grey,
+                                          )),
+                                      Text(
+                                        device.isActive
+                                            ? (device.isInRoom
+                                                ? 'In Room'
+                                                : 'Out of Room')
+                                            : 'Inactive',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: device.isActive
+                                              ? (device.isInRoom
+                                                  ? Colors.green
+                                                  : Colors.red)
+                                              : Colors.grey,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
