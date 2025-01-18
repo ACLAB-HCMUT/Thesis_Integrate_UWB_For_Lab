@@ -14,12 +14,12 @@ class MqttService with ChangeNotifier {
   MqttService({required this.navigatorKey});
   final String server = "io.adafruit.com";
   final String username = "Duyen";
-  final String aioKey = "";
+  final String aioKey = "aio_fATE02ASxyRbFK54LPEWBu9SWqYP";
   final String topicTag = "Duyen/feeds/tagposition";
   final String topicAnchor = "Duyen/feeds/anchorposition";
 
-  double maxX = 10.0; // Giá trị tối đa của x
-  double maxY = 10.0; // Giá trị tối đa của y
+  double maxX = 3.7; // Giá trị tối đa của x
+  double maxY = 2.7; // Giá trị tối đa của y
 
   late MqttServerClient client;
 
@@ -92,7 +92,7 @@ class MqttService with ChangeNotifier {
         final deviceService = Provider.of<DeviceService>(
             navigatorKey.currentContext!,
             listen: false);
-        if (x < 0 || x > maxX || y < 0 || y > maxY) {
+        if (x < -0.5 || x > maxX || y < -0.5 || y > maxY) {
           deviceService.devices[deviceId]!.updateInRoom(false);
           final alertService = Provider.of<AlertService>(
             navigatorKey.currentContext!,
@@ -111,15 +111,6 @@ class MqttService with ChangeNotifier {
         _logger.fine('Updated device $deviceId data: ${_deviceData[deviceId]}');
       } else if (topic == topicAnchor) {
         final anchorId = parsedData['anchor_id'] as String;
-        final x = parsedData['anchor_x'].toDouble();
-        final y = parsedData['anchor_y'].toDouble();
-
-        if (x > maxX) {
-          maxX = x;
-        }
-        if (y > maxY) {
-          maxY = y;
-        }
 
         _anchorData[anchorId] = {
           'anchor_x': parsedData['anchor_x'].toDouble(),
