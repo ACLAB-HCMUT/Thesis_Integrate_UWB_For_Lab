@@ -8,10 +8,11 @@ const app = express();
 app.use(express.json());
 
 // Import routes
-const mqttRoutes = require("./routes/mqtt");
+require("./routes/mqtt");
+const usersRouter = require("./routes/api");
 
 // Sử dụng routes
-app.use("/mqtt", mqttRoutes); // Routes cho MQTT
+// app.use("/mqtt", mqttRoutes); // Routes cho MQTT
 
 // API để Flutter lấy dữ liệu mới nhất
 // app.get("/api/data", async (req, res) => {
@@ -26,6 +27,7 @@ app.use("/mqtt", mqttRoutes); // Routes cho MQTT
 //     res.status(500).json({ error: error.message });
 //   }
 // });
+app.use("/", usersRouter);
 
 // Khởi động server
 const PORT = 3000;
