@@ -1,7 +1,7 @@
 #include "global_var.h"
 
 // Define variables for LED
-const int g_LED_PIN = 13; // Set LED GPIO
+const int g_LED_PIN = 27; // Set LED GPIO
 String g_led_state;       // Stores LED state
 
 // Define variables for UWB

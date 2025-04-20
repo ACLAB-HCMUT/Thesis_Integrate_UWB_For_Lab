@@ -26,6 +26,7 @@
 
 // User includes
 #include "deca_device_api.h"
+#include "deca_regs.h"
 
 /* Tick timer count. */
 volatile unsigned long time32_incr;
@@ -163,9 +164,40 @@ void EXTI1_IRQHandler(void)
 {
 	if(EXTI_GetITStatus(EXTI_Line1) != RESET)
 	{
-		GPIO_ResetBits(GPIOC,GPIO_Pin_13);
+		static uint32_t last_press = 0;
+    if(HAL_GetTick() - last_press < 50)
+		{
+			EXTI_ClearITPendingBit(EXTI_Line1);
+      return;
+    }
+		
+		__disable_irq();
+		
+		dwt_setautorxreenable(0);
 		dwt_forcetrxoff();
+		dwt_rxreset();
+		dwt_write32bitreg(SYS_STATUS_ID, 0xFFFFFFFF);
+		
+		GPIO_ResetBits(GPIOC, GPIO_Pin_13);
+		
+		__enable_irq();
+		
+		last_press = HAL_GetTick();
 		EXTI_ClearITPendingBit(EXTI_Line1);
+		
+		
+		//dwt_setautorxreenable(0);
+	//	static uint32_t last_time = 0;
+	//	uint32_t now = HAL_GetTick();
+		
+	//	if(now - last_time > 50)
+	//	{
+		//	GPIO_ResetBits(GPIOC,GPIO_Pin_13);
+	//		dwt_forcetrxoff();
+	//	dwt_write32bitreg(SYS_STATUS_ID, 0xFFFFFFFF);
+	//	}
+	//	last_time = now;
+		//EXTI_ClearITPendingBit(EXTI_Line1);
 	}
 }
 
