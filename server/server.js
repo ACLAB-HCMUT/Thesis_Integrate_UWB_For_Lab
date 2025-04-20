@@ -3,31 +3,16 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
+const apiRoutes = require("./routes/api");
+
 // Tạo server Express
 const app = express();
-app.use(express.json());
 
 // Import routes
 require("./routes/mqtt");
-const usersRouter = require("./routes/api");
 
-// Sử dụng routes
-// app.use("/mqtt", mqttRoutes); // Routes cho MQTT
-
-// API để Flutter lấy dữ liệu mới nhất
-// app.get("/api/data", async (req, res) => {
-//   try {
-//     const adafruitData = await fetchDataFromAdafruit();
-//     if (adafruitData) {
-//       res.status(200).json(adafruitData);
-//     } else {
-//       res.status(500).json({ error: "Failed to fetch data from Adafruit IO" });
-//     }
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// });
-app.use("/", usersRouter);
+app.use(express.json());
+app.use("/", apiRoutes);
 
 // Khởi động server
 const PORT = 3000;
