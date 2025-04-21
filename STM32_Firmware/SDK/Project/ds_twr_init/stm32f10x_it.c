@@ -27,6 +27,7 @@
 // User includes
 #include "deca_device_api.h"
 #include "deca_regs.h"
+#include "lib.h"
 
 /* Tick timer count. */
 volatile unsigned long time32_incr;
@@ -152,6 +153,41 @@ void SysTick_Handler(void)
 /*  file (startup_stm32f10x_xx.s).                                            */
 /******************************************************************************/
 
+volatile uint8_t dw1000_force_off = 0;
+
+void shutdown_dw1000(void)
+{
+		dwt_setautorxreenable(0);
+    //dwt_setinterrupt(0xFFFFFFFF, 0);
+	
+		dwt_forcetrxoff();
+		dwt_rxreset();
+		//dwt_write32bitreg(SYS_STATUS_ID, 0xFFFFFFFF);
+    
+    dw1000_force_off = 1;
+    GPIO_ResetBits(GPIOC, GPIO_Pin_13);
+}
+
+void wakeup_dw1000(void)
+{
+		if (dw1000_force_off)
+		{
+				//dwt_initialise(DWT_LOADUCODE);
+				//dwt_configure(&config);
+				//dwt_setleds(1);
+			
+				//dwt_setrxantennadelay(RX_ANT_DLY);
+				//dwt_settxantennadelay(TX_ANT_DLY);
+			
+				//dwt_setinterrupt(DWT_INT_RFCG | DWT_INT_RFCE | DWT_INT_RFTO, 1);
+			
+				dwt_rxenable(0);
+			
+				dw1000_force_off = 0;
+				GPIO_SetBits(GPIOC, GPIO_Pin_13); 
+		}
+}
+
 /**
   * @brief  This function handles PPP interrupt request.
   * @param  None
@@ -164,40 +200,24 @@ void EXTI1_IRQHandler(void)
 {
 	if(EXTI_GetITStatus(EXTI_Line1) != RESET)
 	{
-		static uint32_t last_press = 0;
-    if(HAL_GetTick() - last_press < 50)
-		{
+			static uint32_t last_press = 0;
+			if (HAL_GetTick() - last_press < 50)
+			{
+					EXTI_ClearITPendingBit(EXTI_Line1);
+					return;
+			}
+			last_press = HAL_GetTick();
+			
+			if (dw1000_force_off)
+			{
+					wakeup_dw1000();
+      }
+			else
+			{
+					shutdown_dw1000();
+      }
+			
 			EXTI_ClearITPendingBit(EXTI_Line1);
-      return;
-    }
-		
-		__disable_irq();
-		
-		dwt_setautorxreenable(0);
-		dwt_forcetrxoff();
-		dwt_rxreset();
-		dwt_write32bitreg(SYS_STATUS_ID, 0xFFFFFFFF);
-		
-		GPIO_ResetBits(GPIOC, GPIO_Pin_13);
-		
-		__enable_irq();
-		
-		last_press = HAL_GetTick();
-		EXTI_ClearITPendingBit(EXTI_Line1);
-		
-		
-		//dwt_setautorxreenable(0);
-	//	static uint32_t last_time = 0;
-	//	uint32_t now = HAL_GetTick();
-		
-	//	if(now - last_time > 50)
-	//	{
-		//	GPIO_ResetBits(GPIOC,GPIO_Pin_13);
-	//		dwt_forcetrxoff();
-	//	dwt_write32bitreg(SYS_STATUS_ID, 0xFFFFFFFF);
-	//	}
-	//	last_time = now;
-		//EXTI_ClearITPendingBit(EXTI_Line1);
 	}
 }
 

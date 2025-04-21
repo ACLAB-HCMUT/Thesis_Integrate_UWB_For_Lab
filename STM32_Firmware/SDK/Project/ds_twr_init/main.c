@@ -427,7 +427,6 @@ int main(void)
 		reset_DW1000(); // Target specific drive of RSTn line into DW1000 low for a period. 
     spi_set_rate_low();
 
-
     if(dwt_initialise(DWT_LOADUCODE) == -1)
     {
         printf("dwm1000 init fail!\r\n");
@@ -474,61 +473,59 @@ int main(void)
     int rx_ant_delay =32880;
     int index = 0 ;
 		
-	extern UserSet UserSetNow;
-	uint16_t buff[3]={1,0,0xff};//Ĭ��ֵ
-	FLASH_ReadMoreData(USER_FLASH_BASE,buff,3);
-	if(buff[0]==1)
-	{
-		UserSetNow.ANCHOR_TAG=1;
-	}
-	else if(buff[0]==0)
-	{
-		UserSetNow.ANCHOR_TAG=0;
-	}
-	else
-	{
-		UserSetNow.ANCHOR_TAG=1;
-	}
-	
+		extern UserSet UserSetNow;
+		uint16_t buff[3]={1,0,0xff};//Ĭ��ֵ
+		FLASH_ReadMoreData(USER_FLASH_BASE,buff,3);
+		if(buff[0]==1)
+		{
+				UserSetNow.ANCHOR_TAG=1;
+		}
+		else if(buff[0]==0)
+		{
+				UserSetNow.ANCHOR_TAG=0;
+		}
+		else
+		{
+				UserSetNow.ANCHOR_TAG=1;
+		}
 
 //#ifdef ANTHOR
 	
 if(UserSetNow.ANCHOR_TAG==1)
 {
-	if(buff[1]>=0 && buff[1]<=255)
-	{
-		UserSetNow.ID=buff[1];
-		ANCHOR_IND=UserSetNow.ID;
-	}
-	printf("device:anchor ID:%d\r\n",ANCHOR_IND);
+		if(buff[1]>=0 && buff[1]<=255)
+		{
+				UserSetNow.ID=buff[1];
+				ANCHOR_IND=UserSetNow.ID;
+		}
+		printf("device:anchor ID:%d\r\n",ANCHOR_IND);
 	
-			    Anchor_Array_Init();
+		Anchor_Array_Init();
     // Loop forever initiating ranging exchanges. 
     OLED_ShowString(0,0,"DS TWR ANTHOR");
     //OLED_ShowString(0,2,"Distance:");
 
     //KalMan_PramInit();
 		ANTHOR_MEASURE();
-	
 }
 
 //#endif
 
 //#ifdef TAG
-/*
+
 if(UserSetNow.ANCHOR_TAG==0)
 {
 	
-	if(buff[1]>=0 && buff[1]<=255)
-	{
-		UserSetNow.ID=buff[1];
-		TAG_ID=UserSetNow.ID;
-		MASTER_TAG=TAG_ID;
-	}
+		if(buff[1]>=0 && buff[1]<=255)
+		{
+				UserSetNow.ID=buff[1];
+				TAG_ID=UserSetNow.ID;
+				MASTER_TAG=TAG_ID;
+		}
 	
-	printf("device:TAG ID:%d\r\n",UserSetNow.ID);
-	if(TAG_ID == MASTER_TAG)
-    {
+		printf("device:TAG ID:%d\r\n",UserSetNow.ID);
+		if(TAG_ID == MASTER_TAG)
+		{
         OLED_ShowString(0,0,"DS MASTER TAG:");
     }
     else
@@ -557,8 +554,7 @@ if(UserSetNow.ANCHOR_TAG==0)
     //Master TAG0
 			
 		TAG_MEASURE();
-}
-*/		
+}		
 //#endif
 }
 
