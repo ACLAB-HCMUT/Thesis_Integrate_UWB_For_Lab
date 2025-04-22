@@ -1,0 +1,28 @@
+.pio/build/M5_Atom_Dev/lib9fc/FastLED/fl/xymap.cpp.o: \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/fl/xymap.cpp project_config.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/fl/force_inline.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/fl/namespace.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/fl/screenmap.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/fl/lut.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/fl/ptr.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/fl/scoped_ptr.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/fl/template_magic.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/fl/allocator.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/fl/point.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/fl/map.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/fl/vector.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/fl/inplacenew.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/fl/insert_result.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/fl/pair.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/fl/assert.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/fl/warn.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/fl/dbg.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/fl/strstream.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/crgb.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/chsv.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/color.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/lib8tion/types.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/fl/str.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/fl/math_macros.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/fl/xymap.h \
+ .pio/libdeps/M5_Atom_Dev/FastLED/src/fl/xmap.h
