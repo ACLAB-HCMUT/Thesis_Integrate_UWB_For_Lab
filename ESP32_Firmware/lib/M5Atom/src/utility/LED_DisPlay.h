@@ -7,7 +7,7 @@
 #include <freertos/task.h>
 
 #define NUM_LEDS 25
-#define DATA_PIN 27
+#define DATA_PIN 35
 
 class LED_DisPlay : public Task {
    private:

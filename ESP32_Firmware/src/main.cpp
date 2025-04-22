@@ -235,21 +235,32 @@ void loop() {
 }
 */
 
-#include <M5AtomS3.h>
+#include "M5AtomS3.h"
+
+#define BTN_PIN 41
 
 void setup() {
-  AtomS3.begin(true); // Init M5AtomS3Lite.
-  AtomS3.dis.setBrightness(100);
+  // AtomS3.begin(true); // Init M5AtomS3Lite.
+  // AtomS3.dis.setBrightness(100);
+
+  auto cfg = M5.config();
+  AtomS3.begin(cfg, true);
+
+  pinMode(BTN_PIN, INPUT_PULLUP);
+
+  Serial.begin(115200);
 }
 
 void loop() {
-  AtomS3.dis.drawpix(0xff0000);
   AtomS3.update();
-  delay(500);
-  AtomS3.dis.drawpix(0x00ff00);
-  AtomS3.update();
-  delay(500);
-  AtomS3.dis.drawpix(0x0000ff);
-  AtomS3.update();
-  delay(500);
+  // AtomS3.dis.drawpix(0xff0000);
+
+  if (digitalRead(BTN_PIN) == LOW) {
+    AtomS3.dis.drawpix(0x00ff00);
+    // Serial.println("Button pressed!");
+  } else {
+    AtomS3.dis.drawpix(0xff0000);
+  }
+
+  delay(50);
 }
