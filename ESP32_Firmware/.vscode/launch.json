@@ -18,7 +18,7 @@
             "internalConsoleOptions": "openOnSessionStart",
             "preLaunchTask": {
                 "type": "PlatformIO",
-                "task": "Pre-Debug (M5_Atom_Dev)"
+                "task": "Pre-Debug"
             }
         },
         {
