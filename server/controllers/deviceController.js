@@ -59,14 +59,9 @@ exports.getAllDevices = async (req, res) => {
       SELECT 
         d.device_id,
         d.device_name,
-        d.description,
-        d.serial,
-        d.manufacturer,
-        d.specification,
         d.image,
         d.is_active,
         d.is_available,
-        dt.type_id,
         dt.type_name
       FROM device d
       LEFT JOIN device_type dt ON d.type_id = dt.type_id

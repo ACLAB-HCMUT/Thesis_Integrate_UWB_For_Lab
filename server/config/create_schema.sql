@@ -17,7 +17,7 @@ CREATE TABLE device_type (
 
 -- DEVICE table
 CREATE TABLE device (
-  device_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  device_id SERIAL PRIMARY KEY,
   device_name VARCHAR(255),
   description TEXT,
   serial VARCHAR(255),
@@ -44,7 +44,7 @@ CREATE TABLE borrow_request (
 
 -- ANCHOR_LOCATION table
 CREATE TABLE anchor_location (
-  anchorrec_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  anchorrec_id SERIAL PRIMARY KEY,
   anchor_id INT,
   anchor_x FLOAT,
   anchor_y FLOAT,

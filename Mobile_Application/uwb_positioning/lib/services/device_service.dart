@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+import 'dart:convert';
+import 'package:uwb_positioning/services/config.dart';
 import 'package:uwb_positioning/models/device.dart';
 import 'package:uwb_positioning/services/update_service.dart';
+import 'package:http/http.dart' as http;
 
 class DeviceService with ChangeNotifier {
   // Temporary memory to store detail of devices
@@ -11,45 +14,61 @@ class DeviceService with ChangeNotifier {
   static final Logger _logger = Logger('DeviceService');
 
   // Get the list of devices as a Map
+  // static Future<Map<String, Device>> fetchListDevice() async {
+  //   // Simulate device's data
+  //   await Future.delayed(const Duration(milliseconds: 500));
+  //   final Map<String, dynamic> fakeData = {
+  //     '1': {
+  //       'device_id': '1',
+  //       'device_name': 'UWB Tag 1',
+  //       'image':
+  //           'https://static-cdn.m5stack.com/resource/docs/products/unit/uwb/uwb_02.webp',
+  //       'is_active': true,
+  //       'is_available': true,
+  //       'type_name': 'UWB Unit',
+  //     },
+  //     '2': {
+  //       'device_id': '2',
+  //       'device_name': 'NodeMCU-BU01',
+  //       'image':
+  //           'https://exp-tech.de/cdn/shop/products/NodeMCU-BU01_1.png?vu003d1689269984',
+  //       'is_active': false,
+  //       'is_available': false,
+  //       'type_name': 'UWB Unit',
+  //     },
+  //     '3': {
+  //       'device_id': '3',
+  //       'device_name': 'STM32 Microcontroller',
+  //       'image':
+  //           'https://res.cloudinary.com/rsc/image/upload/w_1024/F9107951-01',
+  //       'is_active': false,
+  //       'is_available': false,
+  //       'type_name': 'Microcontroller',
+  //     },
+  //   };
+  //   // Convert fake data to Map
+  //   final convertedData = fakeData.map((key, value) {
+  //     return MapEntry(key, Device.createDevice(value));
+  //   });
+  //
+  //   _logger.info("Converted data: $convertedData");
+  //   return convertedData;
+  // }
   static Future<Map<String, Device>> fetchListDevice() async {
-    // Simulate device's data
-    await Future.delayed(const Duration(milliseconds: 500));
-    final Map<String, dynamic> fakeData = {
-      '1': {
-        'device_id': '1',
-        'device_name': 'UWB Tag 1',
-        'image':
-            'https://static-cdn.m5stack.com/resource/docs/products/unit/uwb/uwb_02.webp',
-        'is_active': true,
-        'is_available': true,
-        'type_name': 'UWB Unit',
-      },
-      '2': {
-        'device_id': '2',
-        'device_name': 'NodeMCU-BU01',
-        'image':
-            'https://exp-tech.de/cdn/shop/products/NodeMCU-BU01_1.png?vu003d1689269984',
-        'is_active': false,
-        'is_available': false,
-        'type_name': 'UWB Unit',
-      },
-      '3': {
-        'device_id': '3',
-        'device_name': 'STM32 Microcontroller',
-        'image':
-            'https://res.cloudinary.com/rsc/image/upload/w_1024/F9107951-01',
-        'is_active': false,
-        'is_available': false,
-        'type_name': 'Microcontroller',
-      },
-    };
-    // Convert fake data to Map
-    final convertedData = fakeData.map((key, value) {
-      return MapEntry(key, Device.createDevice(value));
-    });
-
-    _logger.info("Converted data: $convertedData");
-    return convertedData;
+    final uri = Uri.parse('$baseUrl/devices');
+    final response = await http.get(uri);
+    _logger.info("Raw response body: ${response.body}");
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      final Map<String, Device> deviceMap = {
+        for (var device in data)
+          device['device_id'].toString(): Device.createDevice(device),
+      };
+      _logger.info("Fetched data: $deviceMap");
+      return deviceMap;
+    } else {
+      throw Exception('Failed to load devices');
+    }
   }
 
   // Get device details from database
