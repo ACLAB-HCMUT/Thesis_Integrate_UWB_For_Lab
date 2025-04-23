@@ -131,23 +131,21 @@ exports.getDeviceLocations = async (req, res) => {
 
 exports.createBorrowRequest = async (req, res) => {
   const {
+    device_id,
     detail,
     status,
     appointment_date,
     expected_return,
-    borrow_date,
-    return_date,
     client_id,
   } = req.body;
 
   try {
     const result = await pool.query(
       `INSERT INTO borrow_request (
-        detail, status, appointment_date, expected_return,
-        borrow_date, return_date, client_id
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+        device_id, detail, status, appointment_date, expected_return, client_id
+      ) VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *`,
-      [detail, status, appointment_date, expected_return, borrow_date, return_date, client_id]
+      [device_id, detail, status, appointment_date, expected_return, client_id]
     );
 
     res.status(201).json(result.rows[0]);

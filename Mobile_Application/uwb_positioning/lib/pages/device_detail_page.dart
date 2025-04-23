@@ -157,6 +157,17 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
                               },
                               child: const Text('View Location History'),
                             ),
+                            const SizedBox(height: 8),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  '/borrow-request', // hoặc BorrowRequestPage.nameRoute nếu đã import
+                                  arguments: device.deviceId,
+                                );
+                              },
+                              child: const Text('Create Borrow Request'),
+                            ),
                           ],
                         ),
                       )

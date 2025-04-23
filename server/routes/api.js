@@ -55,7 +55,7 @@ const deviceController = require('../controllers/deviceController');
 router.get('/devices', deviceController.getAllDevices);
 router.get('/devices/:id', deviceController.getDeviceById);
 router.get('/locations/:id', deviceController.getDeviceLocations)
-router.post('/creat-request', deviceController.createBorrowRequest);
+router.post('/create-request', deviceController.createBorrowRequest);
 router.patch('/borrow-date/:id', deviceController.updateBorrowDate);
 router.patch('/return-date/:id', deviceController.updateReturnDate);
 
