@@ -1,12 +1,14 @@
 const { Pool } = require('pg');
+const dotenv = require("dotenv");
 
+dotenv.config();
 // Cấu hình kết nối PostgreSQL
 const pool = new Pool({
-  user: 'postgres',               // Tên người dùng PostgreSQL
-  host: 'localhost',              // Hoặc IP nếu deploy server
-  database: 'uwb',      // Tên database đã tạo
-  password: 'anhkhoi2003',      // Mật khẩu PostgreSQL
-  port: 5432,                     // Port mặc định
+  host: process.env.PG_HOST,
+  port: process.env.PG_PORT,
+  database: process.env.PG_DATABASE,
+  user: process.env.PG_USER,
+  password: process.env.PG_PASSWORD,
 });
 
 pool.connect()
