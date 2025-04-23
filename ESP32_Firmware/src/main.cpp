@@ -1,7 +1,9 @@
 // Import required libraries
-/*
-#include "main.h"
 
+#include "main.h"
+// #include "M5AtomS3.h"
+
+#define BTN_PIN 41
 void UWB_task(void *pvParameters) {
   while (1) {
     UWB_readString();
@@ -10,27 +12,33 @@ void UWB_task(void *pvParameters) {
   }
 }
 
-void MQTT_tag_task(void *pvParameters) {
-  while (1) {
-    MQTT_connect();
-    MQTT_send_data(tagposition, 1, g_position_uwb, "tag");
-  }
-}
+// void MQTT_tag_task(void *pvParameters) {
+//   while (1) {
+//     MQTT_connect();
+//     MQTT_send_data(tagposition, 1, g_position_uwb, "tag");
+//   }
+// }
 
-void MQTT_anchor_task(void *pvParameters) {
-  while (1) {
-    MQTT_connect();
-    for (int i = 0; i < N_ANCHORS; i++) {
-      MQTT_send_data(anchorposition, i + 1, g_anchor_matrix[i], "anchor");
-    }
-  }
-}
+// void MQTT_anchor_task(void *pvParameters) {
+//   while (1) {
+//     MQTT_connect();
+//     for (int i = 0; i < N_ANCHORS; i++) {
+//       MQTT_send_data(anchorposition, i + 1, g_anchor_matrix[i], "anchor");
+//     }
+//   }
+// }
 
 void setup() {
   // M5Atom setup
-  M5.begin(true, false, true);
-  Serial.begin(9600);
+  // M5.begin(true, false, true);
+  // Serial.begin(9600);
 
+  auto cfg = M5.config();
+  AtomS3.begin(cfg, true);
+
+  pinMode(BTN_PIN, INPUT_PULLUP);
+
+  Serial.begin(115200);
   // UWB setup
   // Serial2.begin(115200, SERIAL_8N1, ATOM_RX_PIN, ATOM_TX_PIN);
   // delay(100);
@@ -47,19 +55,30 @@ void setup() {
 }
 
 void loop() {
-  if (M5.Btn.isPressed()) {
-    M5.dis.fillpix(0xfff000);
-    digitalWrite(21, HIGH);
+  // if (M5.Btn.isPressed()) {
+  //   M5.dis.fillpix(0xfff000);
+  //   digitalWrite(21, HIGH);
+  // } else {
+  //   M5.dis.fillpix(0xff0000);
+  //   digitalWrite(21, LOW);
+  // }
+
+  // delay(50);
+
+  // M5.update();
+  AtomS3.update();
+  // AtomS3.dis.drawpix(0xff0000);
+  // AtomS3.dis.drawpix(0x00ff00);
+  if (digitalRead(BTN_PIN) == LOW) {
+    AtomS3.dis.drawpix(0x00ff00);
+    // Serial.println("Button pressed!");
   } else {
-    M5.dis.fillpix(0xff0000);
-    digitalWrite(21, LOW);
+    AtomS3.dis.drawpix(0xff0000);
   }
 
   delay(50);
-
-  M5.update();
 }
-*/
+
 /*
 
 #include "../project_config.h"
@@ -234,7 +253,7 @@ void loop() {
   }
 }
 */
-
+/*
 #include "M5AtomS3.h"
 
 #define BTN_PIN 41
@@ -254,7 +273,7 @@ void setup() {
 void loop() {
   AtomS3.update();
   // AtomS3.dis.drawpix(0xff0000);
-
+  // AtomS3.dis.drawpix(0x00ff00);
   if (digitalRead(BTN_PIN) == LOW) {
     AtomS3.dis.drawpix(0x00ff00);
     // Serial.println("Button pressed!");
@@ -264,3 +283,4 @@ void loop() {
 
   delay(50);
 }
+  */

@@ -68,12 +68,12 @@ void UWB_timer() {
 }
 
 void UWB_keyscan() {
-  if (M5.Btn.isPressed()) {
-    Serial2.write("AT+RST\r\n");
-    UWB_setupmode();
-    UWB_clear();
-    Serial.println("UWB reset");
-  }
+  // if (M5.Btn.isPressed()) {
+  //   Serial2.write("AT+RST\r\n");
+  //   UWB_setupmode();
+  //   UWB_clear();
+  //   Serial.println("UWB reset");
+  // }
 }
 
 // Read UART data

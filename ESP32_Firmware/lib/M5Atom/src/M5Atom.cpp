@@ -38,4 +38,4 @@ void M5Atom::update() {
     M5.Btn.read();
 }
 
-M5Atom M5;
+M5Atom M5P;

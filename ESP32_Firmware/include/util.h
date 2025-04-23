@@ -2,7 +2,8 @@
 #define UTIL_H
 
 #include "ArduinoEigen.h"
-#include "M5Atom.h"
+// #include "M5Atom.h"
+#include "M5AtomS3.h"
 #include "SPIFFS.h"
 #include "global_var.h"
 
