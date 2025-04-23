@@ -32,6 +32,7 @@ CREATE TABLE device (
 -- BORROW_REQUEST table
 CREATE TABLE borrow_request (
   request_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  device_id INT REFERENCES device(device_id),
   detail TEXT,
   status VARCHAR(50),
   appointment_date TIMESTAMP,
@@ -39,13 +40,6 @@ CREATE TABLE borrow_request (
   borrow_date TIMESTAMP,
   return_date TIMESTAMP,
   client_id INT REFERENCES "user"(user_id)
-);
-
--- REQUEST_DEVICE table
-CREATE TABLE request_device (
-  request_id INT REFERENCES borrow_request(request_id),
-  device_id INT REFERENCES device(device_id),
-  PRIMARY KEY (request_id, device_id)
 );
 
 -- ANCHOR_LOCATION table
