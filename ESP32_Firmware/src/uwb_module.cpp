@@ -23,7 +23,7 @@ void UWB_setupmode() {
   case 0:                         // Tag mode
     for (int b = 0; b < 2; b++) { // Repeat twice to stabilize the connection
       vTaskDelay(pdMS_TO_TICKS(50));
-      Serial2.write("AT+anchor_tag=0,1\r\n"); // Set device as Tag
+      Serial2.write("AT+anchor_tag=0\r\n"); // Set device as Tag
       vTaskDelay(pdMS_TO_TICKS(50));
       Serial2.write("AT+interval=5\r\n"); // Set the calculation precision
       vTaskDelay(pdMS_TO_TICKS(50));
@@ -84,8 +84,16 @@ void UWB_readString() {
       vTaskDelay(pdMS_TO_TICKS(20));
       UWB_T_NUMBER = (Serial2.available() / 11); // Count the number of base stations
       vTaskDelay(pdMS_TO_TICKS(20));
+
+      Serial.print("Number of base stations: ");
+      Serial.println(UWB_T_NUMBER);
+
       g_data_uwb = Serial2.readString(); // Read data from Serial2
       vTaskDelay(pdMS_TO_TICKS(2));
+
+      Serial.println("Distance:");
+      Serial.println(g_data_uwb);
+
       timer_flag = 0;
       timer_data = 1;
       break;
@@ -106,12 +114,12 @@ void UWB_readString() {
       if (Serial2.available()) {
         vTaskDelay(pdMS_TO_TICKS(2));
         g_data_uwb = Serial2.readString(); // Read data from Serial2
-        // g_data_uwb = "Set up successfully!";
+        g_data_uwb = "Set up successfully!";
         timer_data = 1;
         timer_flag = 1;
         break;
       } else if (timer_data > 0 && Serial2.available() == 0) {
-        // g_data_uwb = "Can't find the tag!!!";
+        g_data_uwb = "Can't find the tag!!!";
         timer_flag = 0;
         break;
       }
@@ -123,10 +131,10 @@ void UWB_readString() {
 void UWB_display() {
   switch (UWB_MODE) {
   case 0: // Tag mode
-    Serial.print("Number of base stations: ");
-    Serial.println(UWB_T_NUMBER);
-    Serial.println("Distance:");
-    Serial.println(g_data_uwb);
+    // Serial.print("Number of base stations: ");
+    // Serial.println(UWB_T_NUMBER);
+    // Serial.println("Distance:");
+    // Serial.println(g_data_uwb);
     break;
 
   case 1: // Base station mode

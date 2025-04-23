@@ -233,7 +233,7 @@ void Tag_Measure_Dis(void)
         dwt_setrxtimeout(RESP_RX_TIMEOUT_UUS);
         /* Write frame data to DW1000 and prepare transmission. See NOTE 7 below. */
         tx_poll_msg[ALL_MSG_SN_IDX] = frame_seq_nb;
-        tx_poll_msg[ALL_MSG_TAG_IDX] = TAG_ID;//��վ�յ���ǩ����Ϣ��������TAG_ID,�ڻ�վ�ظ���ǩ��ʱ��Ҳ��Ҫָ��TAG_ID,ֻ��TAG_IDһ�²�������
+        tx_poll_msg[ALL_MSG_TAG_IDX] = TAG_ID;//????????k?????????????TAG_ID,?????????k????????????TAG_ID,???TAG_IDh?�???????
 
         dwt_writetxdata(sizeof(tx_poll_msg), tx_poll_msg, 0);
         dwt_writetxfctrl(sizeof(tx_poll_msg), 0);
@@ -244,7 +244,7 @@ void Tag_Measure_Dis(void)
 
         //GPIO_SetBits(GPIOA,GPIO_Pin_2);
         //TODO
-        dwt_rxenable(0);//�����ӵģ�Ĭ��tx��Ӧ���Զ��л�rx������Ŀǰdebug ���ֲ�û���Զ��򿪣�����ǿ�ƴ�rx
+        dwt_rxenable(0);//??????g?I??tx???????????rx???????jdebug ?????�?????????????????rx
 				uint32 tick1=portGetTickCount();
         /* We assume that the transmission is achieved correctly, poll for reception of a frame or error/timeout. See NOTE 8 below. */
         while (!((status_reg = dwt_read32bitreg(SYS_STATUS_ID)) & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_ERR)))
@@ -269,7 +269,7 @@ void Tag_Measure_Dis(void)
                 dwt_readrxdata(rx_buffer, frame_len, 0);
             }
 
-            if(rx_buffer[ALL_MSG_TAG_IDX] != TAG_ID)//���TAG_ID
+            if(rx_buffer[ALL_MSG_TAG_IDX] != TAG_ID)//???TAG_ID
                 continue;
             rx_buffer[ALL_MSG_TAG_IDX] = 0;
 
@@ -474,7 +474,7 @@ int main(void)
     int index = 0 ;
 		
 		extern UserSet UserSetNow;
-		uint16_t buff[3]={1,0,0xff};//Ĭ��ֵ
+		uint16_t buff[3]={1,0,0xff};//I???
 		FLASH_ReadMoreData(USER_FLASH_BASE,buff,3);
 		if(buff[0]==1)
 		{
@@ -490,7 +490,7 @@ int main(void)
 		}
 
 //#ifdef ANTHOR
-	
+
 if(UserSetNow.ANCHOR_TAG==1)
 {
 		if(buff[1]>=0 && buff[1]<=255)
@@ -512,7 +512,7 @@ if(UserSetNow.ANCHOR_TAG==1)
 //#endif
 
 //#ifdef TAG
-
+/*
 if(UserSetNow.ANCHOR_TAG==0)
 {
 	
@@ -556,6 +556,7 @@ if(UserSetNow.ANCHOR_TAG==0)
 		TAG_MEASURE();
 }		
 //#endif
+*/
 }
 
 #define Filter_N 5  //max filter use in this system
@@ -838,7 +839,7 @@ void assert_failed(uint8_t* file, uint32_t line)
 PUTCHAR_PROTOTYPE
 {
     /* Place your implementation of fputc here */
-    /* ��SR�Ĵ����е�TC��־ */
+    /* ??SR?J??????TC??? */
 
     USART_ClearFlag(EVAL_COM1,USART_FLAG_TC);
     /* e.g. write a character to the USART */

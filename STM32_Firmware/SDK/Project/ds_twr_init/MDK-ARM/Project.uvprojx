@@ -389,14 +389,14 @@
               <FilePath>..\stm32f10x_it.c</FilePath>
             </File>
             <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\main.c</FilePath>
-            </File>
-            <File>
               <FileName>STM3210E-EVAL.lib</FileName>
               <FileType>4</FileType>
               <FilePath>.\LIB\STM3210E-EVAL.lib</FilePath>
+            </File>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\main.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2000,14 +2000,14 @@
               <FilePath>..\stm32f10x_it.c</FilePath>
             </File>
             <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\main.c</FilePath>
-            </File>
-            <File>
               <FileName>STM3210E-EVAL.lib</FileName>
               <FileType>4</FileType>
               <FilePath>.\LIB\STM3210E-EVAL.lib</FilePath>
+            </File>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\main.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3662,14 +3662,14 @@
               <FilePath>..\stm32f10x_it.c</FilePath>
             </File>
             <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\main.c</FilePath>
-            </File>
-            <File>
               <FileName>STM3210E-EVAL.lib</FileName>
               <FileType>4</FileType>
               <FilePath>.\LIB\STM3210E-EVAL.lib</FilePath>
+            </File>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\main.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -5426,14 +5426,14 @@
               <FilePath>..\stm32f10x_it.c</FilePath>
             </File>
             <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\main.c</FilePath>
-            </File>
-            <File>
               <FileName>STM3210E-EVAL.lib</FileName>
               <FileType>4</FileType>
               <FilePath>.\LIB\STM3210E-EVAL.lib</FilePath>
+            </File>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\main.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -7294,14 +7294,14 @@
               <FilePath>..\stm32f10x_it.c</FilePath>
             </File>
             <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\main.c</FilePath>
-            </File>
-            <File>
               <FileName>STM3210E-EVAL.lib</FileName>
               <FileType>4</FileType>
               <FilePath>.\LIB\STM3210E-EVAL.lib</FilePath>
+            </File>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\main.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -8956,14 +8956,14 @@
               <FilePath>..\stm32f10x_it.c</FilePath>
             </File>
             <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\main.c</FilePath>
-            </File>
-            <File>
               <FileName>STM3210E-EVAL.lib</FileName>
               <FileType>4</FileType>
               <FilePath>.\LIB\STM3210E-EVAL.lib</FilePath>
+            </File>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\main.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -1,5 +1,5 @@
 // Import required libraries
-/*
+
 #include "main.h"
 
 void UWB_task(void *pvParameters) {
@@ -28,7 +28,7 @@ void MQTT_anchor_task(void *pvParameters) {
 
 void setup() {
   // M5Atom setup
-  M5.begin(true, false, true);
+  M5.begin(true, true, true);
   Serial.begin(9600);
 
   // UWB setup
@@ -44,6 +44,8 @@ void setup() {
   // xTaskCreate(UWB_task, "UWB_task", 4096, NULL, 1, NULL);
   // xTaskCreate(MQTT_tag_task, "MQTT_tag_task", 4096, NULL, 1, NULL);
   // xTaskCreate(MQTT_anchor_task, "MQTT_anchor_task", 4096, NULL, 1, NULL);
+
+  pinMode(21, OUTPUT);
 }
 
 void loop() {
@@ -59,7 +61,7 @@ void loop() {
 
   M5.update();
 }
-*/
+
 /*
 
 #include "../project_config.h"
@@ -234,22 +236,3 @@ void loop() {
   }
 }
 */
-
-#include <M5AtomS3.h>
-
-void setup() {
-  AtomS3.begin(true); // Init M5AtomS3Lite.
-  AtomS3.dis.setBrightness(100);
-}
-
-void loop() {
-  AtomS3.dis.drawpix(0xff0000);
-  AtomS3.update();
-  delay(500);
-  AtomS3.dis.drawpix(0x00ff00);
-  AtomS3.update();
-  delay(500);
-  AtomS3.dis.drawpix(0x0000ff);
-  AtomS3.update();
-  delay(500);
-}

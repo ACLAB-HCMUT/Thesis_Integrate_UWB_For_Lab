@@ -200,6 +200,8 @@ void EXTI1_IRQHandler(void)
 {
 	if(EXTI_GetITStatus(EXTI_Line1) != RESET)
 	{
+		GPIO_ResetBits(GPIOC, GPIO_Pin_13);
+		/*
 			static uint32_t last_press = 0;
 			if (HAL_GetTick() - last_press < 50)
 			{
@@ -216,7 +218,7 @@ void EXTI1_IRQHandler(void)
 			{
 					shutdown_dw1000();
       }
-			
+			*/
 			EXTI_ClearITPendingBit(EXTI_Line1);
 	}
 }
