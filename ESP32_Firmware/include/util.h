@@ -1,3 +1,4 @@
+/*
 #ifndef UTIL_H
 #define UTIL_H
 
@@ -13,3 +14,4 @@ void display_extractdata();
 void display_single(int anchor_id);
 
 #endif
+*/

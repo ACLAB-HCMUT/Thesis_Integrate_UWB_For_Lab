@@ -1,3 +1,4 @@
+/*
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
@@ -21,3 +22,4 @@
 #include "../src/utils/file_manip.h"
 
 #endif
+*/

@@ -1,9 +1,10 @@
+/*
 #include "uwb_module.h"
 
-int UWB_MODE = 0;     // Set UWB Mode: Tag mode is 0, Base station mode is 1
+int UWB_MODE = 1;     // Set UWB Mode: Tag mode is 0, Base station mode is 1
 int UWB_T_NUMBER = 0; // Store the number of base stations
 int UWB_T_ID = 0;     // Tag ID
-int UWB_B_ID = 0;     // Base station ID1~ID4
+int UWB_B_ID = 1;     // Base station ID1~ID4
 
 // Data clear
 void UWB_clear() {
@@ -84,16 +85,8 @@ void UWB_readString() {
       vTaskDelay(pdMS_TO_TICKS(20));
       UWB_T_NUMBER = (Serial2.available() / 11); // Count the number of base stations
       vTaskDelay(pdMS_TO_TICKS(20));
-
-      Serial.print("Number of base stations: ");
-      Serial.println(UWB_T_NUMBER);
-
       g_data_uwb = Serial2.readString(); // Read data from Serial2
       vTaskDelay(pdMS_TO_TICKS(2));
-
-      Serial.println("Distance:");
-      Serial.println(g_data_uwb);
-
       timer_flag = 0;
       timer_data = 1;
       break;
@@ -131,10 +124,10 @@ void UWB_readString() {
 void UWB_display() {
   switch (UWB_MODE) {
   case 0: // Tag mode
-    // Serial.print("Number of base stations: ");
-    // Serial.println(UWB_T_NUMBER);
-    // Serial.println("Distance:");
-    // Serial.println(g_data_uwb);
+    Serial.print("Number of base stations: ");
+    Serial.println(UWB_T_NUMBER);
+    Serial.println("Distance:");
+    Serial.println(g_data_uwb);
     break;
 
   case 1: // Base station mode
@@ -145,3 +138,4 @@ void UWB_display() {
     break;
   }
 }
+  */

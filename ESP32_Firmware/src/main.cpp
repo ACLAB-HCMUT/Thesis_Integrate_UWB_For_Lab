@@ -1,5 +1,5 @@
 // Import required libraries
-
+/*
 #include "main.h"
 
 void UWB_task(void *pvParameters) {
@@ -32,9 +32,9 @@ void setup() {
   Serial.begin(9600);
 
   // UWB setup
-  // Serial2.begin(115200, SERIAL_8N1, ATOM_RX_PIN, ATOM_TX_PIN);
-  // delay(100);
-  // UWB_timer();
+  Serial2.begin(115200, SERIAL_8N1, ATOM_RX_PIN, ATOM_TX_PIN);
+  delay(100);
+  UWB_timer();
   // UWB_setupmode();
 
   // Other setup
@@ -45,22 +45,58 @@ void setup() {
   // xTaskCreate(MQTT_tag_task, "MQTT_tag_task", 4096, NULL, 1, NULL);
   // xTaskCreate(MQTT_anchor_task, "MQTT_anchor_task", 4096, NULL, 1, NULL);
 
-  pinMode(21, OUTPUT);
+  // pinMode(21, OUTPUT);
 }
 
 void loop() {
-  if (M5.Btn.isPressed()) {
-    M5.dis.fillpix(0xfff000);
-    digitalWrite(21, HIGH);
-  } else {
-    M5.dis.fillpix(0xff0000);
-    digitalWrite(21, LOW);
-  }
+  // if (M5.Btn.isPressed()) {
+  //   M5.dis.fillpix(0xfff000);
+  //   digitalWrite(21, HIGH);
+  // } else {
+  //   M5.dis.fillpix(0xff0000);
+  //   digitalWrite(21, LOW);
+  // }
 
-  delay(50);
+  /*
+  Serial.println("AT");
+  Serial.println(Serial2.write("AT\r\n"));
+  Serial.println(Serial2.readString());
+  delay(500);
+  Serial.println("AT+switchdis=0");
+  Serial.println(Serial2.write("AT+switchdis=0\r\n"));
+  Serial.println(Serial2.readString());
+  delay(500);
+  Serial.println("AT+switchdis=1");
+  Serial.println(Serial2.write("AT+switchdis=1\r\n"));
+  Serial.println(Serial2.readString());
+  delay(500);
+  Serial.println("AT+interval=5");
+  Serial.println(Serial2.write("AT+interval=5\r\n"));
+  Serial.println(Serial2.readString());
+  delay(500);
+  Serial.println("AT+version?");
+  Serial.println(Serial2.write("AT+version?\r\n"));
+  Serial.println(Serial2.readString());
+  delay(500);
+  Serial.println("AT+RST");
+  Serial.println(Serial2.write("AT+RST\r\n"));
+  Serial.println(Serial2.readString());
+  delay(500);
+  Serial.println("AT+anchor_tag=0");
+  Serial.println(Serial2.write("AT+anchor_tag=0\r\n"));
+  Serial.println(Serial2.readString());
+  delay(500);
+  Serial.println("AT+anchor_tag=1,0");
+  Serial.println(Serial2.write("AT+anchor_tag=1,0\r\n"));
+  Serial.println(Serial2.readString());
+  delay(500);
 
-  M5.update();
+
+M5.update();
+
+delay(2000);
 }
+*/
 
 /*
 
@@ -236,3 +272,31 @@ void loop() {
   }
 }
 */
+
+#include "M5Atom.h"
+
+void setup() {
+  M5.begin(true, true, true);                // Khởi tạo Serial, I2C, Display
+  Serial.begin(115200);                      // USB để giao tiếp với máy tính
+  Serial2.begin(115200, SERIAL_8N1, 32, 26); // UART với BU01
+  Serial.println("UART Bridge Ready");
+}
+
+void loop() {
+  // Chuyển dữ liệu từ máy tính sang BU01
+  if (Serial.available()) {
+    // Serial2.write((char)Serial.read());
+    String command = Serial.readStringUntil('\n'); // Đọc lệnh đến khi gặp '\n'
+    Serial2.print(command);                        // Gửi lệnh đến STM32/BU01
+    Serial2.print("\r\n");                         // Thêm CR+LF cho lệnh AT
+    Serial.print("Sent: ");                        // Hiển thị lệnh vừa gửi
+    Serial.println(command);                       // In lệnh để xác nhận trên PuTTY
+  }
+  // Chuyển dữ liệu từ BU01 sang máy tính
+  if (Serial2.available()) {
+    // Serial.write((char)Serial2.read());
+    String response = Serial2.readStringUntil('\n'); // Đọc phản hồi đến khi gặp '\n'
+    Serial.print("Received: ");                      // Hiển thị phản hồi
+    Serial.println(response);                        // In phản hồi từ STM32/BU01
+  }
+}

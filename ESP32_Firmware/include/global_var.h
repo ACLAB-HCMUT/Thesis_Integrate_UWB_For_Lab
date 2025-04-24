@@ -1,3 +1,4 @@
+/*
 #ifndef GLOBAL_VAR_H
 #define GLOBAL_VAR_H
 
@@ -31,3 +32,4 @@ extern float g_anchor_matrix[N_ANCHORS][3];
 extern float g_current_distance_rmse;
 
 #endif
+*/

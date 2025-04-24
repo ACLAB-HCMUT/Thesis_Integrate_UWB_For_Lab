@@ -1,3 +1,4 @@
+/*
 #ifndef SERVER_MODULE_H
 #define SERVER_MODULE_H
 
@@ -9,3 +10,4 @@ void serverTask(void *pvParameters);
 String processor(const String &var);
 
 #endif
+*/

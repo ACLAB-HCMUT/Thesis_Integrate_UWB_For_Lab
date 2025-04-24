@@ -1,3 +1,4 @@
+/*
 #include "mqtt_module.h"
 
 WiFiClient client;
@@ -65,3 +66,4 @@ void MQTT_send_data(Adafruit_MQTT_Publish topic, int id, float array[], String t
   vTaskDelay(pdMS_TO_TICKS(MQTT_WAIT_SEND));
   return;
 }
+*/

@@ -1,3 +1,4 @@
+/*
 #ifndef MQTT_MODULE_H
 #define MQTT_MODULE_H
 
@@ -15,3 +16,4 @@ extern Adafruit_MQTT_Publish tagposition;
 extern Adafruit_MQTT_Publish anchorposition;
 
 #endif
+*/

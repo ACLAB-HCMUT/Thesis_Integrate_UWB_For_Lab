@@ -1,3 +1,4 @@
+/*
 #include "wifi_module.h"
 #include "../project_config.h"
 
@@ -31,3 +32,4 @@ void WIFI_setup() {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 }
+  */

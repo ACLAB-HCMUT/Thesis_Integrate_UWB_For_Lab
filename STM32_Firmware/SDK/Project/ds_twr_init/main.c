@@ -511,6 +511,7 @@ if(UserSetNow.ANCHOR_TAG==1)
 
 //#endif
 
+
 //#ifdef TAG
 /*
 if(UserSetNow.ANCHOR_TAG==0)
@@ -557,6 +558,290 @@ if(UserSetNow.ANCHOR_TAG==0)
 }		
 //#endif
 */
+if(UserSetNow.ANCHOR_TAG==0)
+{
+/* Set expected response's delay and timeout. See NOTE 4 and 5 below.
+     * As this example only handles one incoming frame with always the same delay and timeout, those values can be set here once for all. */
+    dwt_setrxaftertxdelay(POLL_TX_TO_RESP_RX_DLY_UUS);
+    dwt_setrxtimeout(RESP_RX_TIMEOUT_UUS);
+    if(TAG_ID == MASTER_TAG)
+    {
+        OLED_ShowString(0,0,"DS MASTER TAG:");
+
+    }
+    else
+    {
+        OLED_ShowString(0,0,"DS SLAVE TAG:");
+    }
+
+    OLED_ShowString(0,2,"Distance:");
+
+    if(TAG_ID ==  MASTER_TAG)
+    {
+        Semaphore_Enable = 1 ;
+        Waiting_TAG_Release_Semaphore = 0;
+    }
+    else
+    {
+        Semaphore_Enable = 0 ;
+    }
+
+
+    Semaphore_Init();
+    //Master TAG0
+    while(1)
+    {
+        if(Semaphore_Enable == 1)
+        {
+            //GPIO_ResetBits(GPIOA,GPIO_Pin_3);
+              GPIO_ResetBits(GPIOA,GPIO_Pin_1);
+              GPIO_ResetBits(GPIOA,GPIO_Pin_2);
+            //send message to anthor,TAG<->ANTHOR
+            //OLED_ShowString(0, 2,"Fail");
+            
+			//dwt_setrxaftertxdelay(POLL_TX_TO_RESP_RX_DLY_UUS);
+			//dwt_setrxtimeout(RESP_RX_TIMEOUT_UUS);
+            Tag_Measure_Dis();//measuer distance between tag and all anthor
+             //OLED_ShowString(0, 2,"PASS");
+            Semaphore_Enable = 0 ;
+
+            if(TAG_ID != MASTER_TAG)
+            {
+                //send release semaphore to master tag
+                Semaphore_Release[ALL_MSG_SN_IDX] = frame_seq_nb;
+                Semaphore_Release[ALL_MSG_TAG_IDX] = TAG_ID;
+                dwt_writetxdata(sizeof(Semaphore_Release), Semaphore_Release, 0);
+                dwt_writetxfctrl(sizeof(Semaphore_Release), 0);
+
+                dwt_starttx(DWT_START_TX_IMMEDIATE );
+                while (!(dwt_read32bitreg(SYS_STATUS_ID) & SYS_STATUS_TXFRS))
+                {};
+            }
+        }
+
+        if(TAG_ID == MASTER_TAG)//master  tag
+        {
+            //statistics tag
+            if(Sum_Tag_Semaphore_request() == 0)
+            {
+                for(tag_index = 0; tag_index <MAX_SLAVE_TAG; tag_index++)
+                {
+                    Tag_Statistics[ALL_MSG_SN_IDX] = frame_seq_nb;
+                    Tag_Statistics[ALL_MSG_TAG_IDX] = tag_index;
+                    dwt_writetxdata(sizeof(Tag_Statistics), Tag_Statistics, 0);
+                    dwt_writetxfctrl(sizeof(Tag_Statistics), 0);
+                    dwt_starttx(DWT_START_TX_IMMEDIATE | DWT_RESPONSE_EXPECTED);
+
+                    while (!((status_reg = dwt_read32bitreg(SYS_STATUS_ID)) & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_ERR)))
+                    { };
+
+                    if (status_reg & SYS_STATUS_RXFCG)
+                    {
+                        /* Clear good RX frame event and TX frame sent in the DW1000 status register. */
+                        dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_RXFCG | SYS_STATUS_TXFRS);
+                        /* A frame has been received, read it into the local buffer. */
+                        frame_len = dwt_read32bitreg(RX_FINFO_ID) & RX_FINFO_RXFLEN_MASK;
+                        if (frame_len <= RX_BUF_LEN)
+                        {
+                            dwt_readrxdata(rx_buffer, frame_len, 0);
+                        }
+                        rx_buffer[ALL_MSG_SN_IDX] = 0;
+						
+                        if(rx_buffer[ALL_MSG_TAG_IDX] == tag_index)
+                        {
+                            uint8 temp = rx_buffer[ALL_MSG_TAG_IDX] ;
+							rx_buffer[ALL_MSG_TAG_IDX] =0;
+                            if (memcmp(rx_buffer, Tag_Statistics_response, ALL_MSG_COMMON_LEN) == 0)
+                            {
+                                Semaphore[temp] = 1;
+
+                               GPIO_SetBits(GPIOA,GPIO_Pin_2);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        /* Clear RX error events in the DW1000 status register. */
+                        dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_ALL_RX_ERR);
+                        //GPIO_SetBits(GPIOA,GPIO_Pin_1);
+                    }
+                }
+            }
+            //pick one tag ,send Semaphore message
+            //release to specific tag(TAG ID)
+            //master tag send release signal,and the specific tag send comfirm message
+            if(Waiting_TAG_Release_Semaphore == 0 && Sum_Tag_Semaphore_request() != 0)
+            {
+          		Semaphore[0] = 0;
+                for(tag_index = 0; tag_index <MAX_SLAVE_TAG; tag_index++)
+                {
+                    if(Semaphore[tag_index] == 1)
+                    {
+                       // dwt_setrxtimeout(0);
+                        Master_Release_Semaphore[ALL_MSG_SN_IDX] = frame_seq_nb;
+                        Master_Release_Semaphore[ALL_MSG_TAG_IDX] = tag_index;
+                        dwt_writetxdata(sizeof(Master_Release_Semaphore), Master_Release_Semaphore, 0);
+                        dwt_writetxfctrl(sizeof(Master_Release_Semaphore), 0);
+                        dwt_starttx(DWT_START_TX_IMMEDIATE | DWT_RESPONSE_EXPECTED);
+						
+						dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_RXFCG | SYS_STATUS_TXFRS);
+
+                        while (!((status_reg = dwt_read32bitreg(SYS_STATUS_ID)) & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_ERR)))
+                        { };
+						
+
+                        if (status_reg & SYS_STATUS_RXFCG)
+                        {
+
+						    GPIO_SetBits(GPIOA,GPIO_Pin_1);
+                            dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_RXFCG | SYS_STATUS_TXFRS);
+                            frame_len = dwt_read32bitreg(RX_FINFO_ID) & RX_FINFO_RXFLEN_MASK;
+                            if (frame_len <= RX_BUF_LEN)
+                            {
+                                dwt_readrxdata(rx_buffer, frame_len, 0);
+                            }
+                            rx_buffer[ALL_MSG_SN_IDX] = 0;
+							
+                            if(rx_buffer[ALL_MSG_TAG_IDX] == tag_index)
+                            {
+                                rx_buffer[ALL_MSG_TAG_IDX] = 0; GPIO_SetBits(GPIOA,GPIO_Pin_3);
+								//USART_puts(rx_buffer,frame_len);
+                                if (memcmp(rx_buffer, Master_Release_Semaphore_comfirm, ALL_MSG_COMMON_LEN) == 0)
+                                {
+                                    //if the tag recive a semaphore, wait release remaphore
+                                    Waiting_TAG_Release_Semaphore ++;                                   
+                                    continue;//only release one semphore once
+                                }
+                            }
+							
+
+                        }
+                        else//the tag may leave net,clear semaphore
+                        {
+                            Semaphore[tag_index] = 0 ;
+                            //GPIO_SetBits(GPIOA,GPIO_Pin_1);
+                            //if(Waiting_TAG_Release_Semaphore != 0 )
+                            //      Waiting_TAG_Release_Semaphore --;
+                            /* Clear RX error events in the DW1000 status register. */
+							//sprintf(dist_str, "%08x",status_reg);
+   							//OLED_ShowString(0, 2," 		   "); OLED_ShowString(0, 2,dist_str);
+                            dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_ALL_RX_ERR);
+                        }
+                    }
+                }
+            }
+
+            if(Waiting_TAG_Release_Semaphore == 0 )
+            {
+                // GPIO_SetBits(GPIOA,GPIO_Pin_2);GPIO_SetBits(GPIOA,GPIO_Pin_1);
+            }
+            //Master tag waitting for specific tag Semaphore Release message
+            if( Waiting_TAG_Release_Semaphore >0)
+            {
+                dwt_setrxtimeout(10000);//about 10ms
+                dwt_rxenable(0);
+                // GPIO_SetBits(GPIOA,GPIO_Pin_2);GPIO_SetBits(GPIOA,GPIO_Pin_1);
+                while (!((status_reg = dwt_read32bitreg(SYS_STATUS_ID)) & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_ERR)))
+                { };
+
+                if (status_reg & SYS_STATUS_RXFCG)
+                {
+                    dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_RXFCG);
+                    frame_len = dwt_read32bitreg(RX_FINFO_ID) & RX_FINFO_RXFL_MASK_1023;
+                    if (frame_len <= RX_BUFFER_LEN)
+                    {
+                        dwt_readrxdata(rx_buffer, frame_len, 0);
+                    }
+                    if (memcmp(rx_buffer, Semaphore_Release, ALL_MSG_COMMON_LEN) == 0)
+                    {
+                        if(Semaphore[Semaphore_Release[ALL_MSG_TAG_IDX]] == 1)
+                        {
+                            Semaphore[Semaphore_Release[ALL_MSG_TAG_IDX]] = 0 ;
+                            Waiting_TAG_Release_Semaphore --;
+                        }
+                    }
+                }
+                else
+                {
+                	//maybe the tag leave network
+                    Waiting_TAG_Release_Semaphore--;
+					/* Clear RX error events in the DW1000 status register. */					
+                    dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_ALL_RX_ERR);
+                }
+            }
+            //????????????TAG???Semaphore û????ž???????????Master TAG??????Semaphore????????????????????h??????????û?????TAG ???Semaphore???????????
+            //if all tag have serviced by  master tag
+            //master tag can measure the distance
+            if(Sum_Tag_Semaphore_request() == 0)
+            {
+                Semaphore_Enable = 1 ;
+            }
+        }
+        else  //slave tags
+        {
+            // OLED_ShowString(0,0,"Slave TAG:");
+            dwt_setrxtimeout(0);
+            dwt_rxenable(0);
+
+            /* Poll for reception of a frame or error/timeout. See NOTE 7 below. */
+            while (!((status_reg = dwt_read32bitreg(SYS_STATUS_ID)) & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_ERR)))
+            { };
+
+            if (status_reg & SYS_STATUS_RXFCG)
+            {
+                /* Clear good RX frame event in the DW1000 status register. */
+                dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_RXFCG);
+
+                /* A frame has been received, read it into the local buffer. */
+                frame_len = dwt_read32bitreg(RX_FINFO_ID) & RX_FINFO_RXFL_MASK_1023;
+                if (frame_len <= RX_BUFFER_LEN)
+                {
+                    dwt_readrxdata(rx_buffer, frame_len, 0);
+                }
+                rx_buffer[ALL_MSG_SN_IDX] = 0;
+                if(rx_buffer[ALL_MSG_TAG_IDX] == TAG_ID)
+                {
+                    rx_buffer[ALL_MSG_TAG_IDX] = 0;
+                    if (memcmp(rx_buffer, Tag_Statistics, ALL_MSG_COMMON_LEN) == 0)
+                    {
+                        //GPIO_SetBits(GPIOA,GPIO_Pin_3);
+                        Tag_Statistics_response[ALL_MSG_SN_IDX] = frame_seq_nb;
+                        Tag_Statistics_response[ALL_MSG_TAG_IDX] = TAG_ID;
+                        dwt_writetxdata(sizeof(Tag_Statistics_response), Tag_Statistics_response, 0);
+                        dwt_writetxfctrl(sizeof(Tag_Statistics_response), 0);
+
+                        dwt_starttx(DWT_START_TX_IMMEDIATE );
+                        //clear tx flag
+                        while (!(dwt_read32bitreg(SYS_STATUS_ID) & SYS_STATUS_TXFRS))
+                        { };
+						GPIO_SetBits(GPIOA,GPIO_Pin_2);
+                    }
+
+                    if (memcmp(rx_buffer, Master_Release_Semaphore, ALL_MSG_COMMON_LEN) == 0)
+                    {
+					    Master_Release_Semaphore_comfirm[ALL_MSG_SN_IDX] = frame_seq_nb;
+                        Master_Release_Semaphore_comfirm[ALL_MSG_TAG_IDX] = TAG_ID;
+                        dwt_writetxdata(sizeof(Master_Release_Semaphore_comfirm), Master_Release_Semaphore_comfirm, 0);
+                        dwt_writetxfctrl(sizeof(Master_Release_Semaphore_comfirm), 0);
+
+                        dwt_starttx(DWT_START_TX_IMMEDIATE);
+                        //clear tx flag
+                        while (!(dwt_read32bitreg(SYS_STATUS_ID) & SYS_STATUS_TXFRS))
+                        { };
+                        Semaphore_Enable = 1;
+                        GPIO_SetBits(GPIOA,GPIO_Pin_1);
+
+                    }
+                }
+            }
+            else
+            {
+                /* Clear RX error events in the DW1000 status register. */
+                dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_ALL_RX_ERR);
+            }
+        }
+    }
+	}
 }
 
 #define Filter_N 5  //max filter use in this system
