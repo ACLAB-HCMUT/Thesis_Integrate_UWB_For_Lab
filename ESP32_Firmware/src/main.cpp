@@ -1,7 +1,7 @@
 // Import required libraries
-/*
-#include "main.h"
 
+#include "main.h"
+/*
 void UWB_task(void *pvParameters) {
   while (1) {
     UWB_readString();
@@ -25,16 +25,17 @@ void MQTT_anchor_task(void *pvParameters) {
     }
   }
 }
+  */
 
 void setup() {
   // M5Atom setup
   M5.begin(true, true, true);
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   // UWB setup
   Serial2.begin(115200, SERIAL_8N1, ATOM_RX_PIN, ATOM_TX_PIN);
   delay(100);
-  UWB_timer();
+  // UWB_timer();
   // UWB_setupmode();
 
   // Other setup
@@ -57,7 +58,7 @@ void loop() {
   //   digitalWrite(21, LOW);
   // }
 
-  /*
+  
   Serial.println("AT");
   Serial.println(Serial2.write("AT\r\n"));
   Serial.println(Serial2.readString());
@@ -96,7 +97,7 @@ M5.update();
 
 delay(2000);
 }
-*/
+
 
 /*
 
@@ -272,31 +273,37 @@ void loop() {
   }
 }
 */
-
+/*
 #include "M5Atom.h"
 
 void setup() {
-  M5.begin(true, true, true);                // Khởi tạo Serial, I2C, Display
-  Serial.begin(115200);                      // USB để giao tiếp với máy tính
+  M5.begin(true, true, false);               // Khởi tạo Serial, I2C, Display
+  Serial.begin(115200);          // USB để giao tiếp với máy tính
   Serial2.begin(115200, SERIAL_8N1, 32, 26); // UART với BU01
+
+  delay(1000);
   Serial.println("UART Bridge Ready");
 }
 
 void loop() {
   // Chuyển dữ liệu từ máy tính sang BU01
-  if (Serial.available()) {
+  // if (Serial.available()) {
     // Serial2.write((char)Serial.read());
-    String command = Serial.readStringUntil('\n'); // Đọc lệnh đến khi gặp '\n'
-    Serial2.print(command);                        // Gửi lệnh đến STM32/BU01
-    Serial2.print("\r\n");                         // Thêm CR+LF cho lệnh AT
-    Serial.print("Sent: ");                        // Hiển thị lệnh vừa gửi
-    Serial.println(command);                       // In lệnh để xác nhận trên PuTTY
-  }
+    // String command = Serial.readStringUntil('\n'); // Đọc lệnh đến khi gặp '\n'
+    // Serial2.print(command);                        // Gửi lệnh đến STM32/BU01
+    // Serial2.print("\r\n");                         // Thêm CR+LF cho lệnh AT
+    // Serial.print("Sent: ");                        // Hiển thị lệnh vừa gửi
+    // Serial.println(command);                       // In lệnh để xác nhận trên PuTTY
+  // }
   // Chuyển dữ liệu từ BU01 sang máy tính
-  if (Serial2.available()) {
+  // if (Serial2.available()) {
     // Serial.write((char)Serial2.read());
-    String response = Serial2.readStringUntil('\n'); // Đọc phản hồi đến khi gặp '\n'
-    Serial.print("Received: ");                      // Hiển thị phản hồi
-    Serial.println(response);                        // In phản hồi từ STM32/BU01
+    // String response = Serial2.readStringUntil('\n'); // Đọc phản hồi đến khi gặp '\n'
+    // Serial.print("Received: ");                      // Hiển thị phản hồi
+    // Serial.println(response);                        // In phản hồi từ STM32/BU01
+  // }
+  while (Serial.available()) {
+    Serial2.print((char)Serial.read());
   }
 }
+*/

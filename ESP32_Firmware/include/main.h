@@ -1,12 +1,12 @@
-/*
+
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
 // External libraries
-#include "DHT20.h"
+// #include "DHT20.h"
 #include "M5Atom.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
+// #include "freertos/FreeRTOS.h"
+// #include "freertos/task.h"
 // #include "HardwareSerial.h"
 
 // Internal libraries
@@ -22,4 +22,3 @@
 #include "../src/utils/file_manip.h"
 
 #endif
-*/
