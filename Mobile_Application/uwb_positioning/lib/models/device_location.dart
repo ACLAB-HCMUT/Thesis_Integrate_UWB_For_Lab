@@ -4,7 +4,6 @@ class DeviceLocation {
   final double tagZ;
   final DateTime recordTime;
   final String recordType;
-  final String roomId;
 
   DeviceLocation({
     required this.tagX,
@@ -12,7 +11,6 @@ class DeviceLocation {
     required this.tagZ,
     required this.recordTime,
     required this.recordType,
-    required this.roomId,
   });
 
   // Method to convert from JSON to DeviceLocation object
@@ -23,7 +21,6 @@ class DeviceLocation {
       tagZ: json['tag_z'].toDouble(),
       recordTime: DateTime.parse(json['record_time']),
       recordType: json['record_type'],
-      roomId: json['room_id'],
     );
   }
 
@@ -35,7 +32,6 @@ class DeviceLocation {
       'tag_z': tagZ,
       'record_time': recordTime.toIso8601String(),
       'record_type': recordType,
-      'room_id': roomId,
     };
   }
 }

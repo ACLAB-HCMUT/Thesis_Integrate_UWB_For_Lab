@@ -16,16 +16,22 @@ class _DeviceHistoryTextPageState extends State<DeviceHistoryTextPage> {
   late Future<void> _deviceHistoryFuture;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final args = ModalRoute.of(context)?.settings.arguments;
+    final deviceId = args is String ? args : args?.toString() ?? 'unknown';
+
     // Mặc định là chế độ xem theo giờ
     _deviceHistoryFuture =
         Provider.of<DeviceLocationService>(context, listen: false)
-            .fetchHistoryHourly();
+            .fetchHistoryHourly(deviceId);
   }
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)?.settings.arguments;
+    final deviceId = args is String ? args : args?.toString() ?? 'unknown';
     final deviceLocationService = Provider.of<DeviceLocationService>(context);
 
     return Scaffold(
@@ -39,10 +45,10 @@ class _DeviceHistoryTextPageState extends State<DeviceHistoryTextPage> {
                 isDailyView = !isDailyView; // Chuyển đổi chế độ xem
                 if (isDailyView) {
                   _deviceHistoryFuture =
-                      deviceLocationService.fetchHistoryDaily();
+                      deviceLocationService.fetchHistoryDaily(deviceId);
                 } else {
                   _deviceHistoryFuture =
-                      deviceLocationService.fetchHistoryHourly();
+                      deviceLocationService.fetchHistoryHourly(deviceId);
                 }
               });
             },
@@ -73,7 +79,7 @@ class _DeviceHistoryTextPageState extends State<DeviceHistoryTextPage> {
 
                 // Chuyển thông tin thiết bị thành text để hiển thị
                 return ListTile(
-                  title: Text('Device ID: ${device.roomId}'),
+                  title: Text('Device ID: $deviceId'),
                   subtitle: Text(
                     'Location: (${device.tagX}, ${device.tagY}, ${device.tagZ})\n'
                     'Time: ${device.recordTime}\n'

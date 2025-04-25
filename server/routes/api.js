@@ -51,10 +51,15 @@ const deviceController = require('../controllers/deviceController');
 //   res.json([{ id: 201, name: "Laptop" }, { id: 202, name: "Phone" }]);
 // });
 
-// API: GET /
+// API: devices
 router.get('/devices', deviceController.getAllDevices);
 router.get('/devices/:id', deviceController.getDeviceById);
-router.get('/locations/:id', deviceController.getDeviceLocations)
+
+//API: locations
+router.get('/locations/hourly/:id', deviceController.getHourlyLocations)
+router.get('/locations/daily/:id', deviceController.getDailyLocations)
+router.get('/locations/anchor/:id', deviceController.getAnchorLocations)
+
 router.post('/create-request', deviceController.createBorrowRequest);
 router.patch('/borrow-date/:id', deviceController.updateBorrowDate);
 router.patch('/return-date/:id', deviceController.updateReturnDate);

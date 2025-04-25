@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uwb_positioning/pages/borrow_request_page.dart';
 import 'package:uwb_positioning/pages/device_realtime_page.dart';
 import 'package:uwb_positioning/pages/device_history_page.dart';
 import 'package:uwb_positioning/services/device_service.dart';
@@ -162,7 +163,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
                               onPressed: () {
                                 Navigator.pushNamed(
                                   context,
-                                  '/borrow-request', // hoặc BorrowRequestPage.nameRoute nếu đã import
+                                  BorrowRequestPage.nameRoute, // hoặc BorrowRequestPage.nameRoute nếu đã import
                                   arguments: device.deviceId,
                                 );
                               },

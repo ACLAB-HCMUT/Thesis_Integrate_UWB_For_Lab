@@ -33,7 +33,8 @@ CREATE TABLE device (
   type_id INT REFERENCES device_type(type_id),
   image TEXT,
   is_active BOOLEAN,
-  is_available BOOLEAN
+  is_available BOOLEAN,
+  room_id INT REFERENCES room(room_id)
 );
 
 -- BORROW_REQUEST table
@@ -67,7 +68,6 @@ CREATE TABLE device_location (
   tag_x FLOAT,
   tag_y FLOAT,
   tag_z FLOAT,
-  room_id INT REFERENCES room(room_id),
   record_time TIMESTAMP,
   record_type VARCHAR(50)
 );

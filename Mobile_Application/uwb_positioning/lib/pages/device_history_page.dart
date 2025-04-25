@@ -43,10 +43,10 @@ class _DeviceHistoryPageState extends State<DeviceHistoryPage> {
                   // Reload the corresponding data
                   if (isDailyView) {
                     _deviceHistoryFuture =
-                        deviceLocationService.fetchHistoryDaily();
+                        deviceLocationService.fetchHistoryDaily(deviceId);
                   } else {
                     _deviceHistoryFuture =
-                        deviceLocationService.fetchHistoryHourly();
+                        deviceLocationService.fetchHistoryHourly(deviceId);
                   }
                 });
               },
@@ -112,10 +112,10 @@ class _DeviceHistoryPageState extends State<DeviceHistoryPage> {
                   icon: const Icon(Icons.list),
                   onPressed: () {
                     // Chuyển sang màn hình lịch sử dạng văn bản
-                    Navigator.push(
+                    Navigator.pushNamed(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => const DeviceHistoryTextPage()),
+                      DeviceHistoryTextPage.nameRoute,
+                      arguments: deviceId,
                     );
                   },
                 ),
@@ -130,6 +130,6 @@ class _DeviceHistoryPageState extends State<DeviceHistoryPage> {
     final deviceId = args is String ? args : args?.toString() ?? 'unknown';
     final deviceLocationService =
         Provider.of<DeviceLocationService>(context, listen: false);
-    _deviceHistoryFuture = deviceLocationService.fetchHistoryHourly();
+    _deviceHistoryFuture = deviceLocationService.fetchHistoryHourly(deviceId);
   }
 }

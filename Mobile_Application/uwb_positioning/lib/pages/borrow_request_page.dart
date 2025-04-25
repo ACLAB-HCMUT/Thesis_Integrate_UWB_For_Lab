@@ -77,11 +77,6 @@ class _BorrowRequestPageState extends State<BorrowRequestPage> {
                 validator: (v) => v!.isEmpty ? 'Required' : null,
               ),
               TextFormField(
-                controller: _statusCtl,
-                decoration: const InputDecoration(labelText: 'Status'),
-                validator: (v) => v!.isEmpty ? 'Required' : null,
-              ),
-              TextFormField(
                 controller: _appointmentCtl,
                 decoration: const InputDecoration(labelText: 'Appointment Date'),
                 onTap: () async {
