@@ -60,7 +60,7 @@ setInterval(async () => {
       try {
         const result = await pool.query(
           `SELECT * FROM device_location 
-           WHERE device_id = $1 AND record_type = 'HOURLY' AND record_time = $2`,
+           WHERE device_id = $1 AND record_type = 'hourly' AND record_time = $2`,
           [data.device_id, time]
         );
   
@@ -70,7 +70,7 @@ setInterval(async () => {
                 device_id, tag_x, tag_y, tag_z,
                 an1rec_id, an2rec_id, an3rec_id, an4rec_id,
                 record_time, record_type
-            ) VALUES ($1, $2, $3, $4, 1, 2, 3, 4, $5, 'HOURLY')`,
+            ) VALUES ($1, $2, $3, $4, 1, 2, 3, 4, $5, 'hourly')`,
             [data.device_id, data.x, data.y, data.z, time]
           );
           console.log("🕐 Đã lưu bản ghi HOURLY cho device:", data.device_id);
@@ -92,7 +92,7 @@ setInterval(async () => {
       try {
         const result = await pool.query(
           `SELECT * FROM device_location 
-           WHERE device_id = $1 AND record_type = 'DAILY' AND record_time = $2`,
+           WHERE device_id = $1 AND record_type = 'daily' AND record_time = $2`,
           [data.device_id, time]
         );
   
@@ -102,7 +102,7 @@ setInterval(async () => {
                 device_id, tag_x, tag_y, tag_z,
                 an1rec_id, an2rec_id, an3rec_id, an4rec_id,
                 record_time, record_type
-            ) VALUES ($1, $2, $3, $4, 1, 2, 3, 4, $5, 'DAILY')`,
+            ) VALUES ($1, $2, $3, $4, 1, 2, 3, 4, $5, 'daily')`,
             [data.device_id, data.x, data.y, data.z, time]
           );
           console.log("📅 Đã lưu bản ghi DAILY cho device:", data.device_id);

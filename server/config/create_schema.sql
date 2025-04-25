@@ -9,6 +9,13 @@ CREATE TABLE "user" (
   status VARCHAR(50)
 );
 
+-- ROOM table
+CREATE TABLE room (
+  room_id SERIAL PRIMARY KEY,
+  room_max_x FLOAT,
+  room_max_y FLOAT
+);
+
 -- DEVICE_TYPE table
 CREATE TABLE device_type (
   type_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -50,9 +57,7 @@ CREATE TABLE anchor_location (
   anchor_y FLOAT,
   anchor_z FLOAT,
   record_time TIMESTAMP,
-  room_number VARCHAR(50),
-  room_max_x FLOAT,
-  room_max_y FLOAT
+  room_id INT REFERENCES room(room_id)
 );
 
 -- DEVICE_LOCATION table
@@ -62,10 +67,7 @@ CREATE TABLE device_location (
   tag_x FLOAT,
   tag_y FLOAT,
   tag_z FLOAT,
-  an1rec_id INT REFERENCES anchor_location(anchorrec_id),
-  an2rec_id INT REFERENCES anchor_location(anchorrec_id),
-  an3rec_id INT REFERENCES anchor_location(anchorrec_id),
-  an4rec_id INT REFERENCES anchor_location(anchorrec_id),
+  room_id INT REFERENCES room(room_id),
   record_time TIMESTAMP,
   record_type VARCHAR(50)
 );

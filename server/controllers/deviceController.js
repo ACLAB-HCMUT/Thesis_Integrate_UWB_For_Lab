@@ -79,9 +79,14 @@ exports.getDeviceById = async (req, res) => {
 
   try {
     const result = await pool.query(
-      `SELECT d.*, dt.type_name
+      `SELECT
+        d.description,
+        d.serial,
+        d.manufacturer,
+        d.specification,
+        d.is_active,
+        d.is_available
        FROM device d
-       LEFT JOIN device_type dt ON d.type_id = dt.type_id
        WHERE d.device_id = $1`,
       [deviceId]
     );

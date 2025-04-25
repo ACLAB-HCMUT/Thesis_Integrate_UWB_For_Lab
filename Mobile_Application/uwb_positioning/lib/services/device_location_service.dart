@@ -221,7 +221,7 @@ class DeviceLocationService with ChangeNotifier {
         'anchor_y': 0,
         'anchor_z': 0,
         'record_time': '2024-12-28T12:30:00Z',
-        'room_number': '1',
+        'room_id': '1',
       },
       '2': {
         'anchorrec_id': '2',
@@ -230,7 +230,7 @@ class DeviceLocationService with ChangeNotifier {
         'anchor_y': 0,
         'anchor_z': 0,
         'record_time': '2024-12-28T12:30:00Z',
-        'room_number': '1',
+        'room_id': '1',
       },
       '3': {
         'anchorrec_id': '3',
@@ -239,7 +239,7 @@ class DeviceLocationService with ChangeNotifier {
         'anchor_y': 5,
         'anchor_z': 0,
         'record_time': '2024-12-28T12:30:00Z',
-        'room_number': '1',
+        'room_id': '1',
       },
       '4': {
         'anchorrec_id': '4',
@@ -248,7 +248,7 @@ class DeviceLocationService with ChangeNotifier {
         'anchor_y': 5,
         'anchor_z': 0,
         'record_time': '2024-12-28T12:30:00Z',
-        'room_number': '1',
+        'room_id': '1',
       },
     };
 
