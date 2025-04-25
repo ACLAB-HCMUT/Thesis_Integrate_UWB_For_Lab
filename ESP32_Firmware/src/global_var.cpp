@@ -1,3 +1,4 @@
+/*
 #include "global_var.h"
 
 // Define variables for LED
@@ -17,3 +18,4 @@ float g_anchor_matrix[N_ANCHORS][N_DIMENSIONS] = {
     {1.45, 0.0, 0.0},
     {1.45, 0.55, 0.0}};
 float g_current_distance_rmse = 0.0;
+*/

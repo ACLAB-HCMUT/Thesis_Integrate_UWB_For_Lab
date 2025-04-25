@@ -1,3 +1,4 @@
+/*
 #ifndef WIFI_MODULE_H
 #define WIFI_MODULE_H
 
@@ -7,3 +8,4 @@ void wifiTask(void *pvParameters);
 void WIFI_setup();
 
 #endif
+*/

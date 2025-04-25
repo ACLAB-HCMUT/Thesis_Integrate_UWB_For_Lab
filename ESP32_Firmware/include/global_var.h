@@ -1,13 +1,13 @@
+/*
 #ifndef GLOBAL_VAR_H
 #define GLOBAL_VAR_H
 
-// #include "M5Atom.h"
-#include "M5AtomS3.h"
+#include "M5Atom.h"
 
 // Macro for UART
 #define ATOM_RX_PIN 32 // Unit's pin TX connects to Atom's pin G32
 #define ATOM_TX_PIN 26 // Unit's pin RX connects to Atom's pin G26
-
+/*
 // Macro for UWB
 #define N_ANCHORS 4    // Number of anchors
 #define N_DIMENSIONS 3 // Number of dimensions
@@ -32,3 +32,4 @@ extern float g_anchor_matrix[N_ANCHORS][3];
 extern float g_current_distance_rmse;
 
 #endif
+*/
