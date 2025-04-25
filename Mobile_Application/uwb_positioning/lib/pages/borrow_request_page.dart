@@ -59,7 +59,8 @@ class _BorrowRequestPageState extends State<BorrowRequestPage> {
 
   @override
   Widget build(BuildContext context) {
-    final deviceId = ModalRoute.of(context)!.settings.arguments as String;
+    final args = ModalRoute.of(context)?.settings.arguments;
+    final deviceId = args is String ? args : args?.toString() ?? 'unknown';
     return Scaffold(
       appBar: AppBar(title: const Text('Borrow Request')),
       body: Padding(

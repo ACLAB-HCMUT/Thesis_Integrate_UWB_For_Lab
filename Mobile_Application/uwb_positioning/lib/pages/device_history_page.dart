@@ -26,7 +26,8 @@ class _DeviceHistoryPageState extends State<DeviceHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final deviceId = ModalRoute.of(context)!.settings.arguments as String;
+    final args = ModalRoute.of(context)?.settings.arguments;
+    final deviceId = args is String ? args : args?.toString() ?? 'unknown';
     final deviceLocationService = Provider.of<DeviceLocationService>(context);
 
     return Scaffold(
@@ -125,7 +126,8 @@ class _DeviceHistoryPageState extends State<DeviceHistoryPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final deviceId = ModalRoute.of(context)!.settings.arguments as String;
+    final args = ModalRoute.of(context)?.settings.arguments;
+    final deviceId = args is String ? args : args?.toString() ?? 'unknown';
     final deviceLocationService =
         Provider.of<DeviceLocationService>(context, listen: false);
     _deviceHistoryFuture = deviceLocationService.fetchHistoryHourly();

@@ -19,7 +19,8 @@ class _DeviceRealtimePageState extends State<DeviceRealtimePage> {
 
   @override
   Widget build(BuildContext context) {
-    final deviceId = ModalRoute.of(context)!.settings.arguments as String;
+    final args = ModalRoute.of(context)?.settings.arguments;
+    final deviceId = args is String ? args : args?.toString() ?? 'unknown';
 
     return Consumer<MqttService>(builder: (context, mqttService, child) {
       // Check number of anchors
