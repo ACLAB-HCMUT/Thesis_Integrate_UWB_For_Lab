@@ -1,4 +1,3 @@
-/*
 #include "timer_module.h"
 
 hw_timer_t *timer = NULL;
@@ -15,4 +14,3 @@ void IRAM_ATTR Timer0_CallBack(void) {
     timer_data = 0;
   }
 }
-  */

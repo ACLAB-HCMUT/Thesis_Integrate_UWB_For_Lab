@@ -226,7 +226,7 @@ void Tag_Measure_Dis(void)
 {
     uint8 dest_anthor = 0,frame_len = 0;
     float final_distance = 0;
-	frame_seq_nb=0;//change by johhn
+		frame_seq_nb=0;//change by johhn
     for(dest_anthor = 0 ;  dest_anthor<ANCHOR_MAX_NUM; dest_anthor++)
     {
         dwt_setrxaftertxdelay(POLL_TX_TO_RESP_RX_DLY_UUS);
@@ -417,8 +417,7 @@ int main(void)
     // Start with board specific hardware init. 
 		peripherals_init();
 	
-    printf("hello dwm1000!\r\n");
-	
+    printf("CE Hello dwm1000!\r\n");
 
     // Reset and initialise DW1000.
     // For initialisation, DW1000 clocks must be temporarily set to crystal speed. After initialisation SPI rate can be increased for optimum
@@ -448,7 +447,7 @@ int main(void)
     dwt_setleds(1);
 		
 		// User configure
-		setup_DW1000ServerIRQ(1);
+		//setup_DW1000ServerIRQ(1);
 		
     // Apply default antenna delay value. See NOTE 1 below. 
     dwt_setrxantennadelay(RX_ANT_DLY);
@@ -504,6 +503,9 @@ if(UserSetNow.ANCHOR_TAG==1)
     // Loop forever initiating ranging exchanges. 
     OLED_ShowString(0,0,"DS TWR ANTHOR");
     //OLED_ShowString(0,2,"Distance:");
+		
+		// User code
+		printf("DS TWR ANTHOR");
 
     //KalMan_PramInit();
 		ANTHOR_MEASURE();
@@ -513,10 +515,9 @@ if(UserSetNow.ANCHOR_TAG==1)
 
 
 //#ifdef TAG
-/*
+
 if(UserSetNow.ANCHOR_TAG==0)
 {
-	
 		if(buff[1]>=0 && buff[1]<=255)
 		{
 				UserSetNow.ID=buff[1];
@@ -528,10 +529,16 @@ if(UserSetNow.ANCHOR_TAG==0)
 		if(TAG_ID == MASTER_TAG)
 		{
         OLED_ShowString(0,0,"DS MASTER TAG:");
+			
+				// User code
+				printf("DS MASTER TAG:");
     }
     else
     {
         OLED_ShowString(0,0,"DS SLAVE TAG:");
+			
+				// User code
+				printf("DS SLAVE TAG:");
     }
 		
     // Set expected response's delay and timeout. See NOTE 4 and 5 below.
@@ -555,19 +562,20 @@ if(UserSetNow.ANCHOR_TAG==0)
     //Master TAG0
 			
 		TAG_MEASURE();
-}		
+}
+
 //#endif
-*/
+
+/*
 if(UserSetNow.ANCHOR_TAG==0)
 {
-/* Set expected response's delay and timeout. See NOTE 4 and 5 below.
-     * As this example only handles one incoming frame with always the same delay and timeout, those values can be set here once for all. */
+		// Set expected response's delay and timeout. See NOTE 4 and 5 below.
+    // As this example only handles one incoming frame with always the same delay and timeout, those values can be set here once for all.
     dwt_setrxaftertxdelay(POLL_TX_TO_RESP_RX_DLY_UUS);
     dwt_setrxtimeout(RESP_RX_TIMEOUT_UUS);
     if(TAG_ID == MASTER_TAG)
     {
         OLED_ShowString(0,0,"DS MASTER TAG:");
-
     }
     else
     {
@@ -637,9 +645,9 @@ if(UserSetNow.ANCHOR_TAG==0)
 
                     if (status_reg & SYS_STATUS_RXFCG)
                     {
-                        /* Clear good RX frame event and TX frame sent in the DW1000 status register. */
+                        // Clear good RX frame event and TX frame sent in the DW1000 status register.
                         dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_RXFCG | SYS_STATUS_TXFRS);
-                        /* A frame has been received, read it into the local buffer. */
+                        // A frame has been received, read it into the local buffer.
                         frame_len = dwt_read32bitreg(RX_FINFO_ID) & RX_FINFO_RXFLEN_MASK;
                         if (frame_len <= RX_BUF_LEN)
                         {
@@ -661,7 +669,7 @@ if(UserSetNow.ANCHOR_TAG==0)
                     }
                     else
                     {
-                        /* Clear RX error events in the DW1000 status register. */
+                        // Clear RX error events in the DW1000 status register.
                         dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_ALL_RX_ERR);
                         //GPIO_SetBits(GPIOA,GPIO_Pin_1);
                     }
@@ -722,7 +730,7 @@ if(UserSetNow.ANCHOR_TAG==0)
                             //GPIO_SetBits(GPIOA,GPIO_Pin_1);
                             //if(Waiting_TAG_Release_Semaphore != 0 )
                             //      Waiting_TAG_Release_Semaphore --;
-                            /* Clear RX error events in the DW1000 status register. */
+                            // Clear RX error events in the DW1000 status register.
 							//sprintf(dist_str, "%08x",status_reg);
    							//OLED_ShowString(0, 2," 		   "); OLED_ShowString(0, 2,dist_str);
                             dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_ALL_RX_ERR);
@@ -765,7 +773,7 @@ if(UserSetNow.ANCHOR_TAG==0)
                 {
                 	//maybe the tag leave network
                     Waiting_TAG_Release_Semaphore--;
-					/* Clear RX error events in the DW1000 status register. */					
+					// Clear RX error events in the DW1000 status register.				
                     dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_ALL_RX_ERR);
                 }
             }
@@ -783,16 +791,16 @@ if(UserSetNow.ANCHOR_TAG==0)
             dwt_setrxtimeout(0);
             dwt_rxenable(0);
 
-            /* Poll for reception of a frame or error/timeout. See NOTE 7 below. */
+            // Poll for reception of a frame or error/timeout. See NOTE 7 below.
             while (!((status_reg = dwt_read32bitreg(SYS_STATUS_ID)) & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_ERR)))
             { };
 
             if (status_reg & SYS_STATUS_RXFCG)
             {
-                /* Clear good RX frame event in the DW1000 status register. */
+                // Clear good RX frame event in the DW1000 status register.
                 dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_RXFCG);
 
-                /* A frame has been received, read it into the local buffer. */
+                // A frame has been received, read it into the local buffer.
                 frame_len = dwt_read32bitreg(RX_FINFO_ID) & RX_FINFO_RXFL_MASK_1023;
                 if (frame_len <= RX_BUFFER_LEN)
                 {
@@ -836,12 +844,13 @@ if(UserSetNow.ANCHOR_TAG==0)
             }
             else
             {
-                /* Clear RX error events in the DW1000 status register. */
+                // Clear RX error events in the DW1000 status register.
                 dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_ALL_RX_ERR);
             }
         }
     }
 	}
+*/
 }
 
 #define Filter_N 5  //max filter use in this system

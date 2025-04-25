@@ -157,35 +157,39 @@ volatile uint8_t dw1000_force_off = 0;
 
 void shutdown_dw1000(void)
 {
-		dwt_setautorxreenable(0);
-    //dwt_setinterrupt(0xFFFFFFFF, 0);
+	/*
+	dwt_setautorxreenable(0);
+  //dwt_setinterrupt(0xFFFFFFFF, 0);
 	
-		dwt_forcetrxoff();
-		dwt_rxreset();
-		//dwt_write32bitreg(SYS_STATUS_ID, 0xFFFFFFFF);
-    
-    dw1000_force_off = 1;
-    GPIO_ResetBits(GPIOC, GPIO_Pin_13);
+	dwt_forcetrxoff();
+	dwt_rxreset();
+	//dwt_write32bitreg(SYS_STATUS_ID, 0xFFFFFFFF);
+  */
+	
+	dw1000_force_off = 1;
+	GPIO_ResetBits(GPIOC, GPIO_Pin_13);
 }
 
 void wakeup_dw1000(void)
 {
-		if (dw1000_force_off)
-		{
-				//dwt_initialise(DWT_LOADUCODE);
-				//dwt_configure(&config);
-				//dwt_setleds(1);
-			
-				//dwt_setrxantennadelay(RX_ANT_DLY);
-				//dwt_settxantennadelay(TX_ANT_DLY);
-			
-				//dwt_setinterrupt(DWT_INT_RFCG | DWT_INT_RFCE | DWT_INT_RFTO, 1);
-			
-				dwt_rxenable(0);
-			
-				dw1000_force_off = 0;
-				GPIO_SetBits(GPIOC, GPIO_Pin_13); 
-		}
+	if (dw1000_force_off)
+	{
+		//dwt_initialise(DWT_LOADUCODE);
+		//dwt_configure(&config);
+		//dwt_setleds(1);
+
+		//dwt_setrxantennadelay(RX_ANT_DLY);
+		//dwt_settxantennadelay(TX_ANT_DLY);
+
+		//dwt_setinterrupt(DWT_INT_RFCG | DWT_INT_RFCE | DWT_INT_RFTO, 1);
+		
+		/*
+		dwt_rxenable(0);
+		*/
+		
+		dw1000_force_off = 0;
+		GPIO_SetBits(GPIOC, GPIO_Pin_13); 
+	}
 }
 
 /**
@@ -200,8 +204,6 @@ void EXTI1_IRQHandler(void)
 {
 	if(EXTI_GetITStatus(EXTI_Line1) != RESET)
 	{
-		GPIO_ResetBits(GPIOC, GPIO_Pin_13);
-		/*
 			static uint32_t last_press = 0;
 			if (HAL_GetTick() - last_press < 50)
 			{
@@ -218,7 +220,6 @@ void EXTI1_IRQHandler(void)
 			{
 					shutdown_dw1000();
       }
-			*/
 			EXTI_ClearITPendingBit(EXTI_Line1);
 	}
 }

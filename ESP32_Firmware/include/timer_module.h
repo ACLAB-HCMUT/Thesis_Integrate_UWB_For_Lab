@@ -1,4 +1,3 @@
-/*
 #ifndef TIMER_MODULE_H
 #define TIMER_MODULE_H
 
@@ -11,4 +10,3 @@ extern uint32_t timer_data;
 void IRAM_ATTR Timer0_CallBack(void);
 
 #endif
-*/
