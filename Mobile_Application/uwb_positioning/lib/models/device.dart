@@ -1,7 +1,7 @@
 import 'package:logging/logging.dart';
 
 class Device {
-  final String deviceId;
+  final int deviceId;
   final String deviceName;
   String description = '';
   String manufacturer = '';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:logging/logging.dart';
 
@@ -8,6 +9,7 @@ import 'package:uwb_positioning/pages/device_realtime_page.dart';
 import 'package:uwb_positioning/pages/notification_list_page.dart';
 import 'package:uwb_positioning/pages/device_history_page.dart';
 import 'package:uwb_positioning/pages/device_history_text_page.dart';
+import 'package:uwb_positioning/pages/borrow_request_page.dart';
 
 import 'package:uwb_positioning/services/alert_service.dart';
 import 'package:uwb_positioning/services/device_service.dart';
@@ -50,6 +52,7 @@ class MyApp extends StatelessWidget {
             const DeviceHistoryTextPage(),
         NotificationListPage.nameRoute: (context) =>
             const NotificationListPage(),
+        BorrowRequestPage.nameRoute: (context) => const BorrowRequestPage(),
       },
       title: 'UWB Device Manager',
       theme: ThemeData.light(),

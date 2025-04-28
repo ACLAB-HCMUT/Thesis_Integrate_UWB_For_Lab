@@ -5,7 +5,7 @@ class Anchor {
   final double anchorY;
   final double anchorZ;
   final DateTime recordTime;
-  final String roomNumber;
+  final String roomId;
 
   Anchor({
     required this.anchorRecId,
@@ -14,7 +14,7 @@ class Anchor {
     required this.anchorY,
     required this.anchorZ,
     required this.recordTime,
-    required this.roomNumber,
+    required this.roomId,
   });
 
   // Method to convert from JSON to Anchor object
@@ -26,7 +26,7 @@ class Anchor {
       anchorY: json['anchor_y'].toDouble(),
       anchorZ: json['anchor_z'].toDouble(),
       recordTime: DateTime.parse(json['record_time']),
-      roomNumber: json['room_number'],
+      roomId: json['room_id'],
     );
   }
 
@@ -39,7 +39,7 @@ class Anchor {
       'anchor_y': anchorY,
       'anchor_z': anchorZ,
       'record_time': recordTime.toIso8601String(),
-      'room_number': roomNumber,
+      'room_id': roomId,
     };
   }
 }

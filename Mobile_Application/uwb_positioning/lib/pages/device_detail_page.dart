@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uwb_positioning/pages/borrow_request_page.dart';
 import 'package:uwb_positioning/pages/device_realtime_page.dart';
 import 'package:uwb_positioning/pages/device_history_page.dart';
 import 'package:uwb_positioning/services/device_service.dart';
@@ -156,6 +157,17 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
                                 );
                               },
                               child: const Text('View Location History'),
+                            ),
+                            const SizedBox(height: 8),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  BorrowRequestPage.nameRoute, // hoặc BorrowRequestPage.nameRoute nếu đã import
+                                  arguments: device.deviceId,
+                                );
+                              },
+                              child: const Text('Create Borrow Request'),
                             ),
                           ],
                         ),

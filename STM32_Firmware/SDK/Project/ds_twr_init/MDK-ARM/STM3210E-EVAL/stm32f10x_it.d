@@ -30,3 +30,5 @@
 .\stm3210e-eval\stm32f10x_it.o: ..\..\..\Libraries\STM32F10x_StdPeriph_Driver\inc\stm32f10x_wwdg.h
 .\stm3210e-eval\stm32f10x_it.o: ..\..\..\Libraries\STM32F10x_StdPeriph_Driver\inc\misc.h
 .\stm3210e-eval\stm32f10x_it.o: ..\decadriver\deca_device_api.h
+.\stm3210e-eval\stm32f10x_it.o: ..\decadriver\deca_regs.h
+.\stm3210e-eval\stm32f10x_it.o: ..\decadriver\deca_version.h
