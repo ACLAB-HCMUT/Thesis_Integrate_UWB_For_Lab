@@ -3,16 +3,20 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const apiRoutes = require("./routes/api");
+const deviceRoutes = require("./routes/deviceRoute");
+const locationRoutes = require("./routes/locationRoute");
+const requestRoutes = require("./routes/requestRoute");
 
 // Tạo server Express
 const app = express();
 
 // Import routes
-require("./routes/mqtt");
+require("./mqtt/mqttBroker");
 
 app.use(express.json());
-app.use("/", apiRoutes);
+app.use("/devices", deviceRoutes);
+app.use("/locations", locationRoutes);
+app.use("/request", requestRoutes);
 
 // Khởi động server
 const PORT = process.env.PORT || 3000;
