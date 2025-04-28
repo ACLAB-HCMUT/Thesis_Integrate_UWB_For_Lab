@@ -1,11 +1,14 @@
 #ifndef GLOBAL_VAR_H
 #define GLOBAL_VAR_H
 
-#include "M5Atom.h"
+// #include "M5Atom.h"
+#include "M5AtomS3.h"
 
 // Macro for UART
-#define ATOM_RX_PIN 32 // Unit's pin TX connects to Atom's pin G32
-#define ATOM_TX_PIN 26 // Unit's pin RX connects to Atom's pin G26
+#define ATOM_RX_PIN 32  // Unit's pin TX connects to Atom's pin G32
+#define ATOM_TX_PIN 26  // Unit's pin RX connects to Atom's pin G26
+#define ATOMS3_RX_PIN 1 // Unit's pin TX connects to Atom's pin G1
+#define ATOMS3_TX_PIN 2 // Unit's pin RX connects to Atom's pin G2
 
 // Macro for UWB
 #define N_ANCHORS 4    // Number of anchors

@@ -1,11 +1,11 @@
 .\stm3210e-eval\deca_spi.o: ..\platform\deca_spi.c
-.\stm3210e-eval\deca_spi.o: D:\ProgramFiles\Keil_v5\ARM\Arm_Compiler_5.06u7\Bin\..\include\string.h
+.\stm3210e-eval\deca_spi.o: C:\Users\Admin\AppData\Local\Keil_v5\ARM\Arm_Compiler_5.06u7\Bin\..\include\string.h
 .\stm3210e-eval\deca_spi.o: ..\platform\deca_spi.h
 .\stm3210e-eval\deca_spi.o: ..\decadriver\deca_types.h
 .\stm3210e-eval\deca_spi.o: ..\platform\deca_sleep.h
 .\stm3210e-eval\deca_spi.o: ..\..\..\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x\stm32f10x.h
 .\stm3210e-eval\deca_spi.o: ..\..\..\Libraries\CMSIS\CM3\CoreSupport\core_cm3.h
-.\stm3210e-eval\deca_spi.o: D:\ProgramFiles\Keil_v5\ARM\Arm_Compiler_5.06u7\Bin\..\include\stdint.h
+.\stm3210e-eval\deca_spi.o: C:\Users\Admin\AppData\Local\Keil_v5\ARM\Arm_Compiler_5.06u7\Bin\..\include\stdint.h
 .\stm3210e-eval\deca_spi.o: ..\..\..\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x\system_stm32f10x.h
 .\stm3210e-eval\deca_spi.o: ..\stm32f10x_conf.h
 .\stm3210e-eval\deca_spi.o: ..\..\..\Libraries\STM32F10x_StdPeriph_Driver\inc\stm32f10x_adc.h
