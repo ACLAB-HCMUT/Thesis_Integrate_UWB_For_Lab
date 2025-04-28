@@ -9,7 +9,7 @@ const PORT = process.env.MQTT_PORT || 1883;
 const aedes = Aedes();
 const server = net.createServer(aedes.handle);
 
-let latestMessage = null; // Biến lưu tin nhắn cuối
+let latestMessages = {}; // Biến lưu tin nhắn cuối
 
 server.listen(PORT, () => {
     console.log(`🚀 Aedes MQTT Broker đang chạy trên cổng ${PORT}`);
@@ -27,11 +27,17 @@ aedes.on("publish", (packet, client) => {
         console.log(`📨 Tin nhắn từ ${client.id}:`, topic, message);
 
         // Ghi lại tin nhắn mới nhất
-        latestMessage = {
-            topic,
-            message,
-            time,
-        };
+        try {
+          const data = JSON.parse(message);
+          const deviceId = data.device_id;
+          latestMessages[deviceId] = {
+              topic,
+              message,
+              time,
+          };
+        } catch (err) {
+            console.error("❌ Lỗi parse JSON:", err.message);
+        }
     }
 });
 
@@ -53,7 +59,8 @@ aedes.on("publish", (packet, client) => {
 
 // ⏱ Lưu dữ liệu HOURLY mỗi giờ
 setInterval(async () => {
-    if (latestMessage) {
+    for (const deviceId in latestMessages) {
+      const latestMessage = latestMessages[deviceId];
       const data = JSON.parse(latestMessage.message);
       const time = latestMessage.time;
   
@@ -68,9 +75,8 @@ setInterval(async () => {
           await pool.query(
             `INSERT INTO device_location (
                 device_id, tag_x, tag_y, tag_z,
-                an1rec_id, an2rec_id, an3rec_id, an4rec_id,
                 record_time, record_type
-            ) VALUES ($1, $2, $3, $4, 1, 2, 3, 4, $5, 'hourly')`,
+            ) VALUES ($1, $2, $3, $4, $5, 'hourly')`,
             [data.device_id, data.x, data.y, data.z, time]
           );
           console.log("🕐 Đã lưu bản ghi HOURLY cho device:", data.device_id);
@@ -81,11 +87,12 @@ setInterval(async () => {
         console.error("❌ Lỗi khi lưu HOURLY:", err.message);
       }
     }
-  }, 60 * 60 * 1000); // mỗi giờ
+  }, 6 * 1000); // mỗi giờ
   
   // ⏱ Lưu dữ liệu DAILY mỗi ngày
   setInterval(async () => {
-    if (latestMessage) {
+    for (const deviceId in latestMessages) {
+      const latestMessage = latestMessages[deviceId];
       const data = JSON.parse(latestMessage.message);
       const time = latestMessage.time;
 
@@ -100,9 +107,8 @@ setInterval(async () => {
           await pool.query(
             `INSERT INTO device_location (
                 device_id, tag_x, tag_y, tag_z,
-                an1rec_id, an2rec_id, an3rec_id, an4rec_id,
                 record_time, record_type
-            ) VALUES ($1, $2, $3, $4, 1, 2, 3, 4, $5, 'daily')`,
+            ) VALUES ($1, $2, $3, $4, $5, 'daily')`,
             [data.device_id, data.x, data.y, data.z, time]
           );
           console.log("📅 Đã lưu bản ghi DAILY cho device:", data.device_id);
@@ -113,6 +119,6 @@ setInterval(async () => {
         console.error("❌ Lỗi khi lưu DAILY:", err.message);
       }
     }
-  }, 24 * 60 * 60 * 1000); // mỗi ngày
+  }, 24 * 1000); // mỗi ngày
 
 module.exports = aedes;
