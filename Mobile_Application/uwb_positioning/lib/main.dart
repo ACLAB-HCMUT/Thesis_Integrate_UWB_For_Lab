@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:logging/logging.dart';
+import 'package:uwb_positioning/pages/admin_home_page.dart';
 
 import 'package:uwb_positioning/pages/device_list_page.dart';
 import 'package:uwb_positioning/pages/device_detail_page.dart';
@@ -10,6 +11,11 @@ import 'package:uwb_positioning/pages/notification_list_page.dart';
 import 'package:uwb_positioning/pages/device_history_page.dart';
 import 'package:uwb_positioning/pages/device_history_text_page.dart';
 import 'package:uwb_positioning/pages/borrow_request_page.dart';
+import 'package:uwb_positioning/pages/login_page.dart';
+import 'package:uwb_positioning/pages/user_list_page.dart';
+import 'package:uwb_positioning/pages/user_update_page.dart';
+import 'package:uwb_positioning/pages/user_create_page.dart';
+import 'package:uwb_positioning/pages/borrow_request_manage_page.dart';
 
 import 'package:uwb_positioning/services/alert_service.dart';
 import 'package:uwb_positioning/services/device_service.dart';
@@ -43,7 +49,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: navigatorKey, // Add navigatorKey
-      home: const DeviceListPage(),
+      home: const BorrowRequestManagePage(),
       routes: {
         DeviceDetailPage.nameRoute: (context) => const DeviceDetailPage(),
         DeviceRealtimePage.nameRoute: (context) => const DeviceRealtimePage(),
@@ -53,6 +59,13 @@ class MyApp extends StatelessWidget {
         NotificationListPage.nameRoute: (context) =>
             const NotificationListPage(),
         BorrowRequestPage.nameRoute: (context) => const BorrowRequestPage(),
+        // Các page mới thêm:
+        '/login': (context) => const LoginPage(),
+        '/users': (context) => const UserListPage(),
+        '/user/update': (context) => const UserUpdatePage(),
+        '/user/create': (context) => const UserCreatePage(),
+        '/borrow_request_manage': (context) => const BorrowRequestManagePage(),
+        '/admin_home': (context) => const AdminHomePage(),
       },
       title: 'UWB Device Manager',
       theme: ThemeData.light(),
