@@ -310,16 +310,13 @@ class DeviceLocationService with ChangeNotifier {
   static Future<Map<String, Anchor>> fetchAnchor(String deviceId) async {
     try {
       final response = await http.get(getAnchorUri(deviceId));
-
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = json.decode(response.body);
-
         // Chuyển thành Map<String, Anchor>
         final Map<String, Anchor> anchorMap = {
           for (var item in jsonList)
             item['anchor_id'].toString(): Anchor.fromJson(item)
         };
-
         _logger.info("Fetched anchor data: $anchorMap");
         return anchorMap;
       } else {

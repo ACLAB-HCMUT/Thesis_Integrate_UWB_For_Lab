@@ -7,6 +7,7 @@ import 'package:uwb_positioning/pages/admin_home_page.dart';
 import 'package:uwb_positioning/pages/device_list_page.dart';
 import 'package:uwb_positioning/pages/device_detail_page.dart';
 import 'package:uwb_positioning/pages/device_realtime_page.dart';
+import 'package:uwb_positioning/pages/device_update_page.dart';
 import 'package:uwb_positioning/pages/notification_list_page.dart';
 import 'package:uwb_positioning/pages/device_history_page.dart';
 import 'package:uwb_positioning/pages/device_history_text_page.dart';
@@ -49,7 +50,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: navigatorKey, // Add navigatorKey
-      home: const BorrowRequestManagePage(),
+      home: const DeviceListPage(),
       routes: {
         DeviceDetailPage.nameRoute: (context) => const DeviceDetailPage(),
         DeviceRealtimePage.nameRoute: (context) => const DeviceRealtimePage(),
@@ -66,6 +67,7 @@ class MyApp extends StatelessWidget {
         '/user/create': (context) => const UserCreatePage(),
         '/borrow_request_manage': (context) => const BorrowRequestManagePage(),
         '/admin_home': (context) => const AdminHomePage(),
+        '/device/update': (context) => const DeviceUpdatePage(),
       },
       title: 'UWB Device Manager',
       theme: ThemeData.light(),

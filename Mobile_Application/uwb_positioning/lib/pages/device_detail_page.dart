@@ -167,7 +167,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
                                   arguments: device.deviceId,
                                 );
                               },
-                              child: const Text('Create Borrow Request'),
+                              child: const Text('Change Infomation'),
                             ),
                           ],
                         ),

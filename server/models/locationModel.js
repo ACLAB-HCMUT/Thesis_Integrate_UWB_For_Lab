@@ -12,7 +12,7 @@ async function getLocations(deviceId, type) {
 
 async function getAnchors(roomId) {
     const result = await pool.query(
-      `SELECT anchorrec_id, anchor_id, anchor_x, anchor_y, anchor_z, record_time
+      `SELECT anchorrec_id, anchor_id, anchor_x, anchor_y, anchor_z, record_time, room_id
        FROM anchor_location
        WHERE room_id = $1`,
       [roomId]

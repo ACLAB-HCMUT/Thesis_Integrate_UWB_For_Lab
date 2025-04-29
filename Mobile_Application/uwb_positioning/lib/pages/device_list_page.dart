@@ -19,15 +19,16 @@ class _DeviceListPageState extends State<DeviceListPage> {
     return Scaffold(
         appBar: AppBar(
           title: const Text("Device List"),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.notifications),
-              tooltip: "Notifications",
-              onPressed: () {
-                Navigator.pushNamed(context, NotificationListPage.nameRoute);
-              },
-            ),
-          ],
+          leading: BackButton(onPressed: () => Navigator.pop(context)),
+          // actions: [
+          //   IconButton(
+          //     icon: const Icon(Icons.notifications),
+          //     tooltip: "Notifications",
+          //     onPressed: () {
+          //       Navigator.pushNamed(context, NotificationListPage.nameRoute);
+          //     },
+          //   ),
+          // ],
         ),
         body: FutureBuilder(
             future: deviceService.fetchDeviceGeneral(),

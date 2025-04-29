@@ -1,11 +1,11 @@
 class Anchor {
-  final String anchorRecId;
+  final int anchorRecId;
   final int anchorId;
   final double anchorX;
   final double anchorY;
   final double anchorZ;
   final DateTime recordTime;
-  final String roomId;
+  final int roomId;
 
   Anchor({
     required this.anchorRecId,

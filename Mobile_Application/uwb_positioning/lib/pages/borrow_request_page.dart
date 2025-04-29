@@ -104,11 +104,11 @@ class _BorrowRequestPageState extends State<BorrowRequestPage> {
                 },
                 readOnly: true,
               ),
-              TextFormField(
-                controller: _clientCtl,
-                decoration: const InputDecoration(labelText: 'Client ID'),
-                validator: (v) => v!.isEmpty ? 'Required' : null,
-              ),
+              // TextFormField(
+              //   controller: _clientCtl,
+              //   decoration: const InputDecoration(labelText: 'Client ID'),
+              //   validator: (v) => v!.isEmpty ? 'Required' : null,
+              // ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () => _submit(deviceId),

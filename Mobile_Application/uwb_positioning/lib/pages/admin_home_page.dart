@@ -44,6 +44,7 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:uwb_positioning/pages/notification_list_page.dart';
 
 class AdminHomePage extends StatelessWidget {
   const AdminHomePage({Key? key}) : super(key: key);
@@ -53,6 +54,15 @@ class AdminHomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Admin Home'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications),
+            tooltip: "Notifications",
+            onPressed: () {
+              Navigator.pushNamed(context, NotificationListPage.nameRoute);
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
