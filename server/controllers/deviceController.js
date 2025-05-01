@@ -1,5 +1,3 @@
-const pool = require('../config/db');
-
 // controllers/deviceController.js
 const deviceService = require('../services/deviceService');
 
