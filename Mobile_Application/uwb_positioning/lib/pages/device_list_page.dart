@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uwb_positioning/pages/device_detail_page.dart';
+import 'package:provider/provider.dart';
 import 'package:uwb_positioning/pages/notification_list_page.dart';
+import 'package:uwb_positioning/services/auth_service.dart';
 import 'package:uwb_positioning/services/device_service.dart';
 
 class DeviceListPage extends StatefulWidget {
   const DeviceListPage({super.key});
-
+  static const nameRoute = '/devices';
   @override
   State<DeviceListPage> createState() => _DeviceListPageState();
 }
@@ -15,11 +17,20 @@ class _DeviceListPageState extends State<DeviceListPage> {
   @override
   Widget build(BuildContext context) {
     final deviceService = Provider.of<DeviceService>(context);
-
+    final user = Provider.of<UserProvider>(context).user;
     return Scaffold(
         appBar: AppBar(
           title: const Text("Device List"),
           leading: BackButton(onPressed: () => Navigator.pop(context)),
+          // actions: [
+          //   // Hiển thị tên người dùng trong AppBar
+          //   user != null
+          //       ? Padding(
+          //     padding: const EdgeInsets.all(8.0),
+          //     child: Text(user.name),  // Hiển thị tên người dùng
+          //   )
+          //       : Container(), // Nếu chưa có người dùng thì không hiển thị gì
+          // ],
           // actions: [
           //   IconButton(
           //     icon: const Icon(Icons.notifications),

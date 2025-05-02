@@ -48,7 +48,7 @@ import 'package:uwb_positioning/pages/notification_list_page.dart';
 
 class AdminHomePage extends StatelessWidget {
   const AdminHomePage({Key? key}) : super(key: key);
-
+  static const nameRoute = '/admin-home';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
