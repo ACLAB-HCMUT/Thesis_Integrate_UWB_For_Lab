@@ -14,6 +14,7 @@ import 'package:uwb_positioning/pages/device_history_page.dart';
 import 'package:uwb_positioning/pages/device_history_text_page.dart';
 import 'package:uwb_positioning/pages/borrow_request_page.dart';
 import 'package:uwb_positioning/pages/login_page.dart';
+import 'package:uwb_positioning/pages/user_home_page.dart';
 import 'package:uwb_positioning/pages/user_list_page.dart';
 import 'package:uwb_positioning/pages/user_update_page.dart';
 import 'package:uwb_positioning/pages/user_create_page.dart';
@@ -80,11 +81,12 @@ class MyApp extends StatelessWidget {
             const NotificationListPage(),
         BorrowRequestPage.nameRoute: (context) => const BorrowRequestPage(),
         // Các page mới thêm:
-        // '/login': (context) => const LoginPage(),
+        LoginPage.nameRoute: (context) => const LoginPage(),
         '/users': (context) => const UserListPage(),
         '/user/update': (context) => const UserUpdatePage(),
         '/user/create': (context) => const UserCreatePage(),
         '/borrow_request_manage': (context) => const BorrowRequestManagePage(),
+        UserHomePage.nameRoute: (context) => const UserHomePage(),
         AdminHomePage.nameRoute: (context) => const AdminHomePage(),
         '/device/update': (context) => const DeviceUpdatePage(),
       },

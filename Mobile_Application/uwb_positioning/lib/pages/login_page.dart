@@ -36,11 +36,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:uwb_positioning/pages/admin_home_page.dart';
+import 'package:uwb_positioning/pages/user_home_page.dart';
 import '../services/auth_service.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
+  static const nameRoute = '/login';
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -65,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
       if (user.role == 'admin') {
         Navigator.pushReplacementNamed(context, AdminHomePage.nameRoute);
       } else {
-        Navigator.pushReplacementNamed(context, '/user_home');
+        Navigator.pushReplacementNamed(context, UserHomePage.nameRoute);
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
