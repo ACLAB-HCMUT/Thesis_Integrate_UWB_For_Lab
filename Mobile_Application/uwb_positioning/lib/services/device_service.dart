@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+import 'package:provider/provider.dart';
+import 'package:uwb_positioning/services/auth_service.dart';
 import 'dart:convert';
 import 'package:uwb_positioning/services/config.dart';
 import 'package:uwb_positioning/models/device.dart';
@@ -7,8 +9,12 @@ import 'package:uwb_positioning/services/update_service.dart';
 import 'package:http/http.dart' as http;
 
 class DeviceService with ChangeNotifier {
+  //API
   static final getAllDeviceUri = baseUri.replace(path: '/devices');
   static Uri getDetailUri(String id) => baseUri.replace(path: '/devices/$id');
+  //User
+  final AuthProvider userProvider;
+  DeviceService(this.userProvider);
   // Temporary memory to store detail of devices
   Map<String, Device> _devices = {};
   Map<String, Device> get devices => _devices;
@@ -56,8 +62,22 @@ class DeviceService with ChangeNotifier {
   //   _logger.info("Converted data: $convertedData");
   //   return convertedData;
   // }
-  static Future<Map<String, Device>> fetchListDevice() async {
-    final response = await http.get(getAllDeviceUri);
+  Future<Map<String, Device>> fetchListDevice() async {
+    // final response = await http.get(getAllDeviceUri);
+    final token = userProvider.user?.token;
+
+    if (token == null) {
+      throw Exception('Token không tồn tại');
+    }
+
+    final response = await http.get(
+      getAllDeviceUri,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
     _logger.info("Raw response body: ${response.body}");
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
@@ -143,7 +163,7 @@ class DeviceService with ChangeNotifier {
     try {
       final isUpdated = await UpdateService().checkForUpdates();
       if (isUpdated) {
-        _devices = await DeviceService.fetchListDevice();
+        _devices = await fetchListDevice();
         notifyListeners();
       }
     } catch (e) {

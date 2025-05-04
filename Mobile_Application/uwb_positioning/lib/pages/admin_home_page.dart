@@ -44,7 +44,7 @@
 // }
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:uwb_positioning/pages/device_list_page.dart';
 import 'package:uwb_positioning/pages/login_page.dart';
 import 'package:uwb_positioning/pages/notification_list_page.dart';
 import 'package:uwb_positioning/services/auth_service.dart';
@@ -53,12 +53,8 @@ class AdminHomePage extends StatelessWidget {
   const AdminHomePage({Key? key}) : super(key: key);
   static const nameRoute = '/admin-home';
 
-  Future<void> _logout(BuildContext context) async {
-
-    // Xóa user trong provider
-    Provider.of<UserProvider>(context, listen: false).clearUser();
-
-    // Điều hướng về trang đăng nhập và xóa stack
+  void _logout(BuildContext context) async {
+    await AuthService.logout(context);
     Navigator.pushNamedAndRemoveUntil(
       context,
       LoginPage.nameRoute,
@@ -101,7 +97,7 @@ class AdminHomePage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, '/devices'),
+              onPressed: () => Navigator.pushNamed(context, DeviceListPage.nameRoute),
               child: const Text('Quản lý Thiết bị'),
             ),
           ],

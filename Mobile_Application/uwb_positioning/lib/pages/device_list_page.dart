@@ -17,7 +17,6 @@ class _DeviceListPageState extends State<DeviceListPage> {
   @override
   Widget build(BuildContext context) {
     final deviceService = Provider.of<DeviceService>(context);
-    final user = Provider.of<UserProvider>(context).user;
     return Scaffold(
         appBar: AppBar(
           title: const Text("Device List"),

@@ -40,8 +40,29 @@ const update = async (req, res) => {
     }
 }
 
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await authService.getAllUsers();
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: 'Lỗi khi lấy danh sách người dùng', error: error.message });
+  }
+}
+
+const getUserDetail = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const user = await authService.getUser(id);
+    res.json(user);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+}
+
 module.exports = {
   register,
   login,
   update,
+  getAllUsers,
+  getUserDetail,
 };

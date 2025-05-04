@@ -62,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       // Save the user in Provider
-      Provider.of<UserProvider>(context, listen: false).setUser(user);
+      Provider.of<AuthProvider>(context, listen: false).setUser(user);
 
       if (user.role == 'admin') {
         Navigator.pushReplacementNamed(context, AdminHomePage.nameRoute);

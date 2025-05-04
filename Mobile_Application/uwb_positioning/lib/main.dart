@@ -41,8 +41,15 @@ void main() async {
   // final role = prefs.getString('role');
 
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_) => DeviceService()),
-    ChangeNotifierProvider(create: (_) => UserProvider()),
+    ChangeNotifierProvider(create: (_) => AuthProvider()),
+    ChangeNotifierProxyProvider<AuthProvider, DeviceService>(
+      create: (context) => DeviceService(context.read<AuthProvider>()),
+      update: (context, userProv, previous) => DeviceService(userProv),
+    ),
+    ChangeNotifierProxyProvider<AuthProvider, AuthService>(
+      create: (context) => AuthService(context.read<AuthProvider>()),
+      update: (context, userProv, previous) => AuthService(userProv),
+    ),
     ChangeNotifierProvider(create: (_) => DeviceLocationService()),
     Provider<GlobalKey<NavigatorState>>(create: (_) => navigatorKey),
     ChangeNotifierProvider(create: (_) => AlertService(navigatorKey)),

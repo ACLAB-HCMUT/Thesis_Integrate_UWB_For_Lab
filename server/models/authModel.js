@@ -15,6 +15,16 @@ async function findUserByEmail (email) {
     return result.rows[0];
 };
 
+async function findUserById(id) {
+    const result = await pool.query(
+      `SELECT user_id, email, full_name, phone_number, role, status
+       FROM "user"
+       WHERE user_id = $1`,
+      [id]
+    );
+    return result.rows[0] || null;
+}
+
 async function updateUserById(id, updates) {
     const keys = Object.keys(updates);
     const values = Object.values(updates);
@@ -70,8 +80,17 @@ async function updateUserById(id, updates) {
     return result.rows.length > 0 ? result.rows[0] : null;
 }
 
+async function getAllUsers() {
+    const result = await pool.query(
+        `SELECT user_id, email, full_name, phone_number, role, status FROM "user" ORDER BY user_id ASC`
+    );
+    return result.rows;
+}
+
 module.exports = {
     createUser,
     findUserByEmail,
+    findUserById,
     updateUserById,
+    getAllUsers,
 };

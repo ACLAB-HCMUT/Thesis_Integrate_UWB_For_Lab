@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uwb_positioning/pages/device_list_page.dart';
 import 'package:uwb_positioning/pages/login_page.dart';
 import 'package:uwb_positioning/pages/notification_list_page.dart';
 import 'package:provider/provider.dart';
@@ -8,12 +9,8 @@ class UserHomePage extends StatelessWidget {
   const UserHomePage({Key? key}) : super(key: key);
   static const nameRoute = '/user-home';
 
-  Future<void> _logout(BuildContext context) async {
-
-    // Xóa user trong provider
-    Provider.of<UserProvider>(context, listen: false).clearUser();
-
-    // Điều hướng về trang đăng nhập và xóa stack
+  void _logout(BuildContext context) async {
+    await AuthService.logout(context);
     Navigator.pushNamedAndRemoveUntil(
       context,
       LoginPage.nameRoute,
@@ -46,7 +43,7 @@ class UserHomePage extends StatelessWidget {
         child: ListView(
           children: [
             ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, '/users'),
+              onPressed: () => Navigator.pushNamed(context, DeviceListPage.nameRoute),
               child: const Text('Danh sách thiết bị'),
             ),
             const SizedBox(height: 16),
