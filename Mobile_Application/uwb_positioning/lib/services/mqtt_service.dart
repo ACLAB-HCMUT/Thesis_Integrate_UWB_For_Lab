@@ -12,11 +12,15 @@ class MqttService with ChangeNotifier {
   final GlobalKey<NavigatorState> navigatorKey;
 
   MqttService({required this.navigatorKey});
-  final String server = "io.adafruit.com";
-  final String username = "Duyen";
-  final String aioKey = "aio_fATE02ASxyRbFK54LPEWBu9SWqYP";
-  final String topicTag = "Duyen/feeds/tagposition";
-  final String topicAnchor = "Duyen/feeds/anchorposition";
+  // final String server = "io.adafruit.com";
+  // final String username = "Duyen";
+  // final String aioKey = "aio_fATE02ASxyRbFK54LPEWBu9SWqYP";
+  // final String topicTag = "Duyen/feeds/tagposition";
+  // final String topicAnchor = "Duyen/feeds/anchorposition";
+  final String server = "192.168.175.176";
+  final String username = "";
+  final String aioKey = "";
+  final String topicTag = "tagposition";
 
   double maxX = 3.7; // Giá trị tối đa của x
   double maxY = 2.7; // Giá trị tối đa của y
@@ -39,7 +43,7 @@ class MqttService with ChangeNotifier {
 
     // Connection Configuration
     final connMessage = MqttConnectMessage()
-        .authenticateAs(username, aioKey)
+        // .authenticateAs(username, aioKey)
         .startClean()
         .withWillTopic('disconnect')
         .withWillMessage('Disconnected unexpectedly')
@@ -55,8 +59,8 @@ class MqttService with ChangeNotifier {
       // Subscribe to the topic
       client.subscribe(topicTag, MqttQos.atLeastOnce);
       _logger.info('Subscribed to topic: $topicTag');
-      client.subscribe(topicAnchor, MqttQos.atLeastOnce);
-      _logger.info('Subscribed to topic: $topicAnchor');
+      // client.subscribe(topicAnchor, MqttQos.atLeastOnce);
+      // _logger.info('Subscribed to topic: $topicAnchor');
 
       // Listen for updates
       client.updates!
@@ -109,16 +113,17 @@ class MqttService with ChangeNotifier {
           'tag_z': parsedData['tag_z'].toDouble(),
         };
         _logger.fine('Updated device $deviceId data: ${_deviceData[deviceId]}');
-      } else if (topic == topicAnchor) {
-        final anchorId = parsedData['anchor_id'] as String;
-
-        _anchorData[anchorId] = {
-          'anchor_x': parsedData['anchor_x'].toDouble(),
-          'anchor_y': parsedData['anchor_y'].toDouble(),
-          'anchor_z': parsedData['anchor_z'].toDouble(),
-        };
-        _logger.fine('Updated anchor $anchorId data: ${_anchorData[anchorId]}');
       }
+      // else if (topic == topicAnchor) {
+      //   final anchorId = parsedData['anchor_id'] as String;
+      //
+      //   _anchorData[anchorId] = {
+      //     'anchor_x': parsedData['anchor_x'].toDouble(),
+      //     'anchor_y': parsedData['anchor_y'].toDouble(),
+      //     'anchor_z': parsedData['anchor_z'].toDouble(),
+      //   };
+      //   _logger.fine('Updated anchor $anchorId data: ${_anchorData[anchorId]}');
+      // }
 
       // Change notification
       notifyListeners();

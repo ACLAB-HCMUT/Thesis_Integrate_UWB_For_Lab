@@ -49,9 +49,9 @@ class GridPointPainter extends CustomPainter {
       canvas.drawCircle(Offset(x, y), pointSize, anchorPaint);
     }
 
-    final x = (tagPoints['tag_x'] as double) * gridSize * 5 + gridOffset.dx;
-    final y = (tagPoints['tag_y'] as double) * gridSize * 5 + gridOffset.dy;
-    canvas.drawCircle(Offset(x, y), pointSize, tagPaint);
+    // final x = (tagPoints['tag_x'] as double) * gridSize * 5 + gridOffset.dx;
+    // final y = (tagPoints['tag_y'] as double) * gridSize * 5 + gridOffset.dy;
+    // canvas.drawCircle(Offset(x, y), pointSize, tagPaint);
   }
 
   @override

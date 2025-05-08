@@ -122,9 +122,18 @@ class DeviceService with ChangeNotifier {
   //     };
   //   }
   // }
-  static Future<Map<String, dynamic>> fetchInfoDevice(String deviceId) async {
+  Future<Map<String, dynamic>> fetchInfoDevice(String deviceId) async {
+    final token = userProvider.user?.token;
+
+    if (token == null) {
+      throw Exception('Token không tồn tại');
+    }
     final uri = getDetailUri(deviceId);
-    final resp = await http.get(uri);
+    final resp = await http.get(uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },);
     _logger.info('GET $uri → ${resp.statusCode}');
     if (resp.statusCode != 200) throw Exception('Failed to load device detail');
     return json.decode(resp.body) as Map<String, dynamic>;

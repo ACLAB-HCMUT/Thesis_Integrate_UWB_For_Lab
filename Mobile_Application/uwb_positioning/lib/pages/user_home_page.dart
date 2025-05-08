@@ -51,6 +51,12 @@ class UserHomePage extends StatelessWidget {
               onPressed: () => Navigator.pushNamed(context, '/borrow_request_manage'),
               child: const Text('Danh sách yêu cầu mượn'),
             ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => Navigator.pushNamed(context, '/borrow_request_manage'),
+              child: const Text('Thông tin tài khoản'),
+            ),
+            const SizedBox(height: 16),
           ],
         ),
       ),
