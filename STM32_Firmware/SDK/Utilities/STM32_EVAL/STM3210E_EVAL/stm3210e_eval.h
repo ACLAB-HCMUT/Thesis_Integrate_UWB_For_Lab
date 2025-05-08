@@ -328,6 +328,10 @@ void sFLASH_LowLevel_DeInit(void);
 void sFLASH_LowLevel_Init(void); 
 void LM75_LowLevel_DeInit(void);
 void LM75_LowLevel_Init(void); 
+
+// User add
+int AT_CmdFunc_ondis(int opt,int argc, char *argv[]);
+
 /**
   * @}
   */

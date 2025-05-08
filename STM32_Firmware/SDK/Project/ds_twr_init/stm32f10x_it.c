@@ -38,8 +38,12 @@ volatile unsigned long time32_incr;
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+//User add
+#define SET_CMD			0x03
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+//User add
+volatile uint8_t dw1000_force_off = 0;
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -153,43 +157,23 @@ void SysTick_Handler(void)
 /*  file (startup_stm32f10x_xx.s).                                            */
 /******************************************************************************/
 
-volatile uint8_t dw1000_force_off = 0;
-
-void shutdown_dw1000(void)
+void set_switchdis(uint8_t value)
 {
-	/*
-	dwt_setautorxreenable(0);
-  //dwt_setinterrupt(0xFFFFFFFF, 0);
-	
-	dwt_forcetrxoff();
-	dwt_rxreset();
-	//dwt_write32bitreg(SYS_STATUS_ID, 0xFFFFFFFF);
-  */
-	
-	dw1000_force_off = 1;
-	GPIO_ResetBits(GPIOC, GPIO_Pin_13);
-}
-
-void wakeup_dw1000(void)
-{
-	if (dw1000_force_off)
-	{
-		//dwt_initialise(DWT_LOADUCODE);
-		//dwt_configure(&config);
-		//dwt_setleds(1);
-
-		//dwt_setrxantennadelay(RX_ANT_DLY);
-		//dwt_settxantennadelay(TX_ANT_DLY);
-
-		//dwt_setinterrupt(DWT_INT_RFCG | DWT_INT_RFCE | DWT_INT_RFTO, 1);
-		
-		/*
-		dwt_rxenable(0);
-		*/
-		
-		dw1000_force_off = 0;
-		GPIO_SetBits(GPIOC, GPIO_Pin_13); 
-	}
+		char param[10];
+    char *argv[1];
+    
+    snprintf(param, sizeof(param), "%d", value);
+    argv[0] = param;
+    
+    int ret = AT_CmdFunc_ondis(SET_CMD, 1, argv);
+    if (ret == -1)
+		{
+        printf("Set AT+switchdis=%d failed\r\n", value);
+    }
+		else
+		{
+        printf("Set AT+switchdis=%d OK\r\n", value);
+    }
 }
 
 /**
@@ -204,21 +188,17 @@ void EXTI1_IRQHandler(void)
 {
 	if(EXTI_GetITStatus(EXTI_Line1) != RESET)
 	{
-			static uint32_t last_press = 0;
-			if (HAL_GetTick() - last_press < 50)
-			{
-					EXTI_ClearITPendingBit(EXTI_Line1);
-					return;
-			}
-			last_press = HAL_GetTick();
-			
 			if (dw1000_force_off)
 			{
-					wakeup_dw1000();
+					dw1000_force_off = 0;
+					set_switchdis(1);
+					GPIO_ResetBits(GPIOC,GPIO_Pin_13);
       }
 			else
 			{
-					shutdown_dw1000();
+					dw1000_force_off = 1;
+					set_switchdis(0);
+					GPIO_SetBits(GPIOC,GPIO_Pin_13);
       }
 			EXTI_ClearITPendingBit(EXTI_Line1);
 	}

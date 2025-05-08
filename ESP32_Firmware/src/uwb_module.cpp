@@ -1,9 +1,22 @@
 #include "uwb_module.h"
 
-int UWB_MODE = 0;     // Set UWB Mode: Tag mode is 0, Base station mode is 1
-int UWB_T_NUMBER = 0; // Store the number of base stations
-int UWB_T_ID = 0;     // Tag ID
-int UWB_B_ID = 0;     // Base station ID1~ID4
+#include <time.h>
+
+void printTimeStamp() {
+  struct tm timeinfo;
+  if (getLocalTime(&timeinfo)) {
+    Serial.printf("[%04d-%02d-%02d %02d:%02d:%02d] ",
+                  timeinfo.tm_year + 1900, timeinfo.tm_mon + 1, timeinfo.tm_mday,
+                  timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
+  } else {
+    Serial.print("[Time unknown] ");
+  }
+}
+
+int UWB_MODE = 1;              // Set UWB Mode: Tag mode is 0, Base station mode is 1
+int UWB_T_NUMBER = 0;          // Store the number of base stations
+int UWB_T_ID = atoi(g_tag_id); // Tag ID
+int UWB_B_ID = 1;              // Base station ID1~ID4
 
 // Private function for checking AT response
 void printForDebug(size_t send, String content, String cases = "") {
@@ -38,8 +51,10 @@ void UWB_setupmode() {
   case 0:                         // Tag mode
     for (int b = 0; b < 2; b++) { // Repeat twice to stabilize the connection
       vTaskDelay(pdMS_TO_TICKS(50));
-      size_t send_antag = Serial2.write("AT+anchor_tag=0\r\n"); // Set device as Tag
-      printForDebug(send_antag, "AT+anchor_tag=0");
+      size_t send_antag = Serial2.write("AT+anchor_tag=0,"); // Set device as Tag
+      Serial2.print(UWB_T_ID);
+      Serial2.write("\r\n");
+      printForDebug(send_antag, "AT+anchor_tag=0," + String(UWB_T_ID));
 
       vTaskDelay(pdMS_TO_TICKS(50));
       size_t send_inter = Serial2.write("AT+interval=5\r\n"); // Set the calculation precision
@@ -154,6 +169,7 @@ void UWB_display() {
   case 0: // Tag mode
     Serial.print("Number of base stations: ");
     Serial.println(UWB_T_NUMBER);
+    // printTimeStamp();
     Serial.println("Distance:");
     Serial.println(g_data_uwb);
     break;
