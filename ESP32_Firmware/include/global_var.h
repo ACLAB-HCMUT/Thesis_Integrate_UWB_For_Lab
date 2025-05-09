@@ -19,11 +19,17 @@
 #define MQTT_WAIT_RETRY 5000 // Wait time (in milliseconds) between each retry
 #define MQTT_WAIT_SEND 6000  // Wait time (in milliseconds) between each data transmission to MQTT
 
+#define MQTT_SEND_INTERVAL 2000     // Interval time (in milliseconds) between each data transmission to MQTT
+#define MQTT_TIMEOUT_RETRY 1000     // Interval time (in milliseconds) between each retry
+#define MQTT_MAX_TIMEOUT_RETRY 6000 // Maximum time (in milliseconds) to send timeout message
+
 // Global variables for LED
 extern const int g_LED_PIN;
 extern String g_led_state;
 
 // Global variables for UWB
+extern char g_tag_id[];
+extern char g_room_id[];
 extern String g_data_uwb;
 extern float g_distance_uwb[];
 extern float g_position_uwb[];

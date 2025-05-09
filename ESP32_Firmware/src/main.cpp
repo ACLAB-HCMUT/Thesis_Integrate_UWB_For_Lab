@@ -2,12 +2,12 @@
 // Import required libraries
 
 #include "main.h"
-#include <WiFi.h>
+// #include <WiFi.h>
 #include <time.h>
 
-// Thông tin WiFi
-const char *ssid = "Redmi Note 11";
-const char *password = "531327aA";
+// // Thông tin WiFi
+// const char *ssid = "Redmi Note 11";
+// const char *password = "531327aA";
 
 // Cấu hình múi giờ Việt Nam
 const long gmtOffset_sec = 7 * 3600; // UTC+7
@@ -17,6 +17,13 @@ void UWB_task(void *pvParameters) {
   while (1) {
     UWB_readString();
     UWB_display();
+    vTaskDelay(pdMS_TO_TICKS(500));
+  }
+}
+
+void MQTT_task(void *pvParameters) {
+  while (1) {
+    MQTT_processing();
     vTaskDelay(pdMS_TO_TICKS(100));
   }
 }
@@ -40,23 +47,24 @@ void setup() {
   // }
   // Serial.println("\nĐã kết nối WiFi!");
 
-  // // Cấu hình NTP server
-  // configTime(gmtOffset_sec, daylightOffset_sec, "pool.ntp.org");
-
-  // // Đợi có thời gian
-  // struct tm timeinfo;
-  // if (!getLocalTime(&timeinfo)) {
-  //   Serial.println("Không lấy được thời gian!");
-  //   return;
-  // }
   // Other setup
-  // WIFI_setup();
+  WIFI_setup();
+  // Cấu hình NTP server
+  configTime(gmtOffset_sec, daylightOffset_sec, "pool.ntp.org");
+
+  // Đợi có thời gian
+  struct tm timeinfo;
+  if (!getLocalTime(&timeinfo)) {
+    Serial.println("Không lấy được thời gian!");
+    return;
+  }
+  MQTT_setup();
 
   // Create task
   xTaskCreate(UWB_task, "UWB_task", 4096, NULL, 1, NULL);
   // xTaskCreate(MQTT_tag_task, "MQTT_tag_task", 4096, NULL, 1, NULL);
   // xTaskCreate(MQTT_anchor_task, "MQTT_anchor_task", 4096, NULL, 1, NULL);
-
+  xTaskCreate(MQTT_task, "MQTT_task", 4096, NULL, 1, NULL);
   // pinMode(21, OUTPUT);
 }
 

@@ -1,10 +1,8 @@
-/*
 #include "wifi_module.h"
-#include "../project_config.h"
 
 // Replace with your network credentials
-const char *ssid = PROJECT_WIFI_SSID;
-const char *password = PROJECT_WIFI_PASSWORD;
+const char *ssid = WLAN_SSID;
+const char *password = WLAN_PASS;
 
 // Task to handle Wi-Fi connection
 void wifiTask(void *pvParameters) {
@@ -21,7 +19,8 @@ void wifiTask(void *pvParameters) {
 }
 
 void WIFI_setup() {
-  WiFi.begin(WLAN_SSID, WLAN_PASS);
+  Serial.println("Connecting to Wifi...");
+  WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print("Connecting to WiFi..");
@@ -32,4 +31,3 @@ void WIFI_setup() {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 }
-  */

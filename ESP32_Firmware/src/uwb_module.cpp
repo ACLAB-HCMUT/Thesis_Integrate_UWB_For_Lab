@@ -12,10 +12,10 @@ void printTimeStamp() {
     Serial.print("[Time unknown] ");
   }
 }
-int UWB_MODE = 0;     // Set UWB Mode: Tag mode is 0, Base station mode is 1
-int UWB_T_NUMBER = 0; // Store the number of base stations
-int UWB_T_ID = 2;     // Tag ID
-int UWB_B_ID = 0;     // Base station ID1~ID4
+int UWB_MODE = 0;              // Set UWB Mode: Tag mode is 0, Base station mode is 1
+int UWB_T_NUMBER = 0;          // Store the number of base stations
+int UWB_T_ID = atoi(g_tag_id); // Tag ID
+int UWB_B_ID = 0;              // Base station ID1~ID4
 
 // Private function for checking AT response
 void printForDebug(size_t send, String content, String cases = "") {
@@ -60,7 +60,7 @@ void UWB_setupmode() {
       printForDebug(send_inter, "AT+interval=5");
 
       vTaskDelay(pdMS_TO_TICKS(50));
-      size_t send_swis = Serial2.write("AT+switchdis=1\r\n"); // Start measuring distance
+      size_t send_swis = Serial2.write("AT+switchdis=0\r\n"); // Start measuring distance
       printForDebug(send_swis, "AT+switchdis=1");
 
       vTaskDelay(pdMS_TO_TICKS(50));
@@ -166,18 +166,18 @@ void UWB_readString() {
 void UWB_display() {
   switch (UWB_MODE) {
   case 0: { // Tag mode
-    // Serial.print("Number of base stations: ");
-    // Serial.println(UWB_T_NUMBER);
-    // // printTimeStamp();
-    // Serial.println("Distance:");
-    // Serial.println(g_data_uwb);
-    String raw = g_data_uwb;
-    int colonIndex = raw.indexOf(':');
-    int mIndex = raw.indexOf('m');
-    if (colonIndex != -1 && mIndex != -1) {
-      String value = raw.substring(colonIndex + 1, mIndex);
-      Serial.println(value); // In ra chỉ "0.81"
-    }
+    Serial.print("Number of base stations: ");
+    Serial.println(UWB_T_NUMBER);
+    // printTimeStamp();
+    Serial.println("Distance:");
+    Serial.println(g_data_uwb);
+    // String raw = g_data_uwb;
+    // int colonIndex = raw.indexOf(':');
+    // int mIndex = raw.indexOf('m');
+    // if (colonIndex != -1 && mIndex != -1) {
+    //   String value = raw.substring(colonIndex + 1, mIndex);
+    //   Serial.println(value); // In ra chỉ "0.81"
+    // }
     break;
   }
   case 1: // Base station mode

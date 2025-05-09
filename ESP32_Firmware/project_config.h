@@ -8,3 +8,6 @@
 #define AIO_SERVERPORT 1883
 #define AIO_USERNAME "Duyen"
 #define AIO_KEY ""
+
+#define MQTT_SERVER "192.168.175.176"
+#define MQTT_PORT 1883
