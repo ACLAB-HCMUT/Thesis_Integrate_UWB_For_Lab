@@ -13,10 +13,10 @@ void printTimeStamp() {
   }
 }
 
-int UWB_MODE = 1;              // Set UWB Mode: Tag mode is 0, Base station mode is 1
+int UWB_MODE = 0;              // Set UWB Mode: Tag mode is 0, Base station mode is 1
 int UWB_T_NUMBER = 0;          // Store the number of base stations
 int UWB_T_ID = atoi(g_tag_id); // Tag ID
-int UWB_B_ID = 1;              // Base station ID1~ID4
+int UWB_B_ID = 0;              // Base station ID1~ID4
 
 // Private function for checking AT response
 void printForDebug(size_t send, String content, String cases = "") {
@@ -62,7 +62,7 @@ void UWB_setupmode() {
 
       vTaskDelay(pdMS_TO_TICKS(50));
       size_t send_swis = Serial2.write("AT+switchdis=1\r\n"); // Start measuring distance
-      printForDebug(send_swis, "AT+switchdis=1");
+      printForDebug(send_swis, "AT+switchdis=0");
 
       vTaskDelay(pdMS_TO_TICKS(50));
       if (b == 0) {
@@ -169,7 +169,7 @@ void UWB_display() {
   case 0: // Tag mode
     Serial.print("Number of base stations: ");
     Serial.println(UWB_T_NUMBER);
-    // printTimeStamp();
+    printTimeStamp();
     Serial.println("Distance:");
     Serial.println(g_data_uwb);
     break;

@@ -9,6 +9,8 @@
 #include "global_var.h"
 #include "util.h"
 
+#include "uwb_module.h"
+
 void MQTT_setup();
 void MQTT_processing();
 

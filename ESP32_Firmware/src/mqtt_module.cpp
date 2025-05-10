@@ -54,6 +54,7 @@ void MQTT_send_tag_data() {
   doc["tag_x"] = 1;
   doc["tag_y"] = 2;
   doc["tag_z"] = 3;
+  doc["data"] = g_data_uwb;
 
   char json_buffer[256];
   serializeJson(doc, json_buffer);
@@ -109,6 +110,11 @@ void MQTT_callback(char *topic, byte *payload, unsigned int length) {
       control_duration = doc["duration"];
       control_start_time = millis();
       is_active = true;
+
+      printTimeStamp();
+      Serial.println("UWB turn on");
+      Serial2.write("AT+switchdis=1\r\n");
+
       Serial.println("MQTT - Active");
     }
   } else if (strcmp(topic, acknowledge_topic) == 0) {
@@ -152,6 +158,11 @@ void MQTT_processing() {
   if ((is_active == true) &&
       ((millis() - control_start_time) > control_duration)) {
     is_active = false;
+
+    printTimeStamp();
+    Serial.println("UWB turn off");
+    Serial2.write("AT+switchdis=0\r\n");
+
     is_timeout_ack_received = false;
     is_send_timeout = true;
     last_retry_time = millis();
