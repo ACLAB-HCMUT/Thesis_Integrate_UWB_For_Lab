@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: navigatorKey, // Add navigatorKey
-      home: const LoginPage(),
+      home: const BorrowRequestManagePage(),
       // initialRoute: initialRoute,
 
       routes: {

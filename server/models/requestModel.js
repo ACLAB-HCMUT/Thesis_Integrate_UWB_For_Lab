@@ -33,8 +33,37 @@ async function changeReturnDate(requestId, returnDate) {
   return result.rows[0];
 }
 
+async function getAllRequests() {
+  const result = await pool.query(`
+    SELECT 
+      br.*,
+      u.full_name,
+      u.email,
+      u.phone_number,
+      u.role,
+      u.status AS user_status
+    FROM borrow_request br
+    JOIN "user" u ON br.client_id = u.user_id
+    ORDER BY br.request_id DESC
+  `);
+  return result.rows;
+}
+
+async function changeStatus(requestId, status) {
+  const result = await pool.query(
+    `UPDATE borrow_request 
+     SET status = $1 
+     WHERE request_id = $2 
+     RETURNING *`,
+    [status, requestId]
+  );
+  return result.rows[0];
+}
+
 module.exports = {
   createRequest,
   changeBorrowDate,
   changeReturnDate,
+  getAllRequests,
+  changeStatus,
 };

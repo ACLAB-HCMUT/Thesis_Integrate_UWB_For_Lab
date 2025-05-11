@@ -33,8 +33,31 @@ async function changeReturnDate(requestId, returnDate = new Date()) {
   }
 }
 
+async function getAllRequests() {
+  try {
+    const requests = await requestModel.getAllRequests();
+    return requests;
+  } catch (error) {
+    throw new Error('Error fetching borrow requests');
+  }
+}
+
+async function updateStatus(requestId, status) {
+  try {
+    const updatedRequest = await requestModel.changeStatus(requestId, status);
+    if (!updatedRequest) {
+      throw new Error('Borrow request not found');
+    }
+    return updatedRequest;
+  } catch (error) {
+    throw new Error('Error updating request status');
+  }
+}
+
 module.exports = {
   createRequest,
   changeBorrowDate,
   changeReturnDate,
+  getAllRequests,
+  updateStatus,
 };

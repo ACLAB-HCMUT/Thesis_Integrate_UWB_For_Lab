@@ -192,68 +192,350 @@
 // }
 // borrow_request_manage_page.dart
 
+// import 'package:flutter/material.dart';
+// import 'package:intl/intl.dart';
+//
+// class BorrowRequestManagePage extends StatelessWidget {
+//   const BorrowRequestManagePage({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     // Dữ liệu giả
+//     final List<Map<String, dynamic>> borrowRequests = [
+//       {
+//         'id': 1,
+//         'user': 'Hồ Chí Anh Khôi',
+//         'device': 'UWB Tag 1',
+//         'expectedBorrowDate': DateTime(2025, 5, 5),
+//         'expectedReturnDate': DateTime(2025, 5, 10),
+//         'actualBorrowDate': null,
+//         'actualReturnDate': null,
+//         'status': 'Pending',
+//         'note': 'Cần dùng cho đồ án',
+//       },
+//       {
+//         'id': 2,
+//         'user': 'Hồ Chí Anh Khôi',
+//         'device': 'NodeMCU-BU01',
+//         'expectedBorrowDate': DateTime(2025, 5, 7),
+//         'expectedReturnDate': DateTime(2025, 5, 15),
+//         'actualBorrowDate': null,
+//         'actualReturnDate': null,
+//         'status': 'Approved',
+//         'note': 'Học online',
+//       },
+//     ];
+//
+//     return Scaffold(
+//       appBar: AppBar(
+//           title: const Text('Quản lý yêu cầu mượn'),
+//           leading: IconButton(
+//             icon: const Icon(Icons.arrow_back),
+//             onPressed: () {
+//               Navigator.pop(context); // <-- Nút trở về
+//             },
+//           ),
+//         ),
+//       body: ListView.builder(
+//         padding: const EdgeInsets.all(16),
+//         itemCount: borrowRequests.length,
+//         itemBuilder: (context, i) {
+//           final req = borrowRequests[i];
+//           return BorrowRequestItem(
+//             data: req,
+//             onApprove: () {
+//               // gọi API duyệt...
+//             },
+//             onReject: () {
+//               // gọi API từ chối...
+//             },
+//             onActualBorrowDateChanged: (date) {
+//               // gọi API cập nhật actualBorrowDate...
+//             },
+//             onActualReturnDateChanged: (date) {
+//               // gọi API cập nhật actualReturnDate...
+//             },
+//           );
+//         },
+//       ),
+//     );
+//   }
+// }
+//
+// class BorrowRequestItem extends StatefulWidget {
+//   final Map<String, dynamic> data;
+//   final VoidCallback onApprove;
+//   final VoidCallback onReject;
+//   final Function(DateTime) onActualBorrowDateChanged;
+//   final Function(DateTime) onActualReturnDateChanged;
+//
+//   const BorrowRequestItem({
+//     super.key,
+//     required this.data,
+//     required this.onApprove,
+//     required this.onReject,
+//     required this.onActualBorrowDateChanged,
+//     required this.onActualReturnDateChanged,
+//   });
+//
+//   @override
+//   State<BorrowRequestItem> createState() => _BorrowRequestItemState();
+// }
+//
+// class _BorrowRequestItemState extends State<BorrowRequestItem> {
+//   final DateFormat _fmt = DateFormat('dd/MM/yyyy');
+//
+//   Future<void> _pickDate(Function(DateTime) onChanged) async {
+//     FocusScope.of(context).requestFocus(FocusNode());
+//     final d = await showDatePicker(
+//       context: context,
+//       initialDate: DateTime.now(),
+//       firstDate: DateTime(2020),
+//       lastDate: DateTime(2100),
+//     );
+//     if (d != null) onChanged(d);
+//   }
+//
+//   Future<bool> _confirm(String action) async {
+//     return (await showDialog<bool>(
+//       context: context,
+//       builder: (_) => AlertDialog(
+//         title: Text('$action yêu cầu mượn?'),
+//         content: const SizedBox.shrink(),
+//         actions: [
+//           Row(
+//             children: [
+//               Expanded(
+//                 child: ElevatedButton(
+//                   style: ElevatedButton.styleFrom(
+//                     backgroundColor: Colors.grey[300],
+//                     foregroundColor: Colors.black,
+//                   ),
+//                   onPressed: () => Navigator.pop(context, false),
+//                   child: const Text('Huỷ'),
+//                 ),
+//               ),
+//               const SizedBox(width: 8),
+//               Expanded(
+//                 child: ElevatedButton(
+//                   style: ElevatedButton.styleFrom(
+//                     backgroundColor: Colors.blue,
+//                     foregroundColor: Colors.white,
+//                   ),
+//                   onPressed: () => Navigator.pop(context, true),
+//                   child: const Text('Xác nhận'),
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ],
+//       ),
+//     )) ==
+//         true;
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final d = widget.data;
+//     return Card(
+//       margin: const EdgeInsets.symmetric(vertical: 8),
+//       child: Padding(
+//         padding: const EdgeInsets.all(16),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Text('Thiết bị: ${d['device']}', style: const TextStyle(fontWeight: FontWeight.bold)),
+//             Text('Người mượn: ${d['user']}'),
+//             // Chi tiết mượn (ghi chú)
+//             Text('Chi tiết mượn: ${d['note']}'),
+//             const SizedBox(height: 8),
+//             Text('Ngày mượn dự kiến: ${_fmt.format(d['expectedBorrowDate'])}'),
+//             Text('Ngày trả dự kiến: ${_fmt.format(d['expectedReturnDate'])}'),
+//             const SizedBox(height: 12),
+//             Text('Trạng thái: ${d['status']}'),
+//             const SizedBox(height: 12),
+//           Row(
+//           mainAxisAlignment: MainAxisAlignment.end,
+//           children: [
+//             ElevatedButton(
+//               onPressed: () => _pickDate(widget.onActualBorrowDateChanged),
+//               child: Text(d['actualBorrowDate'] != null
+//                   ? 'Ngày mượn: ${_fmt.format(d['actualBorrowDate'])}'
+//                   : 'Cập nhật ngày mượn'),
+//             ),
+//             ],
+//           ),
+//             const SizedBox(height: 8),
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.end,
+//           children: [
+//             ElevatedButton(
+//               onPressed: () => _pickDate(widget.onActualReturnDateChanged),
+//               child: Text(d['actualReturnDate'] != null
+//                   ? 'Ngày trả: ${_fmt.format(d['actualReturnDate'])}'
+//                   : 'Cập nhật ngày trả'),
+//             ),
+//           ],
+//         ),
+//             const SizedBox(height: 12),
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.end,
+//               children: [
+//             Wrap(
+//               spacing: 8,
+//               runSpacing: 8,
+//               children: [
+//                 ElevatedButton(
+//                   style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white,),
+//                   onPressed: d['status'] == 'Pending'
+//                       ? () async {
+//                     if (await _confirm('Duyệt')) widget.onApprove();
+//                   }
+//                       : null,
+//                   child: const Text('Duyệt'),
+//                 ),
+//                 ElevatedButton(
+//                   style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white,),
+//                   onPressed: d['status'] == 'Pending'
+//                       ? () async {
+//                     if (await _confirm('Từ chối')) widget.onReject();
+//                   }
+//                       : null,
+//                   child: const Text('Từ chối'),
+//                 ),
+//               ],
+//             ),
+//         ],
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'package:uwb_positioning/models/borrow_request.dart';
+import 'dart:convert';
+import 'package:logging/logging.dart';
 
-class BorrowRequestManagePage extends StatelessWidget {
+import 'package:uwb_positioning/services/borrow_request_service.dart';
+
+final _log = Logger('BorrowRequestItem');
+
+class BorrowRequestManagePage extends StatefulWidget {
   const BorrowRequestManagePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Dữ liệu giả
-    final List<Map<String, dynamic>> borrowRequests = [
-      {
-        'id': 1,
-        'user': 'Hồ Chí Anh Khôi',
-        'device': 'UWB Tag 1',
-        'expectedBorrowDate': DateTime(2025, 5, 5),
-        'expectedReturnDate': DateTime(2025, 5, 10),
-        'actualBorrowDate': null,
-        'actualReturnDate': null,
-        'status': 'Pending',
-        'note': 'Cần dùng cho đồ án',
-      },
-      {
-        'id': 2,
-        'user': 'Hồ Chí Anh Khôi',
-        'device': 'NodeMCU-BU01',
-        'expectedBorrowDate': DateTime(2025, 5, 7),
-        'expectedReturnDate': DateTime(2025, 5, 15),
-        'actualBorrowDate': null,
-        'actualReturnDate': null,
-        'status': 'Approved',
-        'note': 'Học online',
-      },
-    ];
+  State<BorrowRequestManagePage> createState() => _BorrowRequestManagePageState();
+}
 
+class _BorrowRequestManagePageState extends State<BorrowRequestManagePage> {
+  late Future<List<BorrowRequests>> _borrowRequestsFuture;
+  final BorrowRequestService _borrowRequestService = BorrowRequestService();
+
+  @override
+  void initState() {
+    super.initState();
+    _borrowRequestsFuture = _borrowRequestService.fetchRequests();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Quản lý yêu cầu mượn'),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context); // <-- Nút trở về
-            },
-          ),
+        title: const Text('Quản lý yêu cầu mượn'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
         ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: borrowRequests.length,
-        itemBuilder: (context, i) {
-          final req = borrowRequests[i];
-          return BorrowRequestItem(
-            data: req,
-            onApprove: () {
-              // gọi API duyệt...
-            },
-            onReject: () {
-              // gọi API từ chối...
-            },
-            onActualBorrowDateChanged: (date) {
-              // gọi API cập nhật actualBorrowDate...
-            },
-            onActualReturnDateChanged: (date) {
-              // gọi API cập nhật actualReturnDate...
+      ),
+      body: FutureBuilder<List<BorrowRequests>>(
+        future: _borrowRequestsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return Center(child: Text('Lỗi: ${snapshot.error}'));
+          }
+
+          final borrowRequests = snapshot.data!;
+          if (borrowRequests.isEmpty) {
+            return const Center(child: Text('Không có yêu cầu mượn nào.'));
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: borrowRequests.length,
+            itemBuilder: (context, i) {
+              final req = borrowRequests[i];
+              return BorrowRequestItem(
+                data: req.toJson(),  // Convert BorrowRequests model to Map
+                onApprove: () async {
+                  try {
+                    await _borrowRequestService.updateRequestStatus(req.requestId, 'approved');
+                    setState(() {
+                      _borrowRequestsFuture = _borrowRequestService.fetchRequests();
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Đã duyệt yêu cầu')),
+                    );
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Lỗi: $e')),
+                    );
+                  }
+                },
+                onReject: () async {
+                  try {
+                    await _borrowRequestService.updateRequestStatus(req.requestId, 'declined');
+                    setState(() {
+                      _borrowRequestsFuture = _borrowRequestService.fetchRequests();
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Đã từ chối yêu cầu')),
+                    );
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Lỗi: $e')),
+                    );
+                  }
+                },
+                onActualBorrowDateChanged: (date) async {
+                  try {
+                    await _borrowRequestService.changeBorrowDate(req.requestId, date);
+                    setState(() {
+                      req.borrowDate = date;
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Đã cập nhật ngày mượn')),
+                    );
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Lỗi khi cập nhật ngày mượn')),
+                    );
+                  }
+                },
+                onActualReturnDateChanged: (date) async {
+                  try {
+                    await _borrowRequestService.changeReturnDate(req.requestId, date);
+                    setState(() {
+                      req.returnDate = date;
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Đã cập nhật ngày trả')),
+                    );
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Lỗi khi cập nhật ngày trả')),
+                    );
+                  }
+                },
+              );
             },
           );
         },
@@ -330,13 +612,13 @@ class _BorrowRequestItemState extends State<BorrowRequestItem> {
           ),
         ],
       ),
-    )) ==
-        true;
+    )) == true;
   }
 
   @override
   Widget build(BuildContext context) {
     final d = widget.data;
+    _log.info('Data: ${d}');
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8),
       child: Padding(
@@ -344,68 +626,73 @@ class _BorrowRequestItemState extends State<BorrowRequestItem> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Thiết bị: ${d['device']}', style: const TextStyle(fontWeight: FontWeight.bold)),
-            Text('Người mượn: ${d['user']}'),
-            // Chi tiết mượn (ghi chú)
-            Text('Chi tiết mượn: ${d['note']}'),
+            Text('Thiết bị: ${d['device_id']}', style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text('Người mượn: ${d['full_name']}'),
+            Text('Chi tiết mượn: ${d['detail']}'),
             const SizedBox(height: 8),
-            Text('Ngày mượn dự kiến: ${_fmt.format(d['expectedBorrowDate'])}'),
-            Text('Ngày trả dự kiến: ${_fmt.format(d['expectedReturnDate'])}'),
+            Text('Ngày mượn dự kiến: ${_fmt.format(DateTime.parse(d['appointment_date']))}'),
+            Text('Ngày trả dự kiến: ${_fmt.format(DateTime.parse(d['expected_return']))}'),
             const SizedBox(height: 12),
             Text('Trạng thái: ${d['status']}'),
-            const SizedBox(height: 12),
-          Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            ElevatedButton(
-              onPressed: () => _pickDate(widget.onActualBorrowDateChanged),
-              child: Text(d['actualBorrowDate'] != null
-                  ? 'Ngày mượn: ${_fmt.format(d['actualBorrowDate'])}'
-                  : 'Cập nhật ngày mượn'),
-            ),
-            ],
-          ),
-            const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            ElevatedButton(
-              onPressed: () => _pickDate(widget.onActualReturnDateChanged),
-              child: Text(d['actualReturnDate'] != null
-                  ? 'Ngày trả: ${_fmt.format(d['actualReturnDate'])}'
-                  : 'Cập nhật ngày trả'),
-            ),
-          ],
-        ),
             const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white,),
-                  onPressed: d['status'] == 'Pending'
-                      ? () async {
-                    if (await _confirm('Duyệt')) widget.onApprove();
-                  }
-                      : null,
-                  child: const Text('Duyệt'),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white,),
-                  onPressed: d['status'] == 'Pending'
-                      ? () async {
-                    if (await _confirm('Từ chối')) widget.onReject();
-                  }
-                      : null,
-                  child: const Text('Từ chối'),
+                  onPressed: () => _pickDate(widget.onActualBorrowDateChanged),
+                  child: Text(d['borrow_date'] != null
+                      ? 'Ngày mượn: ${_fmt.format(DateTime.parse(d['borrow_date']))}'
+                      : 'Cập nhật ngày mượn'),
                 ),
               ],
             ),
-        ],
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  onPressed: () => _pickDate(widget.onActualReturnDateChanged),
+                  child: Text(d['return_date'] != null
+                      ? 'Ngày trả: ${_fmt.format(DateTime.parse(d['return_date']))}'
+                      : 'Cập nhật ngày trả'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: d['status'] == 'pending'
+                          ? () async {
+                        if (await _confirm('Duyệt')) widget.onApprove();
+                      }
+                          : null,
+                      child: const Text('Duyệt'),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: d['status'] == 'pending'
+                          ? () async {
+                        if (await _confirm('Từ chối')) widget.onReject();
+                      }
+                          : null,
+                      child: const Text('Từ chối'),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
         ),
