@@ -1,4 +1,3 @@
-/*
 #include "util.h"
 
 ////TEST////
@@ -15,11 +14,27 @@
 float modify_distance(float dis) {
   return (dis - g_intercept) / g_slope;
 }
+
+bool is_valid() {
+  int index = g_data_uwb.indexOf("an");
+  Serial.println("is_valid");
+  Serial.println(g_data_uwb);
+  Serial.println(index);
+  return (index != -1);
+}
+
 void extract_data() {
-  for (int i = 0; i < 4; i++) {
+  Serial.println(g_data_uwb);
+
+  for (int i = 0; i < N_ANCHORS; i++) {
     String anchor_info = "an" + String(i + 1) + ":";
     int start_index = g_data_uwb.indexOf(anchor_info);
     int end_index = g_data_uwb.indexOf("m", start_index);
+
+    Serial.print("start");
+    Serial.println(start_index);
+    Serial.print("end");
+    Serial.println(end_index);
 
     String distance_str;
     if (start_index != -1 && end_index != -1) {
@@ -78,7 +93,7 @@ void extract_data() {
 
 void display_extractdata() {
   Serial.println("Real distances:");
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < N_ANCHORS; i++) {
     Serial.println(g_distance_uwb[i]);
   }
 
@@ -92,7 +107,7 @@ void display_extractdata() {
 }
 
 void calc_position() {
-  if (g_data_uwb.isEmpty()) {
+  if (!is_valid()) {
     Serial.println("No data available for position calculation.");
     return;
   }
@@ -103,6 +118,7 @@ void calc_position() {
 
   int i, j, k;
   for (i = 0; i < N_ANCHORS; i++)
+    // d[i] = sqrt(g_distance_uwb[i] * g_distance  _uwb[i] - g_anchor_matrix[i][2] * g_anchor_matrix[i][2]);
     d[i] = g_distance_uwb[i];
   for (i = 0; i < N_ANCHORS; i++) {
     x[i] = g_anchor_matrix[i][0];
@@ -164,4 +180,3 @@ void display_single(int anchor_id) {
   Serial.println(g_distance_uwb[anchor_id]);
   vTaskDelay(pdMS_TO_TICKS(250));
 }
-  */

@@ -51,9 +51,9 @@ void MQTT_send_tag_data() {
   JsonDocument doc;
   doc["tag_id"] = g_tag_id;
   doc["timestamp"] = millis();
-  doc["tag_x"] = 1;
-  doc["tag_y"] = 2;
-  doc["tag_z"] = 3;
+  doc["tag_x"] = g_position_uwb[0];
+  doc["tag_y"] = g_position_uwb[1];
+  doc["tag_z"] = g_position_uwb[2];
   doc["data"] = g_data_uwb;
 
   char json_buffer[256];

@@ -7,14 +7,16 @@ void UWB_task(void *pvParameters) {
   while (1) {
     UWB_readString();
     UWB_display();
-    vTaskDelay(pdMS_TO_TICKS(500));
+    calc_position();
+    display_extractdata();
+    vTaskDelay(pdMS_TO_TICKS(300));
   }
 }
 
 void MQTT_task(void *pvParameters) {
   while (1) {
     MQTT_processing();
-    vTaskDelay(pdMS_TO_TICKS(100));
+    vTaskDelay(pdMS_TO_TICKS(500));
   }
 }
 
@@ -37,15 +39,15 @@ void setup() {
   WIFI_setup();
   MQTT_setup();
 
-   // Cấu hình NTP server
-   configTime(gmtOffset_sec, daylightOffset_sec, "pool.ntp.org");
+  // Cấu hình NTP server
+  configTime(gmtOffset_sec, daylightOffset_sec, "pool.ntp.org");
 
-   // Đợi có thời gian
-   struct tm timeinfo;
-   if (!getLocalTime(&timeinfo)) {
-     Serial.println("Không lấy được thời gian!");
-     return;
-   }
+  // Đợi có thời gian
+  struct tm timeinfo;
+  if (!getLocalTime(&timeinfo)) {
+    Serial.println("Không lấy được thời gian!");
+    return;
+  }
 
   // Create task
   xTaskCreate(UWB_task, "UWB_task", 4096, NULL, 1, NULL);
