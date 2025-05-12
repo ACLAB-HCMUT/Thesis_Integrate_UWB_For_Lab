@@ -2,14 +2,14 @@ import 'package:logging/logging.dart';
 
 class Device {
   final int deviceId;
-  final String deviceName;
+  String deviceName;
   String description = '';
   String manufacturer = '';
   String serial = '';
   String specification = '';
-  final String image;
-  final bool isActive;
-  final bool isAvailable;
+  String image;
+  bool isActive;
+  bool isAvailable;
   final String typeName;
   late bool isInRoom;
 
@@ -33,14 +33,18 @@ class Device {
       _logger.info("Create Device from JSON: $json");
 
       return Device(
-        deviceId: json['device_id'],
-        deviceName: json['device_name'],
-        image: json['image'],
-        isActive: json['is_active'],
-        isAvailable: json['is_available'],
-        typeName: json['type_name'],
-        isInRoom: false,
-      );
+        deviceId: json['device_id'] as int,
+        deviceName: json['device_name'] ?? '',
+        image: json['image'] ?? '',
+        isActive: json['is_active'] ?? false,
+        isAvailable: json['is_available'] ?? false,
+        typeName: json['type_name'] ?? '',
+        isInRoom: true,
+      )
+        ..description = json['description'] ?? ''
+        ..manufacturer = json['manufacturer'] ?? ''
+        ..serial = json['serial'] ?? ''
+        ..specification = json['specification'] ?? '';
     } catch (e, stackTrace) {
       _logger.severe("Error creating Device: $e", e, stackTrace);
       rethrow; // Re-throw the error after logging it
@@ -68,10 +72,14 @@ class Device {
     try {
       _logger.info("Update Device from JSON: $json");
 
-      description = json['description'];
-      manufacturer = json['manufacturer'];
-      serial = json['serial'];
-      specification = json['specification'];
+      deviceName = json['device_name'] ?? deviceName;
+      description = json['description'] ?? description;
+      manufacturer = json['manufacturer'] ?? manufacturer;
+      serial = json['serial'] ?? serial;
+      specification = json['specification'] ?? specification;
+      image = json['image'] ?? image;
+      isActive = json['is_active'] ?? isActive;
+      isAvailable = json['is_available'] ?? isAvailable;
     } catch (e, stackTrace) {
       _logger.severe("Error updating Device: $e", e, stackTrace);
       rethrow; // Re-throw the error after logging it

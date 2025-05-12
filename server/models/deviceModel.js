@@ -20,10 +20,14 @@ async function getAll() {
 async function getById(deviceId) {
   const result = await pool.query(`
     SELECT
+      d.device_id,
+      d.device_name,
+      d.type_id,
       d.description,
       d.serial,
       d.manufacturer,
       d.specification,
+      d.image,
       d.is_active,
       d.is_available
     FROM device d

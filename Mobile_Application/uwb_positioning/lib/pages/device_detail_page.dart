@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uwb_positioning/models/device.dart';
 import 'package:uwb_positioning/pages/borrow_request_page.dart';
 import 'package:uwb_positioning/pages/device_realtime_page.dart';
 import 'package:uwb_positioning/pages/device_history_page.dart';
@@ -17,11 +18,27 @@ class DeviceDetailPage extends StatefulWidget {
 
 class _DeviceDetailPageState extends State<DeviceDetailPage> {
   late Future<void> _deviceDetailFuture;
+  late String deviceId;
+  late DeviceService deviceService;
+  Device? _device;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    deviceId = ModalRoute.of(context)!.settings.arguments as String;
+    deviceService = Provider.of<DeviceService>(context, listen: false);
+    _fetchDeviceDetail();
+  }
+
+  void _fetchDeviceDetail() {
+    _deviceDetailFuture = deviceService.fetchInfoDevice(deviceId).then((data) {
+      final device = Device.createDevice(data);
+      _device = device;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final deviceId = ModalRoute.of(context)!.settings.arguments as String;
-    final deviceService = Provider.of<DeviceService>(context);
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
@@ -34,8 +51,8 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else {
-            final device = deviceService.devices[deviceId];
-
+            // final device = deviceService.devices[deviceId];
+            final device = _device;
             return SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -169,7 +186,12 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
                                     context,
                                     DeviceUpdatePage.nameRoute,
                                     arguments: device.deviceId,
-                                  );
+                                  ).then((_) {
+                                    // Sau khi sửa xong quay lại thì fetch lại
+                                    setState(() {
+                                      _fetchDeviceDetail();
+                                    });
+                                  });
                                 } else {
                                   Navigator.pushNamed(
                                     context,
@@ -192,13 +214,5 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
         },
       ),
     );
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final deviceId = ModalRoute.of(context)!.settings.arguments as String;
-    final deviceService = Provider.of<DeviceService>(context, listen: false);
-    _deviceDetailFuture = deviceService.fetchDeviceDetail(deviceId);
   }
 }

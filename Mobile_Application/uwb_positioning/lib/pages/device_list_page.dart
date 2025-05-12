@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uwb_positioning/models/device.dart';
 import 'package:uwb_positioning/pages/device_detail_page.dart';
 import 'package:provider/provider.dart';
 import 'package:uwb_positioning/pages/notification_list_page.dart';
@@ -14,9 +15,53 @@ class DeviceListPage extends StatefulWidget {
 }
 
 class _DeviceListPageState extends State<DeviceListPage> {
+  Map<String, Device>? devices; // 🟢 Lưu devices sau khi fetch
+  bool isLoading = true;
+  String? error;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDevices();
+  }
+
+  Future<void> fetchDevices() async {
+    try {
+      final deviceService = Provider.of<DeviceService>(context, listen: false);
+      final result = await deviceService.fetchListDevice(); // 🟢 Gọi fetch trả về Map
+      setState(() {
+        devices = result;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        error = e.toString();
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final deviceService = Provider.of<DeviceService>(context);
+    if (isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (error != null) {
+      return Scaffold(
+        body: Center(child: Text('Error: $error')),
+      );
+    }
+
+    if (devices == null || devices!.isEmpty) {
+      return const Scaffold(
+        body: Center(child: Text('There are no devices')),
+      );
+    }
+
     return Scaffold(
         appBar: AppBar(
           title: const Text("Device List"),
@@ -48,13 +93,13 @@ class _DeviceListPageState extends State<DeviceListPage> {
               } else if (deviceService.devices.isEmpty) {
                 return const Center(child: Text('There are no devices'));
               } else {
-                final devices = deviceService.devices;
+                // final devices = deviceService.devices;
 
                 return ListView.builder(
-                    itemCount: devices.length,
+                    itemCount: devices!.length,
                     itemBuilder: (context, index) {
-                      final deviceId = devices.keys.elementAt(index);
-                      final device = devices[deviceId]!;
+                      final deviceId = devices!.keys.elementAt(index);
+                      final device = devices![deviceId]!;
 
                       return GestureDetector(
                           onTap: () {
@@ -62,7 +107,10 @@ class _DeviceListPageState extends State<DeviceListPage> {
                               context,
                               DeviceDetailPage.nameRoute,
                               arguments: deviceId,
-                            );
+                            ).then((_) {
+                              // Khi quay lại sẽ gọi fetch lại danh sách
+                              fetchDevices();
+                            });
                           },
                           child: Container(
                             height: 100,

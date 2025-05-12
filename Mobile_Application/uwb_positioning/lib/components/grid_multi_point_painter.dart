@@ -49,6 +49,17 @@ class GridMultiPointPainter extends CustomPainter {
       final x = (entry.anchorX) * gridSize * 5 + gridOffset.dx;
       final y = (entry.anchorY) * gridSize * 5 + gridOffset.dy;
       canvas.drawCircle(Offset(x, y), pointSize, anchorPaint);
+
+      final textSpan = TextSpan(
+        text: 'Anchor: ${entry.anchorId}',
+        style: TextStyle(color: Colors.black, fontSize: 12),
+      );
+      final textPainter = TextPainter(
+        text: textSpan,
+        textDirection: TextDirection.ltr,
+      );
+      textPainter.layout();
+      textPainter.paint(canvas, Offset(x + 6, y - 6)); // Slight offset for visibility
     }
 
     List<Offset> tagPositions = [];

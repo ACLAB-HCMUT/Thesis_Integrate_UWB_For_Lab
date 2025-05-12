@@ -43,6 +43,10 @@ class BorrowRequests {
   final DateTime expectedReturn;
   DateTime? borrowDate;
   DateTime? returnDate;
+  bool? isActive;
+  bool? isAvailable;
+  String? deviceName;
+  DateTime? receivedExpectedReturn;
   final int clientId;
   final int deviceId;
   final String fullName;
@@ -59,6 +63,10 @@ class BorrowRequests {
     required this.expectedReturn,
     this.borrowDate,
     this.returnDate,
+    this.isActive,
+    this.isAvailable,
+    this.deviceName,
+    this.receivedExpectedReturn,
     required this.clientId,
     required this.deviceId,
     required this.fullName,
@@ -77,6 +85,10 @@ class BorrowRequests {
       expectedReturn: DateTime.parse(json['expected_return']),
       borrowDate: json['borrow_date'] != null ? DateTime.parse(json['borrow_date']) : null,
       returnDate: json['return_date'] != null ? DateTime.parse(json['return_date']) : null,
+      isActive: json['is_active'] ?? null,
+      isAvailable: json['is_available'] ?? null,
+      deviceName: json['device_name'] ?? '',
+      receivedExpectedReturn: json['received_expected_return'] != null ? DateTime.parse(json['received_expected_return']) : null,
       clientId: json['client_id'],
       deviceId: json['device_id'],
       fullName: json['full_name'],
@@ -96,6 +108,10 @@ class BorrowRequests {
       'expected_return': expectedReturn.toIso8601String(),
       'borrow_date': borrowDate?.toIso8601String(),
       'return_date': returnDate?.toIso8601String(),
+      'is_active': isActive,
+      'is_available': isAvailable,
+      'device_name': deviceName,
+      'received_expected_return': receivedExpectedReturn?.toIso8601String(),
       'client_id': clientId,
       'device_id': deviceId,
       'full_name': fullName,

@@ -25,6 +25,7 @@ class AuthProvider with ChangeNotifier {
 class AuthService with ChangeNotifier {
   static final getAllUsersUri = baseUri.replace(path: '/auth');
   static final loginUri = baseUri.replace(path: '/auth/login');
+  static final registerUri = baseUri.replace(path: '/auth/register');
   static Uri updateUri(int id) => baseUri.replace(path: '/auth/$id');
   static Uri changePasswordUri(int id) => baseUri.replace(path: '/auth/change-password/$id');
   final AuthProvider userProvider;
@@ -105,8 +106,6 @@ class AuthService with ChangeNotifier {
       body: jsonEncode(updates),
     );
 
-    notifyListeners();
-
     if (resp.statusCode != 200) {
       throw Exception('Cập nhật thất bại: ${resp.statusCode}');
     }
@@ -140,7 +139,7 @@ class AuthService with ChangeNotifier {
     final userId = userProvider.user?.id;
     if (token == null) throw Exception('Token không tồn tại');
     if (userId == null) throw Exception('User ID không hợp lệ');
-    
+
     final uri = changePasswordUri(userId);
     final resp = await http.post(
       uri,
@@ -157,6 +156,34 @@ class AuthService with ChangeNotifier {
     if (resp.statusCode != 200) {
       final data = jsonDecode(resp.body);
       throw Exception(data['error'] ?? 'Lỗi không xác định');
+    }
+  }
+
+  static Future<void> register({
+    required String email,
+    required String password,
+    required String fullName,
+    required String phoneNumber,
+    required String role,
+  }) async {
+    final response = await http.post(
+      registerUri,
+      headers: {
+
+        'Content-Type': 'application/json'
+      },
+      body: jsonEncode({
+        'email': email,
+        'password': password,
+        'full_name': fullName,
+        'phone_number': phoneNumber,
+        'role': role,
+      }),
+    );
+
+    if (response.statusCode != 201) {
+      final data = jsonDecode(response.body);
+      throw Exception(data['error'] ?? 'Đăng ký thất bại');
     }
   }
 }

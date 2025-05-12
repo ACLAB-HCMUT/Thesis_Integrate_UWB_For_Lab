@@ -20,6 +20,7 @@ class DeviceService with ChangeNotifier {
   Map<String, Device> get devices => _devices;
   // Logger instance
   static final Logger _logger = Logger('DeviceService');
+
   Future<Map<String, Device>> fetchListDevice() async {
     // final response = await http.get(getAllDeviceUri);
     final token = userProvider.user?.token;
@@ -50,36 +51,6 @@ class DeviceService with ChangeNotifier {
     }
   }
 
-  // Get device details from database
-  // static Future<Map<String, dynamic>> fetchInfoDevice(String deviceId) async {
-  //   await Future.delayed(const Duration(milliseconds: 500));
-  //   if (deviceId == '1') {
-  //     return {
-  //       'description':
-  //           "UWB is a Unit which integrates the UWB(Ultra Wide Band) communication protocol which uses nanosecond pulses to locate objects and define position and orientation. The design uses the Ai-ThinkerBU01 Transceiver module which is based on Decawave's DW1000 design. The internal STM32 chip with its integrated ranging algorithm,is capable of 10cm positioning accuracy and also supports AT command control. Applications include: Indoor wireless tracking/range finding of assets,which works by triangulating the position of the base station/s and tag (the base station resolves the position information and outputs it to the tag).",
-  //       'manufacturer': 'M5Stack',
-  //       'serial': 'SKU:U100',
-  //       'specification':
-  //           'Data transfer rate: 10 kbit/s, 850 kbit/s and 6.8 Mbit/s',
-  //     };
-  //   } else if (deviceId == '2') {
-  //     return {
-  //       'description':
-  //           "Node MCU is an open-source development platform based on the ESP8266, a popular Wi-Fi module known for its ability to connect to the Internet and enable remote control. It provides a simple and efficient programming environment using Lua scripts or Arduino IDE. Node MCU facilitates easy integration with IoT devices and automation applications.",
-  //       'manufacturer': 'Espressif Systems',
-  //       'serial': 'SKU:ESP8266',
-  //       'specification': 'Processor: Tensilica L106 32-bit RISC microprocessor',
-  //     };
-  //   } else {
-  //     return {
-  //       'description':
-  //           "The STM32 is a family of 32-bit microcontrollers from STMicroelectronics, based on the ARM Cortex-M processor. Known for their high performance, low power consumption, and scalability, STM32 microcontrollers are ideal for a wide range of applications, including industrial automation, consumer electronics, and IoT. They provide rich peripheral interfaces and robust development support.",
-  //       'manufacturer': 'STMicroelectronics',
-  //       'serial': 'SKU:STM32F401',
-  //       'specification': 'Clock Speed: Up to 84 MHz',
-  //     };
-  //   }
-  // }
   Future<Map<String, dynamic>> fetchInfoDevice(String deviceId) async {
     final token = userProvider.user?.token;
 
@@ -95,6 +66,31 @@ class DeviceService with ChangeNotifier {
     _logger.info('GET $uri → ${resp.statusCode}');
     if (resp.statusCode != 200) throw Exception('Failed to load device detail');
     return json.decode(resp.body) as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> updateDevice(String deviceId, Map<String, dynamic> updateFields) async {
+    final token = userProvider.user?.token;  // Lấy token từ userProvider
+
+    if (token == null) {
+      throw Exception('Token không tồn tại');
+    }
+
+    final uri = detailUri(deviceId);
+
+    final response = await http.patch(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(updateFields),  // Gửi dữ liệu cần cập nhật
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Cập nhật thiết bị thất bại');
+    }
+
+    return json.decode(response.body) as Map<String, dynamic>;
   }
 
   // Fetch data for the first time
@@ -113,6 +109,7 @@ class DeviceService with ChangeNotifier {
   Future<void> fetchDeviceDetail(String deviceId) async {
     try {
       final deviceDetailData = await fetchInfoDevice(deviceId);
+      _logger.warning("$deviceDetailData");
       final currentDevice = _devices[deviceId]!;
       if (currentDevice.shouldUpdate(deviceDetailData)) {
         _devices[deviceId]!.updateDetail(deviceDetailData);
