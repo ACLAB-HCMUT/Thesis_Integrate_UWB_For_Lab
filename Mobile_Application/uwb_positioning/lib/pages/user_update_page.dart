@@ -150,6 +150,7 @@ import '../../services/auth_service.dart';
 
 class UserUpdatePage extends StatefulWidget {
   const UserUpdatePage({super.key});
+  static const nameRoute = '/user/update';
 
   @override
   State<UserUpdatePage> createState() => _UserUpdatePageState();

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:uwb_positioning/main.dart';
 import 'package:uwb_positioning/services/borrow_request_service.dart';
 import 'package:uwb_positioning/models/borrow_request.dart';  // Import model BorrowRequest
 
@@ -16,9 +18,15 @@ class _BorrowRequestPageState extends State<BorrowRequestPage> {
   final _statusCtl = TextEditingController(text: 'pending');
   final _appointmentCtl = TextEditingController();
   final _expectedReturnCtl = TextEditingController();
-  final _clientCtl = TextEditingController();
+  late BorrowRequestService _service;
 
-  final _service = BorrowRequestService();
+  // final _service = BorrowRequestService();
+  @override
+  void initState() {
+    super.initState();
+    // Lấy service thông qua Provider trong initState cần dùng listen: false
+    _service = Provider.of<BorrowRequestService>(context, listen: false);
+  }
 
   Future<void> _submit(String deviceId) async {
     if (!_formKey.currentState!.validate()) return;
@@ -30,7 +38,6 @@ class _BorrowRequestPageState extends State<BorrowRequestPage> {
       status: _statusCtl.text,
       appointmentDate: _appointmentCtl.text,
       expectedReturn: _expectedReturnCtl.text,
-      clientId: _clientCtl.text,
     );
 
     final success = await _service.createRequest(request);  // Pass the BorrowRequest object
@@ -53,7 +60,6 @@ class _BorrowRequestPageState extends State<BorrowRequestPage> {
     _statusCtl.dispose();
     _appointmentCtl.dispose();
     _expectedReturnCtl.dispose();
-    _clientCtl.dispose();
     super.dispose();
   }
 
@@ -104,11 +110,6 @@ class _BorrowRequestPageState extends State<BorrowRequestPage> {
                 },
                 readOnly: true,
               ),
-              // TextFormField(
-              //   controller: _clientCtl,
-              //   decoration: const InputDecoration(labelText: 'Client ID'),
-              //   validator: (v) => v!.isEmpty ? 'Required' : null,
-              // ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () => _submit(deviceId),

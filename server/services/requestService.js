@@ -42,6 +42,15 @@ async function getAllRequests() {
   }
 }
 
+async function getRequestsById(userId) {
+  try {
+    const requests = await requestModel.getRequestsById(userId);
+    return requests;
+  } catch (error) {
+    throw new Error('Error fetching borrow requests by user');
+  }
+}
+
 async function updateStatus(requestId, status) {
   try {
     const updatedRequest = await requestModel.changeStatus(requestId, status);
@@ -60,4 +69,5 @@ module.exports = {
   changeReturnDate,
   getAllRequests,
   updateStatus,
+  getRequestsById,
 };

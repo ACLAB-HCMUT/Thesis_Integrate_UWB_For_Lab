@@ -417,6 +417,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:uwb_positioning/models/borrow_request.dart';
 import 'dart:convert';
 import 'package:logging/logging.dart';
@@ -427,6 +428,7 @@ final _log = Logger('BorrowRequestItem');
 
 class BorrowRequestManagePage extends StatefulWidget {
   const BorrowRequestManagePage({super.key});
+  static const nameRoute = "/borrow_request_manage";
 
   @override
   State<BorrowRequestManagePage> createState() => _BorrowRequestManagePageState();
@@ -434,11 +436,12 @@ class BorrowRequestManagePage extends StatefulWidget {
 
 class _BorrowRequestManagePageState extends State<BorrowRequestManagePage> {
   late Future<List<BorrowRequests>> _borrowRequestsFuture;
-  final BorrowRequestService _borrowRequestService = BorrowRequestService();
+  late BorrowRequestService _borrowRequestService;
 
   @override
   void initState() {
     super.initState();
+    _borrowRequestService = Provider.of<BorrowRequestService>(context, listen: false);
     _borrowRequestsFuture = _borrowRequestService.fetchRequests();
   }
 
@@ -639,7 +642,9 @@ class _BorrowRequestItemState extends State<BorrowRequestItem> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 ElevatedButton(
-                  onPressed: () => _pickDate(widget.onActualBorrowDateChanged),
+                  onPressed: d['status'] == 'approved'
+                      ? () => _pickDate(widget.onActualBorrowDateChanged)
+                      : null, // Vô hiệu hóa nếu không phải 'approved'
                   child: Text(d['borrow_date'] != null
                       ? 'Ngày mượn: ${_fmt.format(DateTime.parse(d['borrow_date']))}'
                       : 'Cập nhật ngày mượn'),
@@ -651,7 +656,9 @@ class _BorrowRequestItemState extends State<BorrowRequestItem> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 ElevatedButton(
-                  onPressed: () => _pickDate(widget.onActualReturnDateChanged),
+                  onPressed: d['status'] == 'approved'
+                      ? () => _pickDate(widget.onActualReturnDateChanged)
+                      : null, // Vô hiệu hóa nếu không phải 'approved'
                   child: Text(d['return_date'] != null
                       ? 'Ngày trả: ${_fmt.format(DateTime.parse(d['return_date']))}'
                       : 'Cập nhật ngày trả'),

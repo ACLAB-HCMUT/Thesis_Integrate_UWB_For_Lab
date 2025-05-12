@@ -5,6 +5,7 @@ const requestController = require('../controllers/requestController');
 // API: request
 
 router.get('/', requestController.getAllBorrowRequests);
+router.get('/:id', requestController.getBorrowRequestsByUser);
 router.post('/create', requestController.createBorrowRequest);
 router.patch('/borrow-date/:id', requestController.updateBorrowDate);
 router.patch('/return-date/:id', requestController.updateReturnDate);

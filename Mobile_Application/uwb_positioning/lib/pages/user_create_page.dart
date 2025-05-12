@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class UserCreatePage extends StatefulWidget {
   const UserCreatePage({Key? key}) : super(key: key);
+  static const nameRoute = '/user/create';
 
   @override
   State<UserCreatePage> createState() => _UserCreatePageState();

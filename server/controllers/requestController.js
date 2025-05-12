@@ -58,6 +58,16 @@ exports.getAllBorrowRequests = async (req, res) => {
   }
 };
 
+exports.getBorrowRequestsByUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const requests = await requestService.getRequestsById(userId);
+    res.status(200).json(requests);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 exports.updateBorrowRequestStatus = async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;

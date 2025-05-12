@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:uwb_positioning/pages/borrow_request_page.dart';
 import 'package:uwb_positioning/pages/device_realtime_page.dart';
 import 'package:uwb_positioning/pages/device_history_page.dart';
+import 'package:uwb_positioning/pages/device_update_page.dart';
+import 'package:uwb_positioning/services/auth_service.dart';
 import 'package:uwb_positioning/services/device_service.dart';
 
 class DeviceDetailPage extends StatefulWidget {
@@ -20,6 +22,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
   Widget build(BuildContext context) {
     final deviceId = ModalRoute.of(context)!.settings.arguments as String;
     final deviceService = Provider.of<DeviceService>(context);
+    final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -161,13 +164,25 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
                             const SizedBox(height: 8),
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  BorrowRequestPage.nameRoute, // hoặc BorrowRequestPage.nameRoute nếu đã import
-                                  arguments: device.deviceId,
-                                );
+                                if (authProvider.user?.role == 'admin') {
+                                  Navigator.pushNamed(
+                                    context,
+                                    DeviceUpdatePage.nameRoute,
+                                    arguments: device.deviceId,
+                                  );
+                                } else {
+                                  Navigator.pushNamed(
+                                    context,
+                                    BorrowRequestPage.nameRoute,
+                                    arguments: device.deviceId,
+                                  );
+                                }
                               },
-                              child: const Text('Change Infomation'),
+                              child: Text(
+                                authProvider.user?.role == 'admin'
+                                    ? 'Change Infomation'
+                                    : 'Create Borrow Request',
+                              ),
                             ),
                           ],
                         ),

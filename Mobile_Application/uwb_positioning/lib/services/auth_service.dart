@@ -26,6 +26,7 @@ class AuthService with ChangeNotifier {
   static final getAllUsersUri = baseUri.replace(path: '/auth');
   static final loginUri = baseUri.replace(path: '/auth/login');
   static Uri updateUri(int id) => baseUri.replace(path: '/auth/$id');
+  static Uri changePasswordUri(int id) => baseUri.replace(path: '/auth/change-password/$id');
   final AuthProvider userProvider;
   static final Logger _logger = Logger('UserService');
 
@@ -68,6 +69,24 @@ class AuthService with ChangeNotifier {
     return User.fromJson(data);
   }
 
+  Future<User> fetchClientDetail() async {
+    final token = userProvider.user?.token;
+    final userId = userProvider.user?.id;
+    if (token == null) throw Exception('Token không tồn tại');
+    if (userId == null) throw Exception('User ID không hợp lệ');
+
+    final uri = updateUri(userId);
+    final resp = await http.get(uri, headers: {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    });
+    if (resp.statusCode != 200) {
+      throw Exception('Không lấy được thông tin user');
+    }
+    final data =  jsonDecode(resp.body);
+    return User.fromJson(data);
+  }
+
   Future<void> updateUser(int userId, Map<String, dynamic> updates) async {
     // Lấy token từ AuthProvider
     final token = userProvider.user?.token;
@@ -85,6 +104,8 @@ class AuthService with ChangeNotifier {
       },
       body: jsonEncode(updates),
     );
+
+    notifyListeners();
 
     if (resp.statusCode != 200) {
       throw Exception('Cập nhật thất bại: ${resp.statusCode}');
@@ -109,5 +130,33 @@ class AuthService with ChangeNotifier {
 
   static Future<void> logout(BuildContext context) async {
     Provider.of<AuthProvider>(context, listen: false).clearUser();
+  }
+
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    final token = userProvider.user?.token;
+    final userId = userProvider.user?.id;
+    if (token == null) throw Exception('Token không tồn tại');
+    if (userId == null) throw Exception('User ID không hợp lệ');
+    
+    final uri = changePasswordUri(userId);
+    final resp = await http.post(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'currentPassword': currentPassword,
+        'newPassword': newPassword,
+      }),
+    );
+
+    if (resp.statusCode != 200) {
+      final data = jsonDecode(resp.body);
+      throw Exception(data['error'] ?? 'Lỗi không xác định');
+    }
   }
 }

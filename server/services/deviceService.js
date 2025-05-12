@@ -22,7 +22,20 @@ async function fetchDeviceById(deviceId) {
   }
 }
 
+async function updateDevice(id, updateFields) {
+  try {
+    const updatedDevice = await deviceModel.updateById(id, updateFields);
+    if (!updatedDevice) {
+      throw new Error('Device not found');
+    }
+    return updatedDevice;
+  } catch (error) {
+    throw new Error(error.message || 'Error updating device');
+  }
+}
+
 module.exports = {
   fetchAllDevices,
   fetchDeviceById,
+  updateDevice,
 };

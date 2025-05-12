@@ -11,7 +11,7 @@ import 'package:http/http.dart' as http;
 class DeviceService with ChangeNotifier {
   //API
   static final getAllDeviceUri = baseUri.replace(path: '/devices');
-  static Uri getDetailUri(String id) => baseUri.replace(path: '/devices/$id');
+  static Uri detailUri(String id) => baseUri.replace(path: '/devices/$id');
   //User
   final AuthProvider userProvider;
   DeviceService(this.userProvider);
@@ -20,48 +20,6 @@ class DeviceService with ChangeNotifier {
   Map<String, Device> get devices => _devices;
   // Logger instance
   static final Logger _logger = Logger('DeviceService');
-
-  // Get the list of devices as a Map
-  // static Future<Map<String, Device>> fetchListDevice() async {
-  //   // Simulate device's data
-  //   await Future.delayed(const Duration(milliseconds: 500));
-  //   final Map<String, dynamic> fakeData = {
-  //     '1': {
-  //       'device_id': '1',
-  //       'device_name': 'UWB Tag 1',
-  //       'image':
-  //           'https://static-cdn.m5stack.com/resource/docs/products/unit/uwb/uwb_02.webp',
-  //       'is_active': true,
-  //       'is_available': true,
-  //       'type_name': 'UWB Unit',
-  //     },
-  //     '2': {
-  //       'device_id': '2',
-  //       'device_name': 'NodeMCU-BU01',
-  //       'image':
-  //           'https://exp-tech.de/cdn/shop/products/NodeMCU-BU01_1.png?vu003d1689269984',
-  //       'is_active': false,
-  //       'is_available': false,
-  //       'type_name': 'UWB Unit',
-  //     },
-  //     '3': {
-  //       'device_id': '3',
-  //       'device_name': 'STM32 Microcontroller',
-  //       'image':
-  //           'https://res.cloudinary.com/rsc/image/upload/w_1024/F9107951-01',
-  //       'is_active': false,
-  //       'is_available': false,
-  //       'type_name': 'Microcontroller',
-  //     },
-  //   };
-  //   // Convert fake data to Map
-  //   final convertedData = fakeData.map((key, value) {
-  //     return MapEntry(key, Device.createDevice(value));
-  //   });
-  //
-  //   _logger.info("Converted data: $convertedData");
-  //   return convertedData;
-  // }
   Future<Map<String, Device>> fetchListDevice() async {
     // final response = await http.get(getAllDeviceUri);
     final token = userProvider.user?.token;
@@ -128,7 +86,7 @@ class DeviceService with ChangeNotifier {
     if (token == null) {
       throw Exception('Token không tồn tại');
     }
-    final uri = getDetailUri(deviceId);
+    final uri = detailUri(deviceId);
     final resp = await http.get(uri,
       headers: {
         'Authorization': 'Bearer $token',

@@ -49,6 +49,23 @@ async function getAllRequests() {
   return result.rows;
 }
 
+async function getRequestsById(userId) {
+  const result = await pool.query(`
+    SELECT 
+      br.*,
+      u.full_name,
+      u.email,
+      u.phone_number,
+      u.role,
+      u.status AS user_status
+    FROM borrow_request br
+    JOIN "user" u ON br.client_id = u.user_id
+    WHERE br.client_id = $1
+    ORDER BY br.request_id DESC
+  `, [userId]);
+  return result.rows;
+}
+
 async function changeStatus(requestId, status) {
   const result = await pool.query(
     `UPDATE borrow_request 
@@ -66,4 +83,5 @@ module.exports = {
   changeReturnDate,
   getAllRequests,
   changeStatus,
+  getRequestsById,
 };

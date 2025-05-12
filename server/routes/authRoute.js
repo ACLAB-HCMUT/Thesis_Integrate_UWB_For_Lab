@@ -8,5 +8,6 @@ router.post('/login', authController.login);
 router.get('/', authMiddleware.verifyToken, authMiddleware.isAdmin, authController.getAllUsers);
 router.patch('/:id', authMiddleware.verifyToken, authMiddleware.isAdmin, authController.update);
 router.get('/:id', authController.getUserDetail);
+router.post('/change-password/:id', authMiddleware.verifyToken, authController.changePassword);
 
 module.exports = router;

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class DeviceUpdatePage extends StatefulWidget {
   const DeviceUpdatePage({super.key});
-
+  static const nameRoute = "/device-update";
   @override
   State<DeviceUpdatePage> createState() => _DeviceUpdatePageState();
 }
@@ -46,6 +46,8 @@ class _DeviceUpdatePageState extends State<DeviceUpdatePage> {
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)?.settings.arguments;
+    final deviceId = args is String ? args : args?.toString() ?? 'unknown';
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cập nhật thiết bị'),

@@ -4,10 +4,6 @@ class BorrowRequest {
   final String status;
   final String appointmentDate;
   final String expectedReturn;
-  final String clientId;
-  // New optional fields
-  String borrowDate = '';
-  String returnDate = '';
 
   BorrowRequest({
     required this.deviceId,
@@ -15,9 +11,6 @@ class BorrowRequest {
     required this.status,
     required this.appointmentDate,
     required this.expectedReturn,
-    required this.clientId,
-    this.borrowDate = '',
-    this.returnDate = '',
   });
 
   factory BorrowRequest.fromJson(Map<String, dynamic> json) {
@@ -27,9 +20,6 @@ class BorrowRequest {
       status: json['status'],
       appointmentDate: json['appointment_date'],
       expectedReturn: json['expected_return'],
-      clientId: json['client_id'],
-      borrowDate: json['borrow_date'] ?? '',
-      returnDate: json['return_date'] ?? '',
     );
   }
 
@@ -40,10 +30,6 @@ class BorrowRequest {
       'status': status,
       'appointment_date': appointmentDate,
       'expected_return': expectedReturn,
-      'client_id': clientId,
-      // Include empty borrow/return dates on creation
-      'borrow_date': borrowDate,
-      'return_date': returnDate,
     };
   }
 }
