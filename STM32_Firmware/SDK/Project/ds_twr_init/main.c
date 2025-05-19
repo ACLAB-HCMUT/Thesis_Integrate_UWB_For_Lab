@@ -545,7 +545,6 @@ if(UserSetNow.ANCHOR_TAG==0)
     // As this example only handles one incoming frame with always the same delay and timeout, those values can be set here once for all. 
     dwt_setrxaftertxdelay(POLL_TX_TO_RESP_RX_DLY_UUS);
     dwt_setrxtimeout(RESP_RX_TIMEOUT_UUS);
-    
 
     //OLED_ShowString(0,2,"Distance:"); chnage by johhn
 
@@ -559,8 +558,8 @@ if(UserSetNow.ANCHOR_TAG==0)
     {
         Semaphore_Enable = 0 ;
     }
-    //Master TAG0
-			
+    
+		//Master TAG0
 		TAG_MEASURE();
 }
 

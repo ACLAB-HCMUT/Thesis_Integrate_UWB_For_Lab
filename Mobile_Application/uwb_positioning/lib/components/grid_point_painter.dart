@@ -17,28 +17,35 @@ class GridPointPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final gridPaint = Paint()
-      ..color = Colors.grey.withOpacity(0.5)
-      ..style = PaintingStyle.stroke;
+    final gridPaint =
+        Paint()
+          ..color = Colors.grey.withOpacity(0.5)
+          ..style = PaintingStyle.stroke;
 
-    final anchorPaint = Paint()
-      ..color = Colors.blue
-      ..style = PaintingStyle.fill;
+    final anchorPaint =
+        Paint()
+          ..color = Colors.blue
+          ..style = PaintingStyle.fill;
 
-    final tagPaint = Paint()
-      ..color = Colors.red
-      ..style = PaintingStyle.fill;
+    final tagPaint =
+        Paint()
+          ..color = Colors.red
+          ..style = PaintingStyle.fill;
 
     // Draw grid, calculate position based on gridOffset
     final double gridSize = 50 * scale;
-    for (double i = -gridSize + gridOffset.dx % gridSize;
-        i < size.width;
-        i += gridSize) {
+    for (
+      double i = -gridSize + gridOffset.dx % gridSize;
+      i < size.width;
+      i += gridSize
+    ) {
       canvas.drawLine(Offset(i, 0), Offset(i, size.height), gridPaint);
     }
-    for (double i = -gridSize + gridOffset.dy % gridSize;
-        i < size.height;
-        i += gridSize) {
+    for (
+      double i = -gridSize + gridOffset.dy % gridSize;
+      i < size.height;
+      i += gridSize
+    ) {
       canvas.drawLine(Offset(0, i), Offset(size.width, i), gridPaint);
     }
 
@@ -49,9 +56,9 @@ class GridPointPainter extends CustomPainter {
       canvas.drawCircle(Offset(x, y), pointSize, anchorPaint);
     }
 
-    // final x = (tagPoints['tag_x'] as double) * gridSize * 5 + gridOffset.dx;
-    // final y = (tagPoints['tag_y'] as double) * gridSize * 5 + gridOffset.dy;
-    // canvas.drawCircle(Offset(x, y), pointSize, tagPaint);
+    final x = (tagPoints['tag_x'] as double) * gridSize * 5 + gridOffset.dx;
+    final y = (tagPoints['tag_y'] as double) * gridSize * 5 + gridOffset.dy;
+    canvas.drawCircle(Offset(x, y), pointSize, tagPaint);
   }
 
   @override

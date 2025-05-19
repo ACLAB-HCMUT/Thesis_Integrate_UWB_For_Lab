@@ -10,6 +10,6 @@ void UWB_setupmode();
 void UWB_timer();
 void UWB_readString();
 void UWB_display();
-void printTimeStamp();
+void print_time_stamp();
 
 #endif

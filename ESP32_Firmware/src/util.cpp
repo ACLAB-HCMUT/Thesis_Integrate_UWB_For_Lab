@@ -1,4 +1,3 @@
-/*
 #include "util.h"
 
 ////TEST////
@@ -15,8 +14,14 @@
 float modify_distance(float dis) {
   return (dis - g_intercept) / g_slope;
 }
+
+bool is_valid() {
+  int index = g_data_uwb.indexOf("an");
+  return (index != -1);
+}
+
 void extract_data() {
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < N_ANCHORS; i++) {
     String anchor_info = "an" + String(i + 1) + ":";
     int start_index = g_data_uwb.indexOf(anchor_info);
     int end_index = g_data_uwb.indexOf("m", start_index);
@@ -76,9 +81,9 @@ void extract_data() {
 //   }
 // }
 
-void display_extractdata() {
+void display_extract_data() {
   Serial.println("Real distances:");
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < N_ANCHORS; i++) {
     Serial.println(g_distance_uwb[i]);
   }
 
@@ -87,23 +92,25 @@ void display_extractdata() {
     Serial.println(g_position_uwb[i]);
   }
 
-  Serial.print("RMS: ");
+  Serial.print("RMSE: ");
   Serial.println(g_current_distance_rmse);
 }
 
 void calc_position() {
-  if (g_data_uwb.isEmpty()) {
-    Serial.println("No data available for position calculation.");
+  if (!is_valid()) {
+    Serial.println("No data available for position calculation");
     return;
   }
   extract_data();
+
   float d[N_ANCHORS];
-  float x[N_ANCHORS], y[N_ANCHORS]; // intermediate vectors
+  float x[N_ANCHORS], y[N_ANCHORS]; // Intermediate vectors
   float A[N_ANCHORS - 1][2], Ainv[2][2], b[N_ANCHORS - 1], kv[N_ANCHORS];
 
   int i, j, k;
   for (i = 0; i < N_ANCHORS; i++)
     d[i] = g_distance_uwb[i];
+  // d[i] = sqrt(g_distance_uwb[i] * g_distance_uwb[i] - g_anchor_matrix[i][2] * g_anchor_matrix[i][2]);
   for (i = 0; i < N_ANCHORS; i++) {
     x[i] = g_anchor_matrix[i][0];
     y[i] = g_anchor_matrix[i][1];
@@ -114,7 +121,7 @@ void calc_position() {
     A[i - 1][1] = y[i] - y[0];
   }
 
-  float ATA[2][2]; // calculate A transpose A
+  float ATA[2][2]; // Calculate A transpose A
   // Cij = sum(k) (Aki*Akj)
   for (i = 0; i < 2; i++) {
     for (j = 0; j < 2; j++) {
@@ -153,7 +160,7 @@ void calc_position() {
   for (i = 0; i < N_ANCHORS; i++) {
     dc0 = g_position_uwb[0] - g_anchor_matrix[i][0];
     dc1 = g_position_uwb[1] - g_anchor_matrix[i][1];
-    dc2 = g_anchor_matrix[i][2]; // include known Z coordinate of anchor
+    dc2 = g_anchor_matrix[i][2] - g_anchor_matrix[i][2]; // Include known Z coordinate of anchor
     dc0 = d[i] - sqrt(dc0 * dc0 + dc1 * dc1 + dc2 * dc2);
     rmse += dc0 * dc0;
   }
@@ -164,4 +171,3 @@ void display_single(int anchor_id) {
   Serial.println(g_distance_uwb[anchor_id]);
   vTaskDelay(pdMS_TO_TICKS(250));
 }
-  */

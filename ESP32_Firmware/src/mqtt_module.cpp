@@ -3,17 +3,17 @@
 WiFiClient wifi_client;
 PubSubClient ps_client(wifi_client);
 
-unsigned long last_reconnect_attempt = 0;
 bool is_register_ack_received = false;
 bool is_active = false;
 bool is_timeout_ack_received = false;
+bool is_send_timeout = false;
 
+unsigned long last_reconnect_attempt = 0;
 unsigned long control_duration = 0;
 unsigned long control_start_time = 0;
 
 unsigned long last_send_time = 0;
 unsigned long last_retry_time = 0;
-bool is_send_timeout = false;
 
 char register_topic[] = "uwb/register";
 char acknowledge_topic[32];
@@ -51,9 +51,9 @@ void MQTT_send_tag_data() {
   JsonDocument doc;
   doc["tag_id"] = g_tag_id;
   doc["timestamp"] = millis();
-  doc["tag_x"] = 1;
-  doc["tag_y"] = 2;
-  doc["tag_z"] = 3;
+  doc["tag_x"] = g_position_uwb[0];
+  doc["tag_y"] = g_position_uwb[1];
+  doc["tag_z"] = g_position_uwb[2];
   doc["data"] = g_data_uwb;
 
   char json_buffer[256];
@@ -111,7 +111,7 @@ void MQTT_callback(char *topic, byte *payload, unsigned int length) {
       control_start_time = millis();
       is_active = true;
 
-      printTimeStamp();
+      print_time_stamp();
       Serial.println("UWB turn on");
       Serial2.write("AT+switchdis=1\r\n");
 
@@ -159,7 +159,7 @@ void MQTT_processing() {
       ((millis() - control_start_time) > control_duration)) {
     is_active = false;
 
-    printTimeStamp();
+    print_time_stamp();
     Serial.println("UWB turn off");
     Serial2.write("AT+switchdis=0\r\n");
 

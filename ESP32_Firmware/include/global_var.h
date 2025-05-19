@@ -8,15 +8,15 @@
 #define ATOM_TX_PIN 26 // Unit's pin RX connects to Atom's pin G26
 
 // Macro for UWB
-#define N_ANCHORS 4    // Number of anchors
+#define N_ANCHORS 3    // Number of anchors
 #define N_DIMENSIONS 3 // Number of dimensions
 
 // Macro configuration for MQTT connection
 #define MQTT_RETRIES 3       // Maximum number of retry
-#define MQTT_WAIT_RETRY 5000 // Wait time (in milliseconds) between each retry
+#define MQTT_WAIT_RETRY 2000 // Wait time (in milliseconds) between each retry
 #define MQTT_WAIT_SEND 6000  // Wait time (in milliseconds) between each data transmission to MQTT
 
-#define MQTT_SEND_INTERVAL 2000     // Interval time (in milliseconds) between each data transmission to MQTT
+#define MQTT_SEND_INTERVAL 500      // Interval time (in milliseconds) between each data transmission to MQTT
 #define MQTT_TIMEOUT_RETRY 1000     // Interval time (in milliseconds) between each retry
 #define MQTT_MAX_TIMEOUT_RETRY 6000 // Maximum time (in milliseconds) to send timeout message
 

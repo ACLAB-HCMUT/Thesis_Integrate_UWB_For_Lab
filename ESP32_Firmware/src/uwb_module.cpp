@@ -1,25 +1,12 @@
 #include "uwb_module.h"
 
-#include <time.h>
-
-void printTimeStamp() {
-  struct tm timeinfo;
-  if (getLocalTime(&timeinfo)) {
-    Serial.printf("[%04d-%02d-%02d %02d:%02d:%02d] ",
-                  timeinfo.tm_year + 1900, timeinfo.tm_mon + 1, timeinfo.tm_mday,
-                  timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
-  } else {
-    Serial.print("[Time unknown] ");
-  }
-}
-
 int UWB_MODE = 0;              // Set UWB Mode: Tag mode is 0, Base station mode is 1
 int UWB_T_NUMBER = 0;          // Store the number of base stations
 int UWB_T_ID = atoi(g_tag_id); // Tag ID
 int UWB_B_ID = 0;              // Base station ID1~ID4
 
 // Private function for checking AT response
-void printForDebug(size_t send, String content, String cases = "") {
+void print_for_debug(size_t send, String content, String cases = "") {
   if (cases == "") {
   } else {
     Serial.println(cases);
@@ -54,20 +41,20 @@ void UWB_setupmode() {
       size_t send_antag = Serial2.write("AT+anchor_tag=0,"); // Set device as Tag
       Serial2.print(UWB_T_ID);
       Serial2.write("\r\n");
-      printForDebug(send_antag, "AT+anchor_tag=0," + String(UWB_T_ID));
+      print_for_debug(send_antag, "AT+anchor_tag=0," + String(UWB_T_ID));
 
       vTaskDelay(pdMS_TO_TICKS(50));
       size_t send_inter = Serial2.write("AT+interval=5\r\n"); // Set the calculation precision
-      printForDebug(send_inter, "AT+interval=5");
+      print_for_debug(send_inter, "AT+interval=5");
 
       vTaskDelay(pdMS_TO_TICKS(50));
       size_t send_swis = Serial2.write("AT+switchdis=1\r\n"); // Start measuring distance
-      printForDebug(send_swis, "AT+switchdis=0");
+      print_for_debug(send_swis, "AT+switchdis=0");
 
       vTaskDelay(pdMS_TO_TICKS(50));
       if (b == 0) {
         size_t send_rst = Serial2.write("AT+RST\r\n"); // Reset device
-        printForDebug(send_rst, "AT+RST", "Tag - When b == 0");
+        print_for_debug(send_rst, "AT+RST", "Tag - When b == 0");
       }
     }
     UWB_clear(); // Delete data remaining in Serial2 buffer
@@ -80,13 +67,13 @@ void UWB_setupmode() {
       Serial2.write("AT+anchor_tag=1,"); // Set up the device as a Base station
       Serial2.print(UWB_B_ID);           // Base station ID
       Serial2.write("\r\n");
-      printForDebug(19, "AT+anchor_tag=1," + String(UWB_B_ID));
+      print_for_debug(19, "AT+anchor_tag=1," + String(UWB_B_ID));
 
       vTaskDelay(pdMS_TO_TICKS(1));
       vTaskDelay(pdMS_TO_TICKS(50));
       if (b == 0) {
         size_t send_rst = Serial2.write("AT+RST\r\n"); // Reset device
-        printForDebug(send_rst, "AT+RST", "Base station - When b == 0");
+        print_for_debug(send_rst, "AT+RST", "Base station - When b == 0");
       }
     }
     UWB_clear(); // Delete data remaining in Serial2 buffer
@@ -112,7 +99,7 @@ void UWB_timer() {
 void UWB_keyscan() {
   if (M5.Btn.isPressed()) {
     size_t send_rst = Serial2.write("AT+RST\r\n");
-    printForDebug(send_rst, "AT+RST", "Back button pressed");
+    print_for_debug(send_rst, "AT+RST", "Back button pressed");
 
     UWB_setupmode();
     UWB_clear();
@@ -169,7 +156,7 @@ void UWB_display() {
   case 0: // Tag mode
     Serial.print("Number of base stations: ");
     Serial.println(UWB_T_NUMBER);
-    printTimeStamp();
+    // print_time_stamp();
     Serial.println("Distance:");
     Serial.println(g_data_uwb);
     break;

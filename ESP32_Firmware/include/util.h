@@ -1,4 +1,3 @@
-/*
 #ifndef UTIL_H
 #define UTIL_H
 
@@ -9,9 +8,8 @@
 
 void extract_data();
 void calc_position();
-void display_extractdata();
+void display_extract_data();
 
 void display_single(int anchor_id);
 
 #endif
-*/
