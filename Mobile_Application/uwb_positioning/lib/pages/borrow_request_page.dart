@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:uwb_positioning/main.dart';
 import 'package:uwb_positioning/services/borrow_request_service.dart';
@@ -20,6 +21,12 @@ class _BorrowRequestPageState extends State<BorrowRequestPage> {
   final _expectedReturnCtl = TextEditingController();
   late BorrowRequestService _service;
 
+  String formatDate(DateTime date) {
+    return DateFormat('dd/MM/yyyy').format(date);
+  }
+  DateTime parseDate(String dateString) {
+    return DateFormat('dd/MM/yyyy').parse(dateString);
+  }
   // final _service = BorrowRequestService();
   @override
   void initState() {
@@ -36,8 +43,8 @@ class _BorrowRequestPageState extends State<BorrowRequestPage> {
       deviceId: deviceId,
       detail: _detailCtl.text,
       status: _statusCtl.text,
-      appointmentDate: _appointmentCtl.text,
-      expectedReturn: _expectedReturnCtl.text,
+      appointmentDate: parseDate(_appointmentCtl.text).toIso8601String(),
+      expectedReturn: parseDate(_expectedReturnCtl.text).toIso8601String(),
     );
 
     final success = await _service.createRequest(request);  // Pass the BorrowRequest object
@@ -92,7 +99,7 @@ class _BorrowRequestPageState extends State<BorrowRequestPage> {
                     firstDate: DateTime(2020),
                     lastDate: DateTime(2100),
                   );
-                  if (d != null) _appointmentCtl.text = d.toIso8601String();
+                  if (d != null) _appointmentCtl.text = formatDate(d);
                 },
                 readOnly: true,
               ),
@@ -106,7 +113,7 @@ class _BorrowRequestPageState extends State<BorrowRequestPage> {
                     firstDate: DateTime(2020),
                     lastDate: DateTime(2100),
                   );
-                  if (d != null) _expectedReturnCtl.text = d.toIso8601String();
+                  if (d != null) _expectedReturnCtl.text = formatDate(d);
                 },
                 readOnly: true,
               ),

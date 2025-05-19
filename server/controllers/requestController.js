@@ -1,3 +1,4 @@
+const { sendNotification } = require('../services/notificationService');
 const requestService = require('../services/requestService');
 
 exports.createBorrowRequest = async (req, res) => {
@@ -28,9 +29,10 @@ exports.createBorrowRequest = async (req, res) => {
 exports.updateBorrowDate = async (req, res) => {
   const id = req.params.id;
   const borrowDate = req.body.borrow_date;
+  const user = req.user;
 
   try {
-    const updatedRequest = await requestService.changeBorrowDate(id, borrowDate);
+    const updatedRequest = await requestService.changeBorrowDate(id, borrowDate, user.userId);
     res.json({ message: 'Đã cập nhật borrow_date', data: updatedRequest });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -40,9 +42,10 @@ exports.updateBorrowDate = async (req, res) => {
 exports.updateReturnDate = async (req, res) => {
   const id = req.params.id;
   const returnDate = req.body.return_date;
+  const user = req.user;
 
   try {
-    const updatedRequest = await requestService.changeReturnDate(id, returnDate);
+    const updatedRequest = await requestService.changeReturnDate(id, returnDate, user.userId);
     res.json({ message: 'Đã cập nhật return_date', data: updatedRequest });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -71,9 +74,10 @@ exports.getBorrowRequestsByUser = async (req, res) => {
 exports.updateBorrowRequestStatus = async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
+  const user = req.user;
 
   try {
-    const updatedRequest = await requestService.updateStatus(id, status);
+    const updatedRequest = await requestService.updateStatus(id, status, user.userId);
     res.status(200).json(updatedRequest);
   } catch (error) {
     res.status(500).json({ message: error.message });

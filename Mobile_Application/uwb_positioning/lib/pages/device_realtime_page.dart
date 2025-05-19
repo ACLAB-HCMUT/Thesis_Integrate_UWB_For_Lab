@@ -55,7 +55,9 @@ class _DeviceRealtimePageState extends State<DeviceRealtimePage> {
       // Get device data from MqttService
       final deviceData = mqttService.deviceData[deviceId];
       if (deviceData == null) {
-        return const Text('No real-time data available');
+        return const Center(
+          child: Text('Vui lòng chờ tín hiệu từ thiết bị'),
+        );
       }
 
       return Scaffold(

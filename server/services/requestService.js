@@ -1,5 +1,6 @@
 const requestModel = require('../models/requestModel');
 const deviceService = require('./deviceService');
+const { sendNotification } = require('./notificationService');
 
 async function createRequest(data) {
   try {
@@ -10,7 +11,7 @@ async function createRequest(data) {
   }
 }
 
-async function changeBorrowDate(requestId, borrowDate = new Date()) {
+async function changeBorrowDate(requestId, borrowDate = new Date(), adminId) {
   try {
     const request = await requestModel.getRequestById(requestId);
     if (!request) {
@@ -31,13 +32,25 @@ async function changeBorrowDate(requestId, borrowDate = new Date()) {
     if (!updatedRequest) {
       throw new Error('Fail to update borrow_date');
     }
+    await sendNotification({
+      user_id: adminId,
+      description: `Cập nhật ngày mượn (Request ID: ${request.request_id})`,
+      type: "update",
+      notify_time: new Date()
+    });
+    await sendNotification({
+      user_id: request.client_id,
+      description: `Cập nhật ngày mượn (Request ID: ${request.request_id})`,
+      type: "update",
+      notify_time: new Date()
+    });
     return updatedRequest;
   } catch (error) {
     throw new Error('Error updating borrow_date');
   }
 }
 
-async function changeReturnDate(requestId, returnDate = new Date()) {
+async function changeReturnDate(requestId, returnDate = new Date(), adminId) {
   try {
     const request = await requestModel.getRequestById(requestId);
     if (!request) {
@@ -55,6 +68,18 @@ async function changeReturnDate(requestId, returnDate = new Date()) {
     if (!updatedRequest) {
       throw new Error('Borrow request not found');
     }
+    await sendNotification({
+      user_id: adminId,
+      description: `Cập nhật ngày trả (Request ID: ${request.request_id})`,
+      type: "update",
+      notify_time: new Date()
+    });
+    await sendNotification({
+      user_id: request.client_id,
+      description: `Cập nhật ngày trả (Request ID: ${request.request_id})`,
+      type: "update",
+      notify_time: new Date()
+    });
     return updatedRequest;
   } catch (error) {
     throw new Error('Error updating return_date');
@@ -79,11 +104,43 @@ async function getRequestsById(userId) {
   }
 }
 
-async function updateStatus(requestId, status) {
+async function updateStatus(requestId, status, adminId) {
   try {
+    const request = await requestModel.getRequestById(requestId);
+    if (!request) {
+      throw new Error('Fail to find request by ID');
+    }
     const updatedRequest = await requestModel.changeStatus(requestId, status);
     if (!updatedRequest) {
       throw new Error('Borrow request not found');
+    }
+    if(status == 'approved') {
+      await sendNotification({
+        user_id: adminId,
+        description: `Duyệt yêu cầu mượn (Request ID: ${request.request_id})`,
+        type: "update",
+        notify_time: new Date()
+      });
+      await sendNotification({
+        user_id: request.client_id,
+        description: `Yêu cầu đã được duyệt (Request ID: ${request.request_id})`,
+        type: "update",
+        notify_time: new Date()
+      });
+    }
+    if(status == 'declined') {
+      await sendNotification({
+        user_id: adminId,
+        description: `Từ chối yêu cầu mượn (Request ID: ${request.request_id})`,
+        type: "update",
+        notify_time: new Date()
+      });
+      await sendNotification({
+        user_id: request.client_id,
+        description: `Yêu cầu bị từ chối (Request ID: ${request.request_id})`,
+        type: "update",
+        notify_time: new Date()
+      });
     }
     return updatedRequest;
   } catch (error) {

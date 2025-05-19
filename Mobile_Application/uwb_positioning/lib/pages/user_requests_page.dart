@@ -51,10 +51,11 @@ class _UserBorrowRequestPageState extends State<UserBorrowRequestPage> {
                 elevation: 2,
                 margin: const EdgeInsets.only(bottom: 16),
                 child: ListTile(
-                  title: Text('Thiết bị ID: ${req.deviceId}'),
+                  title: Text('Yêu cầu ID: ${req.requestId}'),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text('Thiết bị ID: ${req.deviceId}'),
                       Text('Chi tiết: ${req.detail}'),
                       Text('Ngày hẹn: ${formatDate(req.appointmentDate)}'),
                       Text('Ngày trả dự kiến: ${formatDate(req.expectedReturn)}'),

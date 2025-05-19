@@ -29,6 +29,7 @@ import 'package:uwb_positioning/services/borrow_request_service.dart';
 import 'package:uwb_positioning/services/device_service.dart';
 import 'package:uwb_positioning/services/device_location_service.dart';
 import 'package:uwb_positioning/services/mqtt_service.dart';
+import 'package:uwb_positioning/services/notification_service.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -56,6 +57,9 @@ void main() async {
     ),
     ProxyProvider<AuthProvider, BorrowRequestService>(
       update: (_, authProvider, __) => BorrowRequestService(authProvider),
+    ),
+    ProxyProvider<AuthProvider, NotificationService>(
+      update: (_, authProvider, __) => NotificationService(authProvider),
     ),
     ChangeNotifierProvider(create: (_) => DeviceLocationService()),
     Provider<GlobalKey<NavigatorState>>(create: (_) => navigatorKey),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:uwb_positioning/models/notification.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:uwb_positioning/pages/notification_detail_page.dart';
+import 'package:uwb_positioning/services/notification_service.dart';
 
 class NotificationListPage extends StatefulWidget {
   const NotificationListPage({Key? key}) : super(key: key);
@@ -13,32 +15,64 @@ class NotificationListPage extends StatefulWidget {
 
 class _NotificationListPageState extends State<NotificationListPage> {
   // Danh sách thông báo mẫu
-  final List<AppNotification> _notifications = [
-    AppNotification(
-      description: 'Tag 1 is not in the correct position',
-      isRead: false,
-      notifyTime: DateTime.parse('2024-12-24T13:29:30+07:00'),
-      type: 'warning',
-    ),
-    AppNotification(
-      description: 'Device disconnected',
-      isRead: true,
-      notifyTime: DateTime.parse('2024-12-23T10:15:00+07:00'),
-      type: 'update',
-    ),
-    AppNotification(
-      description: 'New firmware update available',
-      isRead: false,
-      notifyTime: DateTime.parse('2024-12-22T09:45:00+07:00'),
-      type: 'update',
-    ),
-    AppNotification(
-      description: 'New firmware update available',
-      isRead: false,
-      notifyTime: DateTime.parse('2024-12-22T09:45:00+07:00'),
-      type: 'update',
-    ),
-  ];
+  List<AppNotification> _notifications = [];
+  bool _isLoading = true;
+  bool _hasError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchNotifications();
+  }
+
+  Future<void> _fetchNotifications() async {
+    setState(() {
+      _isLoading = true;
+      _hasError = false;
+    });
+    try {
+      final notificationService = context.read<NotificationService>();
+      final fetchedNotifications = await notificationService.fetchNotifications();
+      setState(() {
+        _notifications = fetchedNotifications;
+      });
+    } catch (e) {
+      setState(() {
+        _hasError = true;
+      });
+      print('Error fetching notifications: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+  // final List<AppNotification> _notifications = [
+  //   AppNotification(
+  //     description: 'Tag 1 is not in the correct position',
+  //     isRead: false,
+  //     notifyTime: DateTime.parse('2024-12-24T13:29:30+07:00'),
+  //     type: 'warning',
+  //   ),
+  //   AppNotification(
+  //     description: 'Device disconnected',
+  //     isRead: true,
+  //     notifyTime: DateTime.parse('2024-12-23T10:15:00+07:00'),
+  //     type: 'update',
+  //   ),
+  //   AppNotification(
+  //     description: 'New firmware update available',
+  //     isRead: false,
+  //     notifyTime: DateTime.parse('2024-12-22T09:45:00+07:00'),
+  //     type: 'update',
+  //   ),
+  //   AppNotification(
+  //     description: 'New firmware update available',
+  //     isRead: false,
+  //     notifyTime: DateTime.parse('2024-12-22T09:45:00+07:00'),
+  //     type: 'update',
+  //   ),
+  // ];
 
   // Đánh dấu thông báo là đã đọc
   void _markAsRead(int index) {
@@ -60,7 +94,22 @@ class _NotificationListPageState extends State<NotificationListPage> {
       appBar: AppBar(
         title: const Text('Notification List'),
       ),
-      body: _notifications.isEmpty
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _hasError
+          ? Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Failed to load notifications.'),
+                ElevatedButton(
+                  onPressed: _fetchNotifications,
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+          )
+          : _notifications.isEmpty
           ? const Center(
               child: Text(
                 'No notification available',

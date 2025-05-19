@@ -53,7 +53,7 @@ async function updateUserById(id, updates) {
   
     // const result = await pool.query(query, [...values, id]);
     // return result.rows[0];
-    const allowedFields = ['password', 'full_name', 'phone_number', 'role', 'status'];
+    const allowedFields = ['password', 'email', 'full_name', 'phone_number', 'role', 'status'];
     const fields = [];
     const values = [];
     let index = 1;

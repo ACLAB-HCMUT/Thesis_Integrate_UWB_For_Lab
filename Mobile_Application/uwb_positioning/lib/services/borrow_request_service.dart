@@ -60,9 +60,16 @@ class BorrowRequestService {
   }
 
   Future<void> changeBorrowDate(int requestId, DateTime borrowDate) async {
+    final token = userProvider.user?.token;
+    final userId = userProvider.user?.id;
+    if (token == null) throw Exception('Token không tồn tại');
+    if (userId == null) throw Exception('User ID không hợp lệ');
     final response = await http.patch(
       changeBorrowUri(requestId),
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json'
+      },
       body: jsonEncode({'borrow_date': borrowDate.toIso8601String()}),
     );
     if (response.statusCode != 200) {
@@ -71,9 +78,16 @@ class BorrowRequestService {
   }
 
   Future<void> changeReturnDate(int requestId, DateTime returnDate) async {
+    final token = userProvider.user?.token;
+    final userId = userProvider.user?.id;
+    if (token == null) throw Exception('Token không tồn tại');
+    if (userId == null) throw Exception('User ID không hợp lệ');
     final response = await http.patch(
       changeReturnUri(requestId),
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json'
+      },
       body: jsonEncode({'return_date': returnDate.toIso8601String()}),
     );
     if (response.statusCode != 200) {
@@ -82,9 +96,16 @@ class BorrowRequestService {
   }
 
   Future<void> updateRequestStatus(int requestId, String status) async {
+    final token = userProvider.user?.token;
+    final userId = userProvider.user?.id;
+    if (token == null) throw Exception('Token không tồn tại');
+    if (userId == null) throw Exception('User ID không hợp lệ');
     final response = await http.patch(
       changeStatusUri(requestId),
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json'
+      },
       body: jsonEncode({'status': status}),
     );
 
