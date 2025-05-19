@@ -20,10 +20,14 @@ async function getAll() {
 async function getById(deviceId) {
   const result = await pool.query(`
     SELECT
+      d.device_id,
+      d.device_name,
+      d.type_id,
       d.description,
       d.serial,
       d.manufacturer,
       d.specification,
+      d.image,
       d.is_active,
       d.is_available
     FROM device d
@@ -32,7 +36,31 @@ async function getById(deviceId) {
   return result.rows[0];
 }
 
+async function updateById(id, updateFields) {
+  // Xây dựng câu SQL động theo các trường có trong updateFields
+  const keys = Object.keys(updateFields);
+  if (keys.length === 0) {
+    throw new Error('No fields provided for update');
+  }
+
+  const setClause = keys.map((key, index) => `${key} = $${index + 1}`).join(', ');
+  const values = Object.values(updateFields);
+
+  const result = await pool.query(
+    `
+    UPDATE device
+    SET ${setClause}
+    WHERE device_id = $${keys.length + 1}
+    RETURNING *
+    `,
+    [...values, id]
+  );
+
+  return result.rows[0];
+}
+
 module.exports = {
   getAll,
   getById,
+  updateById,
 };

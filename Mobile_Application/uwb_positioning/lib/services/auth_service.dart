@@ -25,7 +25,9 @@ class AuthProvider with ChangeNotifier {
 class AuthService with ChangeNotifier {
   static final getAllUsersUri = baseUri.replace(path: '/auth');
   static final loginUri = baseUri.replace(path: '/auth/login');
+  static final registerUri = baseUri.replace(path: '/auth/register');
   static Uri updateUri(int id) => baseUri.replace(path: '/auth/$id');
+  static Uri changePasswordUri(int id) => baseUri.replace(path: '/auth/change-password/$id');
   final AuthProvider userProvider;
   static final Logger _logger = Logger('UserService');
 
@@ -55,6 +57,24 @@ class AuthService with ChangeNotifier {
   Future<User> fetchUserDetail(int userId) async {
     final token = userProvider.user?.token;
     if (token == null) throw Exception('Token không tồn tại');
+
+    final uri = updateUri(userId);
+    final resp = await http.get(uri, headers: {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    });
+    if (resp.statusCode != 200) {
+      throw Exception('Không lấy được thông tin user');
+    }
+    final data =  jsonDecode(resp.body);
+    return User.fromJson(data);
+  }
+
+  Future<User> fetchClientDetail() async {
+    final token = userProvider.user?.token;
+    final userId = userProvider.user?.id;
+    if (token == null) throw Exception('Token không tồn tại');
+    if (userId == null) throw Exception('User ID không hợp lệ');
 
     final uri = updateUri(userId);
     final resp = await http.get(uri, headers: {
@@ -109,5 +129,61 @@ class AuthService with ChangeNotifier {
 
   static Future<void> logout(BuildContext context) async {
     Provider.of<AuthProvider>(context, listen: false).clearUser();
+  }
+
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    final token = userProvider.user?.token;
+    final userId = userProvider.user?.id;
+    if (token == null) throw Exception('Token không tồn tại');
+    if (userId == null) throw Exception('User ID không hợp lệ');
+
+    final uri = changePasswordUri(userId);
+    final resp = await http.post(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'currentPassword': currentPassword,
+        'newPassword': newPassword,
+      }),
+    );
+
+    if (resp.statusCode != 200) {
+      final data = jsonDecode(resp.body);
+      throw Exception(data['error'] ?? 'Lỗi không xác định');
+    }
+  }
+
+  static Future<void> register({
+    required String email,
+    required String password,
+    required String fullName,
+    required String phoneNumber,
+    required String role,
+  }) async {
+    final response = await http.post(
+      registerUri,
+      headers: {
+
+        'Content-Type': 'application/json'
+      },
+      body: jsonEncode({
+        'email': email,
+        'password': password,
+        'full_name': fullName,
+        'phone_number': phoneNumber,
+        'role': role,
+      }),
+    );
+
+    if (response.statusCode != 201) {
+      final data = jsonDecode(response.body);
+      throw Exception(data['error'] ?? 'Đăng ký thất bại');
+    }
   }
 }

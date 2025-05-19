@@ -43,7 +43,9 @@ const loginUser = async (email, password) => {
 const getUser = async(id) => {
   const user = await authModel.findUserById(id);
   if (!user) throw new Error('User not found');
-  return user;
+
+  const { password, ...safeUser } = user;
+  return safeUser;
 };
 
 const updateUser = async (id, data) => {
@@ -62,10 +64,24 @@ const getAllUsers = async () => {
   return users;
 }
 
+const changePassword = async (userId, currentPassword, newPassword) => {
+    const user = await authModel.findUserById(userId);
+    if (!user) throw new Error('User not found');
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) throw new Error('Mật khẩu hiện tại không đúng');
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    await authModel.updateUserPassword(userId, hashedNewPassword);
+
+    return { message: 'Đổi mật khẩu thành công' };
+};
+
 module.exports = {
   registerUser,
   loginUser,
   updateUser,
   getAllUsers,
   getUser,
+  changePassword,
 };

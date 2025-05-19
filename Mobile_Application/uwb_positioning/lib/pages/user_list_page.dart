@@ -76,6 +76,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uwb_positioning/models/user.dart';
+import 'package:uwb_positioning/pages/user_create_page.dart';
+import 'package:uwb_positioning/pages/user_update_page.dart';
 import 'package:uwb_positioning/services/auth_service.dart';
 
 class UserListPage extends StatefulWidget {
@@ -92,8 +94,14 @@ class _UserListPageState extends State<UserListPage> {
   @override
   void initState() {
     super.initState();
-    // Lấy instance của UserService và gọi fetchAllUsers()
+    // Gọi lại fetchAllUsers khi khởi tạo trang
+    _loadUsers();
+  }
+
+  // Hàm này gọi fetchAllUsers và setState lại Future
+  void _loadUsers() {
     _futureUsers = context.read<AuthService>().fetchAllUsers();
+    setState(() {});
   }
 
   @override
@@ -140,7 +148,11 @@ class _UserListPageState extends State<UserListPage> {
                   icon: const Icon(Icons.edit),
                   onPressed: () {
                     // navigate to edit page, truyền user.userId
-                    Navigator.pushNamed(context, '/user/update', arguments: user.userId);
+                    Navigator.pushNamed(context, UserUpdatePage.nameRoute, arguments: user.userId)
+                        .then((_) {
+                      // Sau khi quay lại từ trang chỉnh sửa, gọi lại _loadUsers
+                      _loadUsers();
+                    });
                   },
                 ),
               );
@@ -150,7 +162,10 @@ class _UserListPageState extends State<UserListPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, '/user/create');
+          Navigator.pushNamed(context, UserCreatePage.nameRoute).then((_) {
+            // Sau khi tạo người dùng mới, gọi lại _loadUsers để cập nhật danh sách
+            _loadUsers();
+          });
         },
         child: const Icon(Icons.add),
         tooltip: 'Tạo người dùng mới',

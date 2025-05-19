@@ -23,6 +23,26 @@ exports.getDeviceById = async (req, res) => {
   }
 };
 
+exports.updateDevice = async (req, res) => {
+  try {
+    const deviceId = req.params.id;
+    const updateFields = req.body;
+
+    if (Object.keys(updateFields).length === 0) {
+      return res.status(400).json({ message: 'Vui lòng cung cấp dữ liệu cần cập nhật' });
+    }
+
+    const updatedDevice = await deviceService.updateDevice(deviceId, updateFields);
+
+    res.json({
+      message: 'Cập nhật thiết bị thành công',
+      data: updatedDevice,
+    });
+  } catch (error) {
+    console.error('❌ Lỗi cập nhật thiết bị:', error.message);
+    res.status(500).json({ message: error.message || 'Lỗi server' });
+  }
+};
 // exports.createBorrowRequest = async (req, res) => {
 //   const {
 //     device_id,

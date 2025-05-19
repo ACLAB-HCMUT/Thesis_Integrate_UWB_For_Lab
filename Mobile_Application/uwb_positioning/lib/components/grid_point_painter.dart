@@ -32,13 +32,13 @@ class GridPointPainter extends CustomPainter {
     // Draw grid, calculate position based on gridOffset
     final double gridSize = 50 * scale;
     for (double i = -gridSize + gridOffset.dx % gridSize;
-        i < size.width;
-        i += gridSize) {
+    i < size.width;
+    i += gridSize) {
       canvas.drawLine(Offset(i, 0), Offset(i, size.height), gridPaint);
     }
     for (double i = -gridSize + gridOffset.dy % gridSize;
-        i < size.height;
-        i += gridSize) {
+    i < size.height;
+    i += gridSize) {
       canvas.drawLine(Offset(0, i), Offset(size.width, i), gridPaint);
     }
 
@@ -47,11 +47,22 @@ class GridPointPainter extends CustomPainter {
       final x = (entry['anchor_x'] as double) * gridSize * 5 + gridOffset.dx;
       final y = (entry['anchor_y'] as double) * gridSize * 5 + gridOffset.dy;
       canvas.drawCircle(Offset(x, y), pointSize, anchorPaint);
+      // Draw anchorId as text near the anchor point
+      final textSpan = TextSpan(
+        text: 'Anchor: ${entry['anchor_id']}',
+        style: TextStyle(color: Colors.black, fontSize: 12),
+      );
+      final textPainter = TextPainter(
+        text: textSpan,
+        textDirection: TextDirection.ltr,
+      );
+      textPainter.layout();
+      textPainter.paint(canvas, Offset(x + 6, y - 6)); // Slight offset for visibility
     }
 
-    // final x = (tagPoints['tag_x'] as double) * gridSize * 5 + gridOffset.dx;
-    // final y = (tagPoints['tag_y'] as double) * gridSize * 5 + gridOffset.dy;
-    // canvas.drawCircle(Offset(x, y), pointSize, tagPaint);
+    final x = (tagPoints['tag_x'] as double) * gridSize * 5 + gridOffset.dx;
+    final y = (tagPoints['tag_y'] as double) * gridSize * 5 + gridOffset.dy;
+    canvas.drawCircle(Offset(x, y), pointSize, tagPaint);
   }
 
   @override

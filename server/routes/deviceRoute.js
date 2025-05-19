@@ -7,5 +7,6 @@ const authMiddleware = require("../middlewares/authMiddleware");
 
 router.get('/', authMiddleware.verifyToken, deviceController.getAllDevices);
 router.get('/:id', authMiddleware.verifyToken, deviceController.getDeviceById);
+router.patch('/:id', authMiddleware.verifyToken, authMiddleware.isAdmin, deviceController.updateDevice);
 
 module.exports = router;

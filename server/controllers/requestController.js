@@ -48,3 +48,34 @@ exports.updateReturnDate = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.getAllBorrowRequests = async (req, res) => {
+  try {
+    const requests = await requestService.getAllRequests();
+    res.status(200).json(requests);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getBorrowRequestsByUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const requests = await requestService.getRequestsById(userId);
+    res.status(200).json(requests);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.updateBorrowRequestStatus = async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  try {
+    const updatedRequest = await requestService.updateStatus(id, status);
+    res.status(200).json(updatedRequest);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

@@ -3,6 +3,8 @@ import 'package:uwb_positioning/pages/device_list_page.dart';
 import 'package:uwb_positioning/pages/login_page.dart';
 import 'package:uwb_positioning/pages/notification_list_page.dart';
 import 'package:provider/provider.dart';
+import 'package:uwb_positioning/pages/user_info_page.dart';
+import 'package:uwb_positioning/pages/user_requests_page.dart';
 import 'package:uwb_positioning/services/auth_service.dart';
 
 class UserHomePage extends StatelessWidget {
@@ -48,12 +50,12 @@ class UserHomePage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, '/borrow_request_manage'),
+              onPressed: () => Navigator.pushNamed(context, UserBorrowRequestPage.nameRoute),
               child: const Text('Danh sách yêu cầu mượn'),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, '/borrow_request_manage'),
+              onPressed: () => Navigator.pushNamed(context, UserInfoPage.nameRoute),
               child: const Text('Thông tin tài khoản'),
             ),
             const SizedBox(height: 16),

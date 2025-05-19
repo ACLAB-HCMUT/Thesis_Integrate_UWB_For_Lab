@@ -20,10 +20,10 @@ class MqttService with ChangeNotifier {
   final String server = "192.168.175.176";
   final String username = "";
   final String aioKey = "";
-  final String topicTag = "tagposition";
+  final String topicTag = "uwb/tagposition";
 
-  double maxX = 3.7; // Giá trị tối đa của x
-  double maxY = 2.7; // Giá trị tối đa của y
+  double maxX = 6.51; // Giá trị tối đa của x
+  double maxY = 6.55; // Giá trị tối đa của y
 
   late MqttServerClient client;
 
@@ -43,7 +43,7 @@ class MqttService with ChangeNotifier {
 
     // Connection Configuration
     final connMessage = MqttConnectMessage()
-        // .authenticateAs(username, aioKey)
+    // .authenticateAs(username, aioKey)
         .startClean()
         .withWillTopic('disconnect')
         .withWillMessage('Disconnected unexpectedly')

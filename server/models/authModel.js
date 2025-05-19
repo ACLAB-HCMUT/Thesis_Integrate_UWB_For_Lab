@@ -17,7 +17,7 @@ async function findUserByEmail (email) {
 
 async function findUserById(id) {
     const result = await pool.query(
-      `SELECT user_id, email, full_name, phone_number, role, status
+      `SELECT user_id, email, full_name, phone_number, role, status, password
        FROM "user"
        WHERE user_id = $1`,
       [id]
@@ -87,10 +87,18 @@ async function getAllUsers() {
     return result.rows;
 }
 
+async function updateUserPassword(id, hashedPassword) {
+    await pool.query(
+        `UPDATE "user" SET password = $1 WHERE user_id = $2`,
+        [hashedPassword, id]
+    );
+}
+
 module.exports = {
     createUser,
     findUserByEmail,
     findUserById,
     updateUserById,
     getAllUsers,
+    updateUserPassword,
 };

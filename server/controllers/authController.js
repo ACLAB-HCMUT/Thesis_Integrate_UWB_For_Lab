@@ -59,10 +59,27 @@ const getUserDetail = async (req, res) => {
   }
 }
 
+const changePassword = async (req, res) => {
+    try {
+        const userId = req.params.id; // Lấy từ token middleware
+        const { currentPassword, newPassword } = req.body;
+
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({ error: 'Thiếu thông tin' });
+        }
+
+        const result = await authService.changePassword(userId, currentPassword, newPassword);
+        res.json(result);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+};
+
 module.exports = {
   register,
   login,
   update,
   getAllUsers,
   getUserDetail,
+  changePassword,
 };
