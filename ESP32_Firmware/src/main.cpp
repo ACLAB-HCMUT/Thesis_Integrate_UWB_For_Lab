@@ -6,7 +6,11 @@ void UWB_task(void *pvParameters) {
     UWB_readString();
     UWB_display();
     calc_position();
+<<<<<<< HEAD
     display_extract_data();
+=======
+    display_extractdata();
+>>>>>>> 21af77f65a9363c9f75e6c50d3516d5716736234
     vTaskDelay(pdMS_TO_TICKS(300));
   }
 }

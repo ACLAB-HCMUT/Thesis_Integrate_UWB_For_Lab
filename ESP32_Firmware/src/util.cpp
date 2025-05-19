@@ -26,6 +26,11 @@ void extract_data() {
     int start_index = g_data_uwb.indexOf(anchor_info);
     int end_index = g_data_uwb.indexOf("m", start_index);
 
+    Serial.print("start");
+    Serial.println(start_index);
+    Serial.print("end");
+    Serial.println(end_index);
+
     String distance_str;
     if (start_index != -1 && end_index != -1) {
       distance_str = g_data_uwb.substring(start_index + anchor_info.length(), end_index);
@@ -109,6 +114,7 @@ void calc_position() {
 
   int i, j, k;
   for (i = 0; i < N_ANCHORS; i++)
+    // d[i] = sqrt(g_distance_uwb[i] * g_distance  _uwb[i] - g_anchor_matrix[i][2] * g_anchor_matrix[i][2]);
     d[i] = g_distance_uwb[i];
   // d[i] = sqrt(g_distance_uwb[i] * g_distance_uwb[i] - g_anchor_matrix[i][2] * g_anchor_matrix[i][2]);
   for (i = 0; i < N_ANCHORS; i++) {
