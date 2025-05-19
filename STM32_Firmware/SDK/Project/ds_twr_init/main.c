@@ -226,14 +226,14 @@ void Tag_Measure_Dis(void)
 {
     uint8 dest_anthor = 0,frame_len = 0;
     float final_distance = 0;
-	frame_seq_nb=0;//change by johhn
+		frame_seq_nb=0;//change by johhn
     for(dest_anthor = 0 ;  dest_anthor<ANCHOR_MAX_NUM; dest_anthor++)
     {
         dwt_setrxaftertxdelay(POLL_TX_TO_RESP_RX_DLY_UUS);
         dwt_setrxtimeout(RESP_RX_TIMEOUT_UUS);
         /* Write frame data to DW1000 and prepare transmission. See NOTE 7 below. */
         tx_poll_msg[ALL_MSG_SN_IDX] = frame_seq_nb;
-        tx_poll_msg[ALL_MSG_TAG_IDX] = TAG_ID;//��վ�յ���ǩ����Ϣ��������TAG_ID,�ڻ�վ�ظ���ǩ��ʱ��Ҳ��Ҫָ��TAG_ID,ֻ��TAG_IDһ�²�������
+        tx_poll_msg[ALL_MSG_TAG_IDX] = TAG_ID;//????????k?????????????TAG_ID,?????????k????????????TAG_ID,???TAG_IDh?�???????
 
         dwt_writetxdata(sizeof(tx_poll_msg), tx_poll_msg, 0);
         dwt_writetxfctrl(sizeof(tx_poll_msg), 0);
@@ -244,7 +244,7 @@ void Tag_Measure_Dis(void)
 
         //GPIO_SetBits(GPIOA,GPIO_Pin_2);
         //TODO
-        dwt_rxenable(0);//�����ӵģ�Ĭ��tx��Ӧ���Զ��л�rx������Ŀǰdebug ���ֲ�û���Զ��򿪣�����ǿ�ƴ�rx
+        dwt_rxenable(0);//??????g?I??tx???????????rx???????jdebug ?????�?????????????????rx
 				uint32 tick1=portGetTickCount();
         /* We assume that the transmission is achieved correctly, poll for reception of a frame or error/timeout. See NOTE 8 below. */
         while (!((status_reg = dwt_read32bitreg(SYS_STATUS_ID)) & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_ERR)))
@@ -269,7 +269,7 @@ void Tag_Measure_Dis(void)
                 dwt_readrxdata(rx_buffer, frame_len, 0);
             }
 
-            if(rx_buffer[ALL_MSG_TAG_IDX] != TAG_ID)//���TAG_ID
+            if(rx_buffer[ALL_MSG_TAG_IDX] != TAG_ID)//???TAG_ID
                 continue;
             rx_buffer[ALL_MSG_TAG_IDX] = 0;
 
@@ -417,8 +417,7 @@ int main(void)
     // Start with board specific hardware init. 
 		peripherals_init();
 	
-    printf("hello dwm1000!\r\n");
-	
+    printf("CE Hello dwm1000!\r\n");
 
     // Reset and initialise DW1000.
     // For initialisation, DW1000 clocks must be temporarily set to crystal speed. After initialisation SPI rate can be increased for optimum
@@ -426,7 +425,6 @@ int main(void)
 
 		reset_DW1000(); // Target specific drive of RSTn line into DW1000 low for a period. 
     spi_set_rate_low();
-
 
     if(dwt_initialise(DWT_LOADUCODE) == -1)
     {
@@ -474,66 +472,73 @@ int main(void)
     int rx_ant_delay =32880;
     int index = 0 ;
 		
-	extern UserSet UserSetNow;
-	uint16_t buff[3]={1,0,0xff};//Ĭ��ֵ
-	FLASH_ReadMoreData(USER_FLASH_BASE,buff,3);
-	if(buff[0]==1)
-	{
-		UserSetNow.ANCHOR_TAG=1;
-	}
-	else if(buff[0]==0)
-	{
-		UserSetNow.ANCHOR_TAG=0;
-	}
-	else
-	{
-		UserSetNow.ANCHOR_TAG=1;
-	}
-	
+		extern UserSet UserSetNow;
+		uint16_t buff[3]={1,0,0xff};//I???
+		FLASH_ReadMoreData(USER_FLASH_BASE,buff,3);
+		if(buff[0]==1)
+		{
+				UserSetNow.ANCHOR_TAG=1;
+		}
+		else if(buff[0]==0)
+		{
+				UserSetNow.ANCHOR_TAG=0;
+		}
+		else
+		{
+				UserSetNow.ANCHOR_TAG=1;
+		}
 
 //#ifdef ANTHOR
-	
+
 if(UserSetNow.ANCHOR_TAG==1)
 {
-	if(buff[1]>=0 && buff[1]<=255)
-	{
-		UserSetNow.ID=buff[1];
-		ANCHOR_IND=UserSetNow.ID;
-	}
-	printf("device:anchor ID:%d\r\n",ANCHOR_IND);
+		if(buff[1]>=0 && buff[1]<=255)
+		{
+				UserSetNow.ID=buff[1];
+				ANCHOR_IND=UserSetNow.ID;
+		}
+		printf("device:anchor ID:%d\r\n",ANCHOR_IND);
 	
-			    Anchor_Array_Init();
+		Anchor_Array_Init();
     // Loop forever initiating ranging exchanges. 
     OLED_ShowString(0,0,"DS TWR ANTHOR");
     //OLED_ShowString(0,2,"Distance:");
+		
+		// User code
+		printf("DS TWR ANTHOR");
 
     //KalMan_PramInit();
 		ANTHOR_MEASURE();
-	
 }
 
 //#endif
 
+
 //#ifdef TAG
-/*
+
 if(UserSetNow.ANCHOR_TAG==0)
 {
+		if(buff[1]>=0 && buff[1]<=255)
+		{
+				UserSetNow.ID=buff[1];
+				TAG_ID=UserSetNow.ID;
+				MASTER_TAG=TAG_ID;
+		}
 	
-	if(buff[1]>=0 && buff[1]<=255)
-	{
-		UserSetNow.ID=buff[1];
-		TAG_ID=UserSetNow.ID;
-		MASTER_TAG=TAG_ID;
-	}
-	
-	printf("device:TAG ID:%d\r\n",UserSetNow.ID);
-	if(TAG_ID == MASTER_TAG)
-    {
+		printf("device:TAG ID:%d\r\n",UserSetNow.ID);
+		if(TAG_ID == MASTER_TAG)
+		{
         OLED_ShowString(0,0,"DS MASTER TAG:");
+			
+				// User code
+				printf("DS MASTER TAG:");
     }
     else
     {
         OLED_ShowString(0,0,"DS SLAVE TAG:");
+			
+				// User code
+				printf("DS SLAVE TAG:");
     }
 		
     // Set expected response's delay and timeout. See NOTE 4 and 5 below.
@@ -558,7 +563,7 @@ if(UserSetNow.ANCHOR_TAG==0)
 			
 		TAG_MEASURE();
 }
-*/		
+
 //#endif
 }
 
@@ -842,7 +847,7 @@ void assert_failed(uint8_t* file, uint32_t line)
 PUTCHAR_PROTOTYPE
 {
     /* Place your implementation of fputc here */
-    /* ��SR�Ĵ����е�TC��־ */
+    /* ??SR?J??????TC??? */
 
     USART_ClearFlag(EVAL_COM1,USART_FLAG_TC);
     /* e.g. write a character to the USART */

@@ -27,6 +27,7 @@
 // User includes
 #include "deca_device_api.h"
 #include "deca_regs.h"
+#include "lib.h"
 
 /* Tick timer count. */
 volatile unsigned long time32_incr;
@@ -37,8 +38,12 @@ volatile unsigned long time32_incr;
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+//User add
+#define SET_CMD			0x03
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+//User add
+volatile uint8_t dw1000_force_off = 0;
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -152,6 +157,25 @@ void SysTick_Handler(void)
 /*  file (startup_stm32f10x_xx.s).                                            */
 /******************************************************************************/
 
+void set_switchdis(uint8_t value)
+{
+		char param[10];
+    char *argv[1];
+    
+    snprintf(param, sizeof(param), "%d", value);
+    argv[0] = param;
+    
+    int ret = AT_CmdFunc_ondis(SET_CMD, 1, argv);
+    if (ret == -1)
+		{
+        printf("Set AT+switchdis=%d failed\r\n", value);
+    }
+		else
+		{
+        printf("Set AT+switchdis=%d OK\r\n", value);
+    }
+}
+
 /**
   * @brief  This function handles PPP interrupt request.
   * @param  None
@@ -164,40 +188,19 @@ void EXTI1_IRQHandler(void)
 {
 	if(EXTI_GetITStatus(EXTI_Line1) != RESET)
 	{
-		static uint32_t last_press = 0;
-    if(HAL_GetTick() - last_press < 50)
-		{
+			if (dw1000_force_off)
+			{
+					dw1000_force_off = 0;
+					set_switchdis(1);
+					GPIO_ResetBits(GPIOC,GPIO_Pin_13);
+      }
+			else
+			{
+					dw1000_force_off = 1;
+					set_switchdis(0);
+					GPIO_SetBits(GPIOC,GPIO_Pin_13);
+      }
 			EXTI_ClearITPendingBit(EXTI_Line1);
-      return;
-    }
-		
-		__disable_irq();
-		
-		dwt_setautorxreenable(0);
-		dwt_forcetrxoff();
-		dwt_rxreset();
-		dwt_write32bitreg(SYS_STATUS_ID, 0xFFFFFFFF);
-		
-		GPIO_ResetBits(GPIOC, GPIO_Pin_13);
-		
-		__enable_irq();
-		
-		last_press = HAL_GetTick();
-		EXTI_ClearITPendingBit(EXTI_Line1);
-		
-		
-		//dwt_setautorxreenable(0);
-	//	static uint32_t last_time = 0;
-	//	uint32_t now = HAL_GetTick();
-		
-	//	if(now - last_time > 50)
-	//	{
-		//	GPIO_ResetBits(GPIOC,GPIO_Pin_13);
-	//		dwt_forcetrxoff();
-	//	dwt_write32bitreg(SYS_STATUS_ID, 0xFFFFFFFF);
-	//	}
-	//	last_time = now;
-		//EXTI_ClearITPendingBit(EXTI_Line1);
 	}
 }
 

@@ -1,7 +1,7 @@
 --cpu Cortex-M3
 ".\stm3210e-eval\stm32f10x_it.o"
-".\stm3210e-eval\main.o"
 ".\LIB\STM3210E-EVAL.lib"
+".\stm3210e-eval\main.o"
 ".\stm3210e-eval\stm32f10x_rcc.o"
 ".\stm3210e-eval\stm32f10x_gpio.o"
 ".\stm3210e-eval\misc.o"

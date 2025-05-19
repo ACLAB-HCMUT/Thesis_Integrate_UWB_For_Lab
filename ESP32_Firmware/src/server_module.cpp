@@ -1,3 +1,4 @@
+/*
 #include "server_module.h"
 
 // Create AsyncWebServer object on port 80
@@ -52,3 +53,4 @@ void serverTask(void *pvParameters) {
   server.begin();
   vTaskDelete(NULL); // Delete the task when done
 }
+  */
