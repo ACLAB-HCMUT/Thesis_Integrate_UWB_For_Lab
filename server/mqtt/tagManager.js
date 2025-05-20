@@ -34,7 +34,7 @@ const tagManager = {
         this.printStatus(); // ✅ In trạng thái sau khi cấp quyền
 
         this.timeoutMonitor = setTimeout(() => {
-            console.log(`⏰ Không nhận được timeout từ tag ${this.currentActive}, xoá khỏi danh sách.`);
+            console.log(`⏰ Không nhận được timeout từ tag ${this.currentActive}, xoá khỏi danh sách`);
             this.removeTag(this.currentActive);
             this.nextTag(aedes);
         }, this.TIMEOUT_MS);
@@ -63,7 +63,7 @@ const tagManager = {
 
     handleTimeoutMessage(tagId, aedes) {
         if (tagId === this.currentActive) {
-            console.log(`📥 Nhận timeout từ tag ${tagId}, xác nhận và chuyển tag.`);
+            console.log(`📥 Nhận timeout từ tag ${tagId}, xác nhận và chuyển tag`);
 
             const topic = `uwb/ack/${tagId}`;
             const message = JSON.stringify({ status: "timeout_ok" });
@@ -72,7 +72,7 @@ const tagManager = {
             clearTimeout(this.timeoutMonitor);
             this.nextTag(aedes);
         } else {
-            console.log(`⚠️ Nhận timeout từ tag ${tagId} nhưng không khớp với tag đang hoạt động.`);
+            console.log(`⚠️ Nhận timeout từ tag ${tagId} nhưng không khớp với tag đang hoạt động`);
         }
 
         this.printStatus(); // ✅ In trạng thái sau khi nhận timeout
@@ -98,7 +98,7 @@ const tagManager = {
             this.currentIndex = 0;
         }
 
-        console.log(`🧹 Đã xóa tag ${tagId} khỏi danh sách.`);
+        console.log(`🧹 Đã xóa tag ${tagId} khỏi danh sách`);
         this.printStatus(); // ✅ In trạng thái sau khi xoá tag
     },
 

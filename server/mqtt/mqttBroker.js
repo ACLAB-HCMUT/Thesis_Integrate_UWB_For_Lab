@@ -69,7 +69,7 @@ aedes.on("publish", (packet, client) => {
           if (tagId) {
               tagManager.handleRegister(tagId, aedes);
           } else {
-              console.error("❌ JSON hợp lệ nhưng không có trường 'id':", data);
+              console.error("❌ JSON hợp lệ nhưng không có trường 'tag_id':", data);
           }
       }
 

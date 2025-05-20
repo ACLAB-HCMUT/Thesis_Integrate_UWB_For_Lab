@@ -1,20 +1,28 @@
 const mqtt = require("mqtt");
 
-// ⚙️ Cấu hình
-const TAG_ID = "tag123";
+// Cấu hình
+const TAG_ID = "2";
 const MQTT_BROKER = "mqtt://localhost:1883";
+const MAX_TIMEOUT_RETRY_MS = 6000;
+const position = [
+    [1.0, 1.0, 0.0],
+    [2.0, 1.0, 0.0],
+    [2.0, 2.0, 0.0],
+    [1.0, 2.0, 0.0],
+];
 
 let isAcknowledged = false;
 let isActive = false;
-let client = null;
-let sendInterval = null;
-
 let timeoutAckReceived = false;
+
+let sendInterval = null;
 let retryTimeoutInterval = null;
 let timeoutRetryStart = null;
-const MAX_TIMEOUT_RETRY_MS = 6000;
 
-// 👉 Kết nối MQTT
+let client = null;
+let idx = 0;
+
+// Kết nối MQTT
 function connectMQTT() {
     client = mqtt.connect(MQTT_BROKER);
 
@@ -30,14 +38,14 @@ function connectMQTT() {
         console.log(`📥 Nhận tin nhắn từ ${topic}:`, payload);
 
         if (topic === `uwb/ack/${TAG_ID}`) {
-            if (payload.status === "ok" && !isAcknowledged) {
+            if (payload.status === "register_ok" && !isAcknowledged) {
                 isAcknowledged = true;
                 console.log("✅ Đã được server chấp nhận");
             }
 
-            if (payload.status === "received timeout") {
-                console.log("✅ Server đã xác nhận timeout.");
+            if (payload.status === "timeout_ok") {
                 timeoutAckReceived = true;
+                console.log("✅ Server đã xác nhận timeout");
                 clearInterval(retryTimeoutInterval);
             }
         }
@@ -56,10 +64,10 @@ function connectMQTT() {
     });
 }
 
-// 👉 Gửi yêu cầu đăng ký tag
+// Gửi yêu cầu đăng ký tag
 function sendRegisterRequest() {
     if (client && client.connected) {
-        client.publish("uwb/register", JSON.stringify({ id: TAG_ID }));
+        client.publish("uwb/register", JSON.stringify({ tag_id: TAG_ID }));
 
         setTimeout(() => {
             if (!isAcknowledged) {
@@ -70,11 +78,11 @@ function sendRegisterRequest() {
     }
 }
 
-// 👉 Xử lý phân quyền từ manager
+// Xử lý phân quyền từ manager
 function handleControlMessage(payload) {
-    const { activeTag, duration } = payload;
+    const { active_tag, duration } = payload;
 
-    if (activeTag === TAG_ID) {
+    if (active_tag === TAG_ID) {
         console.log(`🚦 Tag ${TAG_ID} được kích hoạt trong ${duration}ms`);
         isActive = true;
 
@@ -93,21 +101,30 @@ function handleControlMessage(payload) {
     }
 }
 
-// 👉 Gửi dữ liệu định kỳ
+// Gửi dữ liệu định kỳ
 function sendTagData() {
     if (!isActive || !client.connected) return;
 
+    if (idx >= 4) {
+        idx = 0;
+    }
+
     const data = {
-        id: TAG_ID,
+        tag_id: TAG_ID,
         timestamp: Date.now(),
+        tag_x: position[idx][0],
+        tag_y: position[idx][1],
+        tag_z: position[idx][2],
         info: "Dữ liệu từ tag đang hoạt động"
     };
+
+    idx++;
 
     client.publish(`uwb/tagposition`, JSON.stringify(data));
     console.log("📤 Đã gửi dữ liệu:", data);
 }
 
-// 👉 Gửi timeout và thử lại trong 3 giây nếu chưa được xác nhận
+// Gửi timeout và thử lại trong 3 giây nếu chưa được xác nhận
 function notifyTimeoutWithRetry(tagId) {
     timeoutAckReceived = false;
     timeoutRetryStart = Date.now();
@@ -125,7 +142,7 @@ function notifyTimeoutWithRetry(tagId) {
         }
 
         if (elapsed > MAX_TIMEOUT_RETRY_MS) {
-            console.warn(`🛑 Không nhận được xác nhận timeout từ server sau ${MAX_TIMEOUT_RETRY_MS}ms. Dừng gửi.`);
+            console.warn(`🛑 Không nhận được xác nhận timeout từ server sau ${MAX_TIMEOUT_RETRY_MS}ms. Dừng gửi`);
             clearInterval(retryTimeoutInterval);
             return;
         }
@@ -135,10 +152,10 @@ function notifyTimeoutWithRetry(tagId) {
 }
 
 function sendTimeoutMessage(tagId) {
-    const message = JSON.stringify({ id: tagId, status: "timeout" });
+    const message = JSON.stringify({ tag_id: tagId, status: "timeout" });
     client.publish("uwb/timeout", message);
     console.log("⏱️ Gửi timeout:", message);
 }
 
-// 👉 Khởi chạy
+// Khởi chạy
 connectMQTT();

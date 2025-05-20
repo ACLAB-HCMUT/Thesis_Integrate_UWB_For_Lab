@@ -17,7 +17,7 @@ class MqttService with ChangeNotifier {
   // final String aioKey = "aio_fATE02ASxyRbFK54LPEWBu9SWqYP";
   // final String topicTag = "Duyen/feeds/tagposition";
   // final String topicAnchor = "Duyen/feeds/anchorposition";
-  final String server = "192.168.175.176";
+  final String server = "192.168.170.170";
   final String username = "";
   final String aioKey = "";
   final String topicTag = "uwb/tagposition";
