@@ -9,6 +9,7 @@ class NotificationDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('[DEBUG] build: Notification Detail');
     return Scaffold(
       appBar: AppBar(
         title: const Text('Notification Detail'),

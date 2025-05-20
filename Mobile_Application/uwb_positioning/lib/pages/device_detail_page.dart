@@ -39,6 +39,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('[DEBUG] build: Device Detail');
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(

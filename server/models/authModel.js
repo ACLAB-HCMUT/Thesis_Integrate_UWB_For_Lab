@@ -94,6 +94,11 @@ async function updateUserPassword(id, hashedPassword) {
     );
 }
 
+async function findAllAdmins() {
+  const result = await pool.query(`SELECT user_id FROM "user" WHERE role = $1`, ['admin']);
+  return result.rows;
+}
+
 module.exports = {
     createUser,
     findUserByEmail,
@@ -101,4 +106,5 @@ module.exports = {
     updateUserById,
     getAllUsers,
     updateUserPassword,
+    findAllAdmins,
 };

@@ -75,21 +75,48 @@ class _NotificationListPageState extends State<NotificationListPage> {
   // ];
 
   // Đánh dấu thông báo là đã đọc
-  void _markAsRead(int index) {
-    setState(() {
-      _notifications[index] = _notifications[index].copyWith(isRead: true);
-    });
+  void _markAsRead(int index) async {
+    final notificationService = context.read<NotificationService>();
+    final notifyId = _notifications[index].notifyId;
+
+    if (_notifications[index].isRead == true) return;
+
+    final success = await notificationService.markAsRead(notifyId);
+    if (success) {
+      setState(() {
+        _notifications[index] = _notifications[index].copyWith(isRead: true);
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Lỗi khi đánh dấu đã đọc')),
+      );
+    }
   }
 
   // Xóa thông báo
-  void _deleteNotification(int index) {
-    setState(() {
-      _notifications.removeAt(index);
-    });
+  void _deleteNotification(int index) async {
+    final notificationService = context.read<NotificationService>();
+    final notifyId = _notifications[index].notifyId;
+
+    final success = await notificationService.deleteNotification(notifyId!);
+
+    if (success) {
+      setState(() {
+        _notifications.removeAt(index);
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Đã xóa thông báo')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Lỗi khi xóa thông báo')),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    print('[DEBUG] build: Notification List');
     return Scaffold(
       appBar: AppBar(
         title: const Text('Notification List'),

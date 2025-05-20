@@ -6,6 +6,7 @@ import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:provider/provider.dart';
 import 'package:uwb_positioning/services/alert_service.dart';
+import 'package:uwb_positioning/services/config.dart';
 import 'package:uwb_positioning/services/device_service.dart';
 
 class MqttService with ChangeNotifier {
@@ -17,10 +18,11 @@ class MqttService with ChangeNotifier {
   // final String aioKey = "aio_fATE02ASxyRbFK54LPEWBu9SWqYP";
   // final String topicTag = "Duyen/feeds/tagposition";
   // final String topicAnchor = "Duyen/feeds/anchorposition";
-  final String server = "192.168.175.176";
+  final String server = host;
   final String username = "";
   final String aioKey = "";
   final String topicTag = "uwb/tagposition";
+  final String topicAlert = "uwb/alert";
 
   double maxX = 6.51; // Giá trị tối đa của x
   double maxY = 6.55; // Giá trị tối đa của y
@@ -59,6 +61,10 @@ class MqttService with ChangeNotifier {
       // Subscribe to the topic
       client.subscribe(topicTag, MqttQos.atLeastOnce);
       _logger.info('Subscribed to topic: $topicTag');
+
+      client.subscribe(topicAlert, MqttQos.atLeastOnce);
+      _logger.info('Subscribed to topic alert');
+
       // client.subscribe(topicAnchor, MqttQos.atLeastOnce);
       // _logger.info('Subscribed to topic: $topicAnchor');
 
@@ -92,20 +98,20 @@ class MqttService with ChangeNotifier {
         final x = parsedData['tag_x'].toDouble();
         final y = parsedData['tag_y'].toDouble();
 
-        // Kiểm tra tọa độ
-        final deviceService = Provider.of<DeviceService>(
-            navigatorKey.currentContext!,
-            listen: false);
-        if (x < -0.5 || x > maxX || y < -0.5 || y > maxY) {
-          deviceService.devices[deviceId]!.updateInRoom(false);
-          final alertService = Provider.of<AlertService>(
-            navigatorKey.currentContext!,
-            listen: false,
-          );
-          alertService.showAlert('Tag $deviceId không ở đúng vị trí!');
-        } else {
-          deviceService.devices[deviceId]!.updateInRoom(true);
-        }
+        // // Kiểm tra tọa độ
+        // final deviceService = Provider.of<DeviceService>(
+        //     navigatorKey.currentContext!,
+        //     listen: false);
+        // if (x < -0.5 || x > maxX || y < -0.5 || y > maxY) {
+        //   deviceService.devices[deviceId]!.updateInRoom(false);
+        //   final alertService = Provider.of<AlertService>(
+        //     navigatorKey.currentContext!,
+        //     listen: false,
+        //   );
+        //   alertService.showAlert('Tag $deviceId không ở đúng vị trí!');
+        // } else {
+        //   deviceService.devices[deviceId]!.updateInRoom(true);
+        // }
 
         _deviceData[deviceId] = {
           'tag_x': parsedData['tag_x'].toDouble(),
@@ -124,6 +130,16 @@ class MqttService with ChangeNotifier {
       //   };
       //   _logger.fine('Updated anchor $anchorId data: ${_anchorData[anchorId]}');
       // }
+
+      else if (topic == 'uwb/alert') {
+        final deviceId = parsedData['tag_id'];
+        final message = parsedData['message'];
+        final alertService = Provider.of<AlertService>(
+          navigatorKey.currentContext!,
+          listen: false,
+        );
+        alertService.showAlert("Tag $deviceId không ở đúng vị trí");
+      }
 
       // Change notification
       notifyListeners();

@@ -27,6 +27,7 @@ class _UserBorrowRequestPageState extends State<UserBorrowRequestPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('[DEBUG] build: User Request');
     return Scaffold(
       appBar: AppBar(title: const Text('Yêu cầu mượn của bạn')),
       body: FutureBuilder<List<BorrowRequests>>(

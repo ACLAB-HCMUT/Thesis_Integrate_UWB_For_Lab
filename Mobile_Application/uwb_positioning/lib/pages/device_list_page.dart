@@ -43,6 +43,7 @@ class _DeviceListPageState extends State<DeviceListPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('[DEBUG] build: Device List');
     final deviceService = Provider.of<DeviceService>(context);
     if (isLoading) {
       return const Scaffold(

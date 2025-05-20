@@ -9,7 +9,17 @@ async function sendNotification(notificationData) {
   return await notificationModel.createNotification(notificationData);
 }
 
+async function markNotificationAsRead(notifyId) {
+  return await notificationModel.markAsRead(notifyId);
+}
+
+async function deleteNotification(notifyId) {
+  return await notificationModel.deleteById(notifyId);
+}
+
 module.exports = {
   getAllNotifications,
   sendNotification,
+  markNotificationAsRead,
+  deleteNotification,
 };

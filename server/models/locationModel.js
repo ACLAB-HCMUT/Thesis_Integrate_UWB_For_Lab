@@ -27,10 +27,22 @@ async function getRoomId(deviceId) {
     );
     return result.rows[0] ? result.rows[0].room_id : null;
 }
+
+async function getAllRooms() {
+    const result = await pool.query(`SELECT * FROM room`);
+    return result.rows;
+}
+
+async function getRoomById(roomId) {
+    const result = await pool.query(`SELECT * FROM room WHERE room_id = $1`, [roomId]);
+    return result.rows[0] || null;
+}
   
   
 module.exports = { 
     getLocations, 
     getAnchors, 
-    getRoomId
+    getRoomId,
+    getAllRooms,
+    getRoomById,
 };

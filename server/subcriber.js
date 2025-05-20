@@ -1,6 +1,7 @@
 const mqtt = require("mqtt");
 
-const TOPIC = "uwb/tagposition";
+// const TOPIC = "uwb/tagposition";
+const TOPIC = "uwb/alert";
 
 // Kết nối đến MQTT Broker (Thay IP nếu cần)
 const client = mqtt.connect("mqtt://localhost:1883");

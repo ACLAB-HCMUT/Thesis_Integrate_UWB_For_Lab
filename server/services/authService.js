@@ -64,6 +64,11 @@ const getAllUsers = async () => {
   return users;
 }
 
+const getAllAdmins = async () => {
+  const admins = await authModel.findAllAdmins();
+  return admins;
+}
+
 const changePassword = async (userId, currentPassword, newPassword) => {
     const user = await authModel.findUserById(userId);
     if (!user) throw new Error('User not found');
@@ -84,4 +89,5 @@ module.exports = {
   getAllUsers,
   getUser,
   changePassword,
+  getAllAdmins,
 };

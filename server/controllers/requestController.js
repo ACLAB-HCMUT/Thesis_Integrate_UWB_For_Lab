@@ -1,4 +1,3 @@
-const { sendNotification } = require('../services/notificationService');
 const requestService = require('../services/requestService');
 
 exports.createBorrowRequest = async (req, res) => {

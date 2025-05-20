@@ -228,6 +228,7 @@ class _UserUpdatePageState extends State<UserUpdatePage> {
 
   @override
   Widget build(BuildContext context) {
+    print('[DEBUG] build: User Update');
     return Scaffold(
       appBar: AppBar(title: const Text('Cập nhật người dùng')),
       body: _loading

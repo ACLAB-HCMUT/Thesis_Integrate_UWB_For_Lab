@@ -28,4 +28,29 @@ async function fetchAnchors(deviceId) {
   }
 }
 
-module.exports = { fetchHourly, fetchDaily, fetchAnchors };
+async function fetchAllRooms() {
+  try {
+    const rooms = await locationModel.getAllRooms();
+    return rooms;
+  } catch (error) {
+    throw new Error('Error fetching rooms from database');
+  }
+}
+
+async function fetchRoomById(deviceId) {
+  try {
+    const roomId = await locationModel.getRoomId(deviceId);
+    const room = await locationModel.getRoomById(roomId);
+    return room;
+  } catch (error) {
+    throw new Error('Error fetching rooms from database');
+  }
+}
+
+module.exports = {
+  fetchHourly,
+  fetchDaily,
+  fetchAnchors,
+  fetchAllRooms,
+  fetchRoomById,
+};

@@ -48,7 +48,55 @@ async function sendNotification(req, res) {
   }
 }
 
+async function markNotificationAsRead(req, res) {
+  try {
+    const notifyId = req.params.id;
+
+    const updatedNotification = await notificationService.markNotificationAsRead(notifyId);
+
+    if (!updatedNotification) {
+      return res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy thông báo để cập nhật',
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Đã đánh dấu thông báo là đã đọc',
+      data: updatedNotification,
+    });
+  } catch (error) {
+    console.error('Error marking notification as read:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi server khi đánh dấu thông báo là đã đọc',
+    });
+  }
+}
+
+async function deleteNotification(req, res) {
+  try {
+    const notifyId = req.params.id;
+    const success = await notificationService.deleteNotification(notifyId);
+
+    if (success) {
+      res.json({ success: true, message: 'Xóa thông báo thành công' });
+    } else {
+      res.status(404).json({ success: false, message: 'Không tìm thấy thông báo' });
+    }
+  } catch (error) {
+    console.error('Lỗi khi xóa thông báo:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi server khi xóa thông báo',
+    });
+  }
+}
+
 module.exports = {
   getAllNotifications,
   sendNotification,
+  markNotificationAsRead,
+  deleteNotification,
 };

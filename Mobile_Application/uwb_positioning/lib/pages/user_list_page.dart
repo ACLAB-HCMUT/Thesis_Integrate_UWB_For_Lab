@@ -106,6 +106,7 @@ class _UserListPageState extends State<UserListPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('[DEBUG] build: User List');
     return Scaffold(
       appBar: AppBar(
         title: const Text('Danh sách Người dùng'),

@@ -23,6 +23,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('[DEBUG] build: User_Info');
     return Scaffold(
       appBar: AppBar(title: const Text('Thông tin người dùng')),
       body: FutureBuilder<User>(

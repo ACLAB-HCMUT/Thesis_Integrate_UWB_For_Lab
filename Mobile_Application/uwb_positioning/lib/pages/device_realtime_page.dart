@@ -41,6 +41,7 @@ class _DeviceRealtimePageState extends State<DeviceRealtimePage> {
 
   @override
   Widget build(BuildContext context) {
+    print('[DEBUG] build: Realtime');
     final args = ModalRoute.of(context)?.settings.arguments;
     final deviceId = args is String ? args : args?.toString() ?? 'unknown';
 
