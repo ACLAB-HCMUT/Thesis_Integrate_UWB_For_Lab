@@ -77,14 +77,16 @@ client.on("connect", async () => {
   console.log("✅ Đã kết nối tới MQTT broker");
 
   try {
-    const tagId = await askQuestion("🔷 Nhập tag_id: ");
+    // const tagId = await askQuestion("🔷 Nhập tag_id: ");
     const tagX = parseFloat(await askQuestion("🔷 Nhập tag_x: "));
     const tagY = parseFloat(await askQuestion("🔷 Nhập tag_y: "));
-    const tagZ = parseFloat(await askQuestion("🔷 Nhập tag_z: "));
-    const dataUwb = await askQuestion("🔷 Nhập data_uwb: ");
+    // const tagZ = parseFloat(await askQuestion("🔷 Nhập tag_z: "));
+    // const dataUwb = await askQuestion("🔷 Nhập data_uwb: ");
+    const tagZ = 0;
+    const dataUwb = "";
 
     const payload = {
-      tag_id: tagId,
+      tag_id: "2",
       timestamp: Date.now(),
       tag_x: tagX,
       tag_y: tagY,

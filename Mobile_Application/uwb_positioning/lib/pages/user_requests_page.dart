@@ -16,7 +16,7 @@ class _UserBorrowRequestPageState extends State<UserBorrowRequestPage> {
   late Future<List<BorrowRequests>> _borrowRequestsFuture;
   String formatDate(DateTime? date) {
     if (date == null) return 'Chưa cập nhật';
-    return DateFormat('yyyy-MM-dd').format(date);
+    return DateFormat('yyyy-MM-dd').format(date.toLocal());
   }
   @override
   void initState() {

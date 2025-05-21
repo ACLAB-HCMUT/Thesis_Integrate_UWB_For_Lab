@@ -404,8 +404,8 @@ class _BorrowRequestItemState extends State<BorrowRequestItem> {
             const SizedBox(height: 12),
             Text('Chi tiết mượn: ${d['detail']}'),
             const SizedBox(height: 8),
-            Text('Ngày mượn dự kiến: ${_fmt.format(DateTime.parse(d['appointment_date']))}'),
-            Text('Ngày trả dự kiến: ${_fmt.format(DateTime.parse(d['expected_return']))}'),
+            Text('Ngày mượn dự kiến: ${_fmt.format(DateTime.parse(d['appointment_date']).toLocal())}'),
+            Text('Ngày trả dự kiến: ${_fmt.format(DateTime.parse(d['expected_return']).toLocal())}'),
             const SizedBox(height: 12),
             Text('Trạng thái yêu cầu: ${d['status']}', style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
@@ -429,7 +429,7 @@ class _BorrowRequestItemState extends State<BorrowRequestItem> {
                     ? () => _pickDate(widget.onActualBorrowDateChanged)
                     : null,
                 child: Text(d['borrow_date'] != null
-                    ? 'Ngày mượn: ${_fmt.format(DateTime.parse(d['borrow_date']))}'
+                    ? 'Ngày mượn: ${_fmt.format(DateTime.parse(d['borrow_date']).toLocal())}'
                     : 'Cập nhật ngày mượn'),
               ),
             ),
@@ -454,7 +454,7 @@ class _BorrowRequestItemState extends State<BorrowRequestItem> {
                     ? () => _pickDate(widget.onActualReturnDateChanged)
                     : null,
                 child: Text(d['return_date'] != null
-                    ? 'Ngày trả: ${_fmt.format(DateTime.parse(d['return_date']))}'
+                    ? 'Ngày trả: ${_fmt.format(DateTime.parse(d['return_date']).toLocal())}'
                     : 'Cập nhật ngày trả'),
               ),
             ),

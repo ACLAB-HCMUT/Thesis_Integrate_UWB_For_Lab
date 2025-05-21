@@ -47,7 +47,8 @@ async function sendAlert(deviceId, message, timestamp) {
       user_id: admin.user_id,
       description: `${message} (Thiết bị: ${deviceId})`,
       type: "warning",
-      notify_time: timestamp,
+      // notify_time: timestamp,
+      notify_time: new Date(Date.now() - 10 * 60 * 60 * 1000),
     });
   }
 }

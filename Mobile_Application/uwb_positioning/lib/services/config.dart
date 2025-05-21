@@ -1,5 +1,5 @@
 // lib/config.dart
-const String host = '192.168.1.2';
+const String host = '192.168.1.6';
 const int port = 3000;
 
 final Uri baseUri = Uri(

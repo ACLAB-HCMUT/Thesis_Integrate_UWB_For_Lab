@@ -170,10 +170,11 @@ class _NotificationListPageState extends State<NotificationListPage> {
                       ),
                     ),
                     subtitle: Text(
-                      DateFormat.yMMMMd()
-                          .add_jms()
-                          .format(notification.notifyTime),
-                      style: const TextStyle(fontSize: 12),
+                      // DateFormat.yMMMMd()
+                      //     .add_jms()
+                      //     .format(notification.notifyTime),
+                        DateFormat('dd/MM/yyyy HH:mm:ss').format(notification.notifyTime.toLocal()),
+                        style: const TextStyle(fontSize: 12),
                     ),
                     onTap: () {
                       // Mark the notification as read when tapped

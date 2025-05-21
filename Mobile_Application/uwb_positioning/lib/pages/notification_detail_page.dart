@@ -35,7 +35,7 @@ class NotificationDetailPage extends StatelessWidget {
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             Text(
-              '${DateFormat.yMMMMd().add_jms().format(notification.notifyTime)}',
+              '${DateFormat('dd/MM/yyyy HH:mm:ss').format(notification.notifyTime.toLocal())}',
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 20),

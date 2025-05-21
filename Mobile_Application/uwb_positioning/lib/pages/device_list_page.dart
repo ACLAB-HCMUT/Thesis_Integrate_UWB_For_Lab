@@ -171,16 +171,18 @@ class _DeviceListPageState extends State<DeviceListPage> {
                                           )),
                                       Text(
                                         device.isActive
-                                            ? (device.isInRoom
-                                                ? 'In Room'
-                                                : 'Out of Room')
+                                            ? 'Active'
+                                            // (device.isInRoom
+                                            //     ? 'In Room'
+                                            //     : 'Out of Room')
                                             : 'Inactive',
                                         style: TextStyle(
                                           fontSize: 14,
                                           color: device.isActive
-                                              ? (device.isInRoom
-                                                  ? Colors.green
-                                                  : Colors.red)
+                                              ? Colors.green
+                                              // (device.isInRoom
+                                              //     ? Colors.green
+                                              //     : Colors.red)
                                               : Colors.grey,
                                         ),
                                       ),
