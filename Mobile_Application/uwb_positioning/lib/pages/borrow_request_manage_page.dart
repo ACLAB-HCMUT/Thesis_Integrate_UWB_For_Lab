@@ -383,7 +383,7 @@ class _BorrowRequestItemState extends State<BorrowRequestItem> {
             ),
             if (d['received_expected_return'] != null) ...[
               const SizedBox(height: 4),
-              Text('Thiết bị được hẹn trả vào ngày: ${_fmt.format(DateTime.parse(d['received_expected_return']))}'),
+              Text('Thiết bị được hẹn trả vào ngày: ${_fmt.format(DateTime.parse(d['received_expected_return']).toLocal())}'),
             ],
             const SizedBox(height: 8),
             Text('Người mượn: ${d['full_name']}', style: const TextStyle(fontWeight: FontWeight.bold)),
